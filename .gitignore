@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+.env.*
+.cache/
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+# captured pages from probes — local only, may contain PII
+*-page.html
+*-page.png
+tmp-*
+usps-probe-failure.html

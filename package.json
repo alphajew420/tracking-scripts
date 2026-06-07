@@ -1,0 +1,40 @@
+{
+  "name": "tracking-scripts",
+  "version": "0.1.0",
+  "description": "Carrier tracking library + CLI + bandwidth probes for UPS, FedEx, DHL, DHL Express, and USPS. Scrapers (browser-driven) and official APIs side by side.",
+  "type": "module",
+  "scripts": {
+    "track": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "probe:bandwidth-usps": "tsx probes/bandwidth_usps_warm.ts",
+    "probe:bandwidth-usps-cold": "tsx probes/bandwidth_usps.ts",
+    "postinstall": "playwright install chromium"
+  },
+  "bin": {
+    "track": "src/cli.ts"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "shipping",
+    "tracking",
+    "ups",
+    "fedex",
+    "dhl",
+    "usps",
+    "playwright",
+    "scraper"
+  ],
+  "license": "MIT"
+}
