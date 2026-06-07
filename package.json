@@ -8,15 +8,13 @@
     "typecheck": "tsc --noEmit",
     "probe:bandwidth-usps": "tsx probes/bandwidth_usps_warm.ts",
     "probe:bandwidth-usps-cold": "tsx probes/bandwidth_usps.ts",
-    "postinstall": "playwright install chromium"
+    "postinstall": "patchright install chromium"
   },
   "bin": {
     "track": "src/cli.ts"
   },
   "dependencies": {
-    "playwright": "^1.49.0",
-    "playwright-extra": "^4.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
+    "patchright": "^1.49.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

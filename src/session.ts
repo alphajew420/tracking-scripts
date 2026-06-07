@@ -1,9 +1,12 @@
-import { chromium } from "playwright-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import type { APIRequestContext, Browser, BrowserContext, Page } from "playwright";
+// Patchright is a stealth-patched Playwright fork — drop-in replacement
+// for `playwright` that ships with proper navigator.webdriver removal,
+// canvas/WebGL fingerprint normalization, and Chrome runtime spoofing.
+// Significantly more reliable against Akamai sensor.js / Cloudflare /
+// PerimeterX than playwright-extra + stealth-plugin (which leaves the
+// CDP traces patchright actually scrubs).
+import { chromium } from "patchright";
+import type { APIRequestContext, Browser, BrowserContext, Page } from "patchright";
 import type { ScrapeResult } from "./types.ts";
-
-chromium.use(StealthPlugin());
 
 const BLOCKED_TYPES = new Set(["image", "font", "media", "stylesheet"]);
 const BLOCKED_DOMAINS = [
@@ -181,14 +184,36 @@ export class TrackingSession {
       locale: "en-US",
     });
 
+    // Two-phase blocker:
+    //   Phase 1 (warm): block heavy resource types + ad domains, but let
+    //   the SPA's own JS/CSS through so Akamai's sensor.js can run + mint
+    //   cookies. Without these the warm fails at awaitReady.
+    //   Phase 2 (post-warm): tighten to ONLY allow HTML + JSON + Akamai
+    //   sensor pings. Every subsequent page.evaluate(fetch) returns just
+    //   the tracking-page HTML; React chrome bundles + analytics + new
+    //   JS chunks all get aborted. Per-query bandwidth ≈ HTML body only.
+    let postWarm = false;
     if (!process.env.NO_BLOCKING) {
       await this.context.route("**/*", (route, req) => {
         const url = req.url();
+        if (postWarm) {
+          // Tightened: keep only navigations/document fetches + JSON,
+          // and Akamai sensor pings (they keep the session valid).
+          const rt = req.resourceType();
+          if (rt === "document" || rt === "xhr" || rt === "fetch") return route.continue();
+          if (url.includes(".json")) return route.continue();
+          if (/akamai|edgesuite|_abck/i.test(url)) return route.continue();
+          return route.abort();
+        }
         if (BLOCKED_TYPES.has(req.resourceType())) return route.abort();
         if (BLOCKED_DOMAINS.some((d) => url.includes(d))) return route.abort();
         return route.continue();
       });
     }
+    // Expose so the warm flow below can flip the switch after awaitReady.
+    (this as unknown as { _flipPostWarm: () => void })._flipPostWarm = () => {
+      postWarm = true;
+    };
 
     this.page = await this.context.newPage();
 
@@ -214,6 +239,10 @@ export class TrackingSession {
     }
 
     this._warm = true;
+    // Flip the route blocker into "block everything but HTML/JSON" mode now
+    // that anti-bot cookies are valid. Per-query bandwidth collapses to the
+    // size of the response body.
+    (this as unknown as { _flipPostWarm?: () => void })._flipPostWarm?.();
     this.opts.onWarm?.();
   }
 

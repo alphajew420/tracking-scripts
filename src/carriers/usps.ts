@@ -19,16 +19,25 @@ function classify(desc: string): Status {
   return "unknown";
 }
 
-async function runQuery({ page, request }: QueryCtx, num: string): Promise<ScrapeResult> {
-  // Raw HTTP request via the warm context — same Akamai cookies + Chrome TLS
-  // fingerprint, but bypasses USPS' React SPA so we don't re-pay the
-  // 1+ MB of chrome/JS bundles per query. Just the 70 KB tracking HTML.
-  const resp = await request.get(URL_FOR(num), { failOnStatusCode: false });
+async function runQuery({ page }: QueryCtx, num: string): Promise<ScrapeResult> {
+  // page.evaluate(fetch) — the only path Akamai accepts, because the
+  // fetch runs from inside the real Chrome process (correct JA3 + bot
+  // score + browser fingerprint). context.request uses Node's TLS so
+  // its JA3 hash doesn't match Chrome and Akamai 403's it even with
+  // valid session cookies.
+  //
+  // To kill the 1+ MB of SPA chrome that USPS' page would normally
+  // re-pull, the session ALSO installs a tightened route blocker after
+  // warm — see TrackingSession.ensureWarm post-warm hook.
+  const raw = await page.evaluate(async (u: string) => {
+    const r = await fetch(u, { credentials: "include", redirect: "follow" });
+    return { status: r.status, body: await r.text() };
+  }, URL_FOR(num));
 
-  if (resp.status() !== 200) {
-    return { ok: false, error: `USPS fetch HTTP ${resp.status()}` };
+  if (raw.status !== 200) {
+    return { ok: false, error: `USPS fetch HTTP ${raw.status}` };
   }
-  const body = await resp.text();
+  const body = raw.body;
   if (body.includes("Access Denied") || body.includes("edgesuite")) {
     return { ok: false, error: "USPS: Access Denied (Akamai session expired)" };
   }

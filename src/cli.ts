@@ -96,10 +96,16 @@ async function main() {
   // Scraper UPS needs system Chrome to clear reCAPTCHA.
   const channel: "chrome" | undefined =
     !useApi && (flags.has("--chrome") || carrierKey === "ups") ? "chrome" : undefined;
+  // Akamai's sensor.js detects headless Chrome on USPS / DHL / FedEx. Default
+  // scrapers to headed mode; the user can opt back into headless with --headless
+  // if their stealth fingerprint is good enough (or for API mode where the
+  // browser never opens).
+  const headless = useApi ? true : flags.has("--headless");
 
   const session = new TrackingSession(make(), {
     debug,
     channel,
+    headless,
     onWarm: debug ? () => console.error(`[session] warmed`) : undefined,
   });
   try {
