@@ -1,6 +1,6 @@
 import { chromium } from "playwright-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import type { Browser, BrowserContext, Page } from "playwright";
+import type { APIRequestContext, Browser, BrowserContext, Page } from "playwright";
 import type { ScrapeResult } from "./types.ts";
 
 chromium.use(StealthPlugin());
@@ -28,6 +28,19 @@ interface CarrierBase {
   isExpired?(result: ScrapeResult): boolean;
 }
 
+/** Bundle passed to ScraperCarrier.runQuery. */
+export interface QueryCtx {
+  /** The warm Page — use for DOM parsing or carrier-specific signals
+   *  (cookies, page.url() checks). DO NOT use for the data fetch. */
+  page: Page;
+  /** Raw HTTP request bound to the warm context. Reuses cookies +
+   *  Chrome TLS fingerprint but bypasses the page lifecycle entirely
+   *  — no React chrome re-render, no analytics, no JS bundle reloads.
+   *  USPS measured: 1.22 MB/query via page.evaluate(fetch) → ~70 KB
+   *  via request.get(). Use `request.get/post()` for every fetch. */
+  request: APIRequestContext;
+}
+
 export interface ScraperCarrier extends CarrierBase {
   readonly mode: "scraper";
   /** Initial URL to load to mint anti-bot cookies + any auth tokens. */
@@ -44,11 +57,11 @@ export interface ScraperCarrier extends CarrierBase {
    */
   awaitReady?(page: Page): Promise<void>;
   /**
-   * Execute one tracking lookup against the warm Page. Implementations should
-   * use `page.evaluate(fetch ...)` — never `page.goto()` — so we reuse cookies
-   * and don't pay the asset-loading cost again.
+   * Execute one tracking lookup. Use `ctx.request` for the HTTP call —
+   * it skips all page-level JS so per-query bandwidth collapses from
+   * 1+ MB to the size of the actual response body.
    */
-  runQuery(page: Page, num: string): Promise<ScrapeResult>;
+  runQuery(ctx: QueryCtx, num: string): Promise<ScrapeResult>;
 }
 
 export interface ApiCarrier extends CarrierBase {
@@ -101,16 +114,21 @@ export class TrackingSession {
 
     // Scraper mode: warm + retry-on-expiry.
     await this.ensureWarm(num);
-    let result = await this.carrier.runQuery(this.page!, num);
+    let result = await this.carrier.runQuery(this.ctx(), num);
 
     if (!result.ok && this.detectExpired(result)) {
       if (this.opts.debug)
         console.error(`[session:${this.carrier.name}] expiry detected, re-warming`);
       this._warm = false;
       await this.ensureWarm(num);
-      result = await this.carrier.runQuery(this.page!, num);
+      result = await this.carrier.runQuery(this.ctx(), num);
     }
     return result;
+  }
+
+  /** Pack page + request into the QueryCtx the carrier expects. */
+  private ctx(): QueryCtx {
+    return { page: this.page!, request: this.context!.request };
   }
 
   async close(): Promise<void> {

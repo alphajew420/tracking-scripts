@@ -1,5 +1,5 @@
 import type { Page } from "playwright";
-import type { Carrier } from "../session.ts";
+import type { Carrier, QueryCtx } from "../session.ts";
 import type { Event, ScrapeResult, Status } from "../types.ts";
 
 const TRACK_URL = (n: string) =>
@@ -52,13 +52,14 @@ function buildResult(status: number, json: any, num: string): ScrapeResult {
 }
 
 /**
- * After warm, call /Track/GetStatus directly via in-page XHR. UPS's Akamai
- * SDK hooks window.fetch but not XMLHttpRequest, so XHR slips through.
+ * Raw POST via the warm context. UPS' Akamai SDK hooks window.fetch but
+ * not server-issued requests, so request.post() (which bypasses every
+ * page-level hook) slips through cleanly.
+ *
+ * We still pull the XSRF cookie from the page context manually so we can
+ * send it in the `x-xsrf-token` header — UPS' API enforces double-submit.
  */
-async function runQuery(page: Page, num: string): Promise<ScrapeResult> {
-  // UPS stores the anti-forgery token in cookie X-XSRF-TOKEN-ST (set on
-  // .ups.com domain, so document.cookie may not see it depending on the
-  // current page origin — pull via context.cookies()).
+async function runQuery({ page, request }: QueryCtx, num: string): Promise<ScrapeResult> {
   const cookies = await page.context().cookies();
   const xsrf =
     cookies.find((c) => c.name === "X-XSRF-TOKEN-ST")?.value ??
@@ -68,27 +69,20 @@ async function runQuery(page: Page, num: string): Promise<ScrapeResult> {
     return { ok: false, error: "UPS: XSRF token cookie missing (warm may have failed)" };
   }
 
-  const raw = await page.evaluate(
-    (args: { url: string; num: string; xsrf: string }) =>
-      new Promise<{ status: number; body: string }>((resolve) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", `${args.url}?loc=en_US`, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.setRequestHeader("Accept", "application/json, text/plain, */*");
-        xhr.setRequestHeader("x-xsrf-token", args.xsrf);
-        xhr.withCredentials = true;
-        xhr.onload = () => resolve({ status: xhr.status, body: xhr.responseText });
-        xhr.onerror = () => resolve({ status: 0, body: "" });
-        xhr.send(JSON.stringify({ Locale: "en_US", TrackingNumber: [args.num] }));
-      }),
-    { url: API_URL, num, xsrf },
-  );
+  const resp = await request.post(`${API_URL}?loc=en_US`, {
+    failOnStatusCode: false,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json, text/plain, */*",
+      "x-xsrf-token": xsrf,
+    },
+    data: { Locale: "en_US", TrackingNumber: [num] },
+  });
 
-  if (raw.status === 0) return { ok: false, error: "UPS: XHR error (network or CORS)" };
-
+  const status = resp.status();
   let json: any = null;
-  try { json = raw.body ? JSON.parse(raw.body) : null; } catch { /* */ }
-  return buildResult(raw.status, json, num);
+  try { json = await resp.json(); } catch { /* */ }
+  return buildResult(status, json, num);
 }
 
 export const upsCarrier: Carrier = {

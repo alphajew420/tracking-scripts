@@ -1,5 +1,5 @@
 import type { Page } from "playwright";
-import type { Carrier } from "../session.ts";
+import type { Carrier, QueryCtx } from "../session.ts";
 import type { Event, ScrapeResult, Status } from "../types.ts";
 
 const TRACK_URL = (n: string) =>
@@ -69,8 +69,8 @@ function buildResult(status: number, json: any, num: string): ScrapeResult {
  *  - warm: load the tracking page; during load FedEx fires
  *      POST api.fedex.com/auth/oauth/v2/token → JSON {access_token}
  *    Our setupPage listener captures the bearer token from that response.
- *  - runQuery: send our own XHR to /track/v2/shipments with the bearer header.
- *    XHR slips past the Akamai fetch hook.
+ *  - runQuery: raw POST to /track/v2/shipments with the bearer header,
+ *    using ctx.request — no page lifecycle side effects.
  */
 export function createFedexCarrier(): Carrier {
   let bearerToken: string | null = null;
@@ -102,9 +102,9 @@ export function createFedexCarrier(): Carrier {
       }
     },
 
-    async runQuery(page: Page, num: string): Promise<ScrapeResult> {
-      // If the page landed on /no-results-found (because the warm number was
-      // invalid), the XHR-from-that-origin fails CORS. Surface it directly.
+    async runQuery({ page, request }: QueryCtx, num: string): Promise<ScrapeResult> {
+      // If the page landed on /no-results-found (because the warm number
+      // was invalid), the API also returns nothing useful. Surface it.
       if (page.url().includes("no-results-found")) {
         return { ok: false, error: "FedEx: no results found (tracking number invalid)" };
       }
@@ -116,49 +116,40 @@ export function createFedexCarrier(): Carrier {
         console.error(`[fedex] token len=${bearerToken.length}`);
       }
 
-      const raw = await page.evaluate(
-        (args: { url: string; num: string; token: string }) =>
-          new Promise<{ status: number; body: string }>((resolve) => {
-            const body = {
-              appType: "WTRK",
-              appDeviceType: "DESKTOP",
-              uniqueKey: "",
-              processingParameters: {},
-              trackingInfo: [
-                {
-                  trackNumberInfo: {
-                    trackingNumber: args.num,
-                    trackingQualifier: "",
-                    trackingCarrier: "",
-                  },
-                },
-              ],
-            };
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", args.url, true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.setRequestHeader("Authorization", `Bearer ${args.token}`);
-            xhr.setRequestHeader("x-clientid", "WTRK");
-            xhr.setRequestHeader("x-locale", "en_US");
-            xhr.withCredentials = true;
-            xhr.onload = () => resolve({ status: xhr.status, body: xhr.responseText });
-            xhr.onerror = () => resolve({ status: 0, body: "" });
-            xhr.send(JSON.stringify(body));
-          }),
-        { url: API_URL, num, token: bearerToken },
-      );
+      const resp = await request.post(API_URL, {
+        failOnStatusCode: false,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${bearerToken}`,
+          "x-clientid": "WTRK",
+          "x-locale": "en_US",
+        },
+        data: {
+          appType: "WTRK",
+          appDeviceType: "DESKTOP",
+          uniqueKey: "",
+          processingParameters: {},
+          trackingInfo: [
+            {
+              trackNumberInfo: {
+                trackingNumber: num,
+                trackingQualifier: "",
+                trackingCarrier: "",
+              },
+            },
+          ],
+        },
+      });
 
-      if (raw.status === 0) {
-        return { ok: false, error: "FedEx: XHR error (network or CORS)" };
-      }
-      if (raw.status === 401) {
+      const status = resp.status();
+      if (status === 401) {
         bearerToken = null;
         return { ok: false, error: "FedEx HTTP 401 (token expired)" };
       }
 
       let json: any = null;
-      try { json = raw.body ? JSON.parse(raw.body) : null; } catch { /* */ }
-      return buildResult(raw.status, json, num);
+      try { json = await resp.json(); } catch { /* */ }
+      return buildResult(status, json, num);
     },
 
     isExpired: (r) =>

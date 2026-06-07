@@ -1,5 +1,5 @@
 import type { Page } from "playwright";
-import type { Carrier } from "../session.ts";
+import type { Carrier, QueryCtx } from "../session.ts";
 import type { Event, ScrapeResult, Status, Track } from "../types.ts";
 
 const TRACK_URL = (n: string) =>
@@ -44,35 +44,33 @@ function normalize(json: any, trackingNumber: string): Track {
 }
 
 /**
- * Lightweight path: after warm, call DHL's /int-verfolgen/data/search endpoint
- * directly via in-page fetch (reuses the warm session's Akamai cookies + TLS).
- * Crucial detail: redirect: "manual" so we see the 303 (not-found) instead of
- * silently following it to an HTML error page.
+ * Raw HTTP request via the warm context. Cookies + Chrome TLS fingerprint
+ * carry over from the goto'd page, but no SPA chrome re-runs. The /int-
+ * verfolgen/data/search endpoint returns JSON directly.
+ *
+ * `maxRedirects: 0` so we see the 303 (tracking-not-found) instead of
+ * silently following it to a generic HTML error page.
  */
-async function runQuery(page: Page, num: string): Promise<ScrapeResult> {
-  const raw = await page.evaluate(async (u: string) => {
-    const r = await fetch(u, { credentials: "include", redirect: "manual" });
-    const ct = r.headers.get("content-type") || "";
-    // r.type === "opaqueredirect" when fetch hits a 3xx with redirect: "manual"
-    return {
-      status: r.status,
-      type: r.type,
-      contentType: ct,
-      body: r.type === "opaqueredirect" ? "" : await r.text(),
-    };
-  }, SEARCH_URL(num));
+async function runQuery({ request }: QueryCtx, num: string): Promise<ScrapeResult> {
+  const resp = await request.get(SEARCH_URL(num), {
+    failOnStatusCode: false,
+    maxRedirects: 0,
+  });
 
-  if (raw.type === "opaqueredirect" || (raw.status >= 300 && raw.status < 400)) {
+  const status = resp.status();
+  if (status >= 300 && status < 400) {
     return { ok: false, error: "DHL: tracking number not found" };
   }
-  if (raw.status === 404) return { ok: false, error: "DHL: tracking number not found" };
-  if (raw.status !== 200) return { ok: false, error: `DHL HTTP ${raw.status}` };
-  if (!raw.contentType.includes("json")) {
+  if (status === 404) return { ok: false, error: "DHL: tracking number not found" };
+  if (status !== 200) return { ok: false, error: `DHL HTTP ${status}` };
+
+  const ct = resp.headers()["content-type"] || "";
+  if (!ct.includes("json")) {
     return { ok: false, error: "DHL: session expired (got HTML)" };
   }
 
   let json: any;
-  try { json = JSON.parse(raw.body); } catch {
+  try { json = await resp.json(); } catch {
     return { ok: false, error: "DHL: invalid JSON" };
   }
 

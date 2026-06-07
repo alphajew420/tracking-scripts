@@ -1,5 +1,4 @@
-import type { Page } from "playwright";
-import type { Carrier } from "../session.ts";
+import type { Carrier, QueryCtx } from "../session.ts";
 import type { Event, ScrapeResult, Status } from "../types.ts";
 
 const URL_FOR = (n: string) =>
@@ -19,33 +18,34 @@ function classify(desc: string): Status {
 /**
  * DHL Express's modern site is a SPA — for invalid numbers it renders the
  * "not successful" message inline without firing an obvious tracking XHR.
- * Strategy: navigate via in-page fetch to grab the page HTML, parse it for
- * either the error message or the event timeline.
+ * Strategy: raw GET to grab the page HTML, parse it for either the error
+ * message or the event timeline.
  *
  * If a stable JSON XHR is identified later we can swap to that — the strategy
  * lives behind the Carrier interface.
  */
-async function runQuery(page: Page, num: string): Promise<ScrapeResult> {
-  const raw = await page.evaluate(async (u: string) => {
-    const r = await fetch(u, { credentials: "include", redirect: "follow" });
-    return { status: r.status, body: await r.text() };
-  }, URL_FOR(num));
+async function runQuery({ page, request }: QueryCtx, num: string): Promise<ScrapeResult> {
+  const resp = await request.get(URL_FOR(num), { failOnStatusCode: false });
 
-  if (raw.status !== 200) {
-    return { ok: false, error: `DHL Express HTTP ${raw.status}` };
+  const status = resp.status();
+  if (status !== 200) {
+    return { ok: false, error: `DHL Express HTTP ${status}` };
   }
-  if (raw.body.includes("Access Denied")) {
+  const body = await resp.text();
+  if (body.includes("Access Denied")) {
     return { ok: false, error: "DHL Express: Access Denied (session expired)" };
   }
   if (
     /tracking attempt was not successful|no shipment found|please check your tracking number/i.test(
-      raw.body,
+      body,
     )
   ) {
     return { ok: false, error: "DHL Express: tracking number not found" };
   }
 
-  // Parse events from the SPA-rendered HTML, if present.
+  // Parse events from the SPA-rendered HTML inside the browser so we
+  // avoid pulling in an HTML parser dep on the Node side. IPC only
+  // ships the response body string, no extra fetches.
   const parsed = await page.evaluate((html: string) => {
     const doc = new DOMParser().parseFromString(html, "text/html");
     const out: Array<{ date: string | null; location: string; description: string }> = [];
@@ -61,15 +61,15 @@ async function runQuery(page: Page, num: string): Promise<ScrapeResult> {
         "[class*='description'], [class*='status']",
       );
       out.push({
-        date: dateEl ? (dateEl as HTMLElement).textContent.trim() : null,
-        location: locEl ? (locEl as HTMLElement).textContent.trim() : "",
+        date: dateEl ? (dateEl as HTMLElement).textContent?.trim() ?? null : null,
+        location: locEl ? (locEl as HTMLElement).textContent?.trim() ?? "" : "",
         description: descEl
-          ? (descEl as HTMLElement).textContent.trim()
+          ? (descEl as HTMLElement).textContent?.trim() ?? ""
           : text.slice(0, 200),
       });
     }
     return out;
-  }, raw.body);
+  }, body);
 
   if (parsed.length === 0) {
     return {

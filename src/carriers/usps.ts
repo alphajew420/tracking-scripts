@@ -1,5 +1,4 @@
-import type { Page } from "playwright";
-import type { Carrier } from "../session.ts";
+import type { Carrier, QueryCtx } from "../session.ts";
 import type { Event, ScrapeResult, Status } from "../types.ts";
 
 const URL_FOR = (n: string) =>
@@ -20,23 +19,22 @@ function classify(desc: string): Status {
   return "unknown";
 }
 
-async function runQuery(page: Page, num: string): Promise<ScrapeResult> {
-  const url = URL_FOR(num);
+async function runQuery({ page, request }: QueryCtx, num: string): Promise<ScrapeResult> {
+  // Raw HTTP request via the warm context — same Akamai cookies + Chrome TLS
+  // fingerprint, but bypasses USPS' React SPA so we don't re-pay the
+  // 1+ MB of chrome/JS bundles per query. Just the 70 KB tracking HTML.
+  const resp = await request.get(URL_FOR(num), { failOnStatusCode: false });
 
-  // In-page fetch reuses Akamai cookies + Chrome TLS fingerprint.
-  const raw = await page.evaluate(async (u: string) => {
-    const r = await fetch(u, { credentials: "include", redirect: "follow" });
-    return { status: r.status, body: await r.text() };
-  }, url);
-
-  if (raw.status !== 200) {
-    return { ok: false, error: `USPS fetch HTTP ${raw.status}` };
+  if (resp.status() !== 200) {
+    return { ok: false, error: `USPS fetch HTTP ${resp.status()}` };
   }
-  if (raw.body.includes("Access Denied") || raw.body.includes("edgesuite")) {
+  const body = await resp.text();
+  if (body.includes("Access Denied") || body.includes("edgesuite")) {
     return { ok: false, error: "USPS: Access Denied (Akamai session expired)" };
   }
 
-  // Parse inside the browser via DOMParser — no extra Node deps required.
+  // Parse inside the browser via DOMParser — keeps Node free of an HTML
+  // parser dep, and the IPC roundtrip is tiny (just the response body).
   type RawEvent = { date: string | null; location: string; description: string };
   const parsed = await page.evaluate((html: string): {
     notAvailable: boolean;
@@ -46,7 +44,7 @@ async function runQuery(page: Page, num: string): Promise<ScrapeResult> {
 
     const notAvailable = !!Array.from(
       doc.querySelectorAll(".banner-header"),
-    ).find((el) => /Not Available/i.test((el as HTMLElement).textContent));
+    ).find((el) => /Not Available/i.test((el as HTMLElement).textContent ?? ""));
 
     const events: RawEvent[] = [];
     const stepSelectors = [
@@ -68,16 +66,16 @@ async function runQuery(page: Page, num: string): Promise<ScrapeResult> {
           "[class*='description'], [class*='status'], [class*='Status']",
         );
         events.push({
-          date: dateEl ? (dateEl as HTMLElement).textContent.trim() : null,
-          location: locEl ? (locEl as HTMLElement).textContent.trim() : "",
+          date: dateEl ? (dateEl as HTMLElement).textContent?.trim() ?? null : null,
+          location: locEl ? (locEl as HTMLElement).textContent?.trim() ?? "" : "",
           description: descEl
-            ? (descEl as HTMLElement).textContent.trim()
+            ? (descEl as HTMLElement).textContent?.trim() ?? ""
             : text.slice(0, 200),
         });
       }
     }
     return { notAvailable, events };
-  }, raw.body);
+  }, body);
 
   if (parsed.notAvailable && parsed.events.length === 0) {
     return {
