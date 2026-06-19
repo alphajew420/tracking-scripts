@@ -60,15 +60,20 @@ services:
 
   worker:
     image: tracking-scripts-app:latest
-    command: ["npm", "run", "worker"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["xvfb-run", "-a", "npm", "run", "worker"]
     environment:
       NODE_ENV: production
       DATABASE_URL: postgres://trackified:trackified@postgres:5432/trackified
       REDIS_URL: redis://redis:6379
-      HEADLESS: "true"
+      HEADLESS: "false"
+      BROWSER_CHANNEL_FEDEX: ${BROWSER_CHANNEL_FEDEX:-bundled}
       WORKER_CONCURRENCY: 2
       SESSION_MAX_AGE_MS: 3600000
       SESSION_MAX_USES: 250
+      PROXY_MODE: ${PROXY_MODE:-}
       PROXY_DEFAULT: ${PROXY_DEFAULT:-}
       PROXY_DEFAULT_USERNAME: ${PROXY_DEFAULT_USERNAME:-}
       PROXY_DEFAULT_USERNAME_TEMPLATE: ${PROXY_DEFAULT_USERNAME_TEMPLATE:-}
@@ -87,6 +92,12 @@ services:
       PROXY_FEDEX_USERNAME: ${PROXY_FEDEX_USERNAME:-}
       PROXY_FEDEX_USERNAME_TEMPLATE: ${PROXY_FEDEX_USERNAME_TEMPLATE:-}
       PROXY_FEDEX_PASSWORD: ${PROXY_FEDEX_PASSWORD:-}
+      PROXY_FEDEX_MODE: ${PROXY_FEDEX_MODE:-extension}
+      FEDEX_PROFILE_DIR: ${FEDEX_PROFILE_DIR:-/tmp/trackified-fedex-profile}
+      FEDEX_WARM_TIMEOUT_MS: ${FEDEX_WARM_TIMEOUT_MS:-180000}
+      FEDEX_READY_TIMEOUT_MS: ${FEDEX_READY_TIMEOUT_MS:-45000}
+    volumes:
+      - browser-profiles:/tmp
     depends_on:
       postgres:
         condition: service_healthy
@@ -147,3 +158,4 @@ services:
 volumes:
   postgres-data:
   redis-data:
+  browser-profiles:

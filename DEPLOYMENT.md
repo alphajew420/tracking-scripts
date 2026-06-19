@@ -86,6 +86,21 @@ PROXY_FEDEX=http://fedex-proxy:port docker compose up -d
 
 Warm navigation and all `page.evaluate(fetch)` queries stay inside the same browser context and proxy.
 
+FedEx should run through the worker sidecar with Chrome extension proxy mode. This matches browser proxy extensions more closely than Playwright's native proxy option and lets one warmed browser process handle many queued FedEx trackings:
+
+```bash
+PROXY_FEDEX=http://fedex-proxy:port
+PROXY_FEDEX_USERNAME=<username>
+PROXY_FEDEX_PASSWORD=<password>
+PROXY_FEDEX_MODE=extension
+BROWSER_CHANNEL_FEDEX=bundled
+HEADLESS=false
+SESSION_MAX_AGE_MS=3600000
+SESSION_MAX_USES=250
+```
+
+The Compose worker runs under `xvfb-run` so `HEADLESS=false` works on a VPS. Do not run FedEx lookups in the API process; `POST /v1/trackings`, `/v1/trackings/bulk`, and `/v1/trackings/{id}/retrack` enqueue jobs, and the worker keeps the browser session hot.
+
 ## Current Host Note
 
 During setup, Docker hit a disk-full/containerd I/O error while writing browser image layers. The existing stack continued to serve:

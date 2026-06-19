@@ -6,6 +6,7 @@ import { fedexCarrier } from "../carriers/fedex.ts";
 import { upsCarrier } from "../carriers/ups.ts";
 import { uspsCarrier } from "../carriers/usps.ts";
 import { proxyForCarrier } from "../proxy.ts";
+import type { ScrapeResult } from "../types.ts";
 
 const handCoded: Record<string, () => Carrier> = {
   dhl: () => dhlCarrier,
@@ -28,8 +29,17 @@ interface PooledSession {
 const maxAgeMs = Number(process.env.SESSION_MAX_AGE_MS ?? 60 * 60_000);
 const maxUses = Number(process.env.SESSION_MAX_USES ?? 250);
 
+function browserChannel(carrierId: string): "chrome" | "msedge" | undefined {
+  const key = `BROWSER_CHANNEL_${carrierId.toUpperCase().replaceAll("-", "_")}`;
+  const value = process.env[key] ?? process.env.BROWSER_CHANNEL;
+  if (value === "chrome" || value === "msedge") return value;
+  if (value === "bundled" || value === "chromium" || value === "") return undefined;
+  return carrierId === "ups" || carrierId === "fedex" ? "chrome" : undefined;
+}
+
 export class SessionPool {
   private sessions = new Map<string, PooledSession>();
+  private locks = new Map<string, Promise<unknown>>();
 
   async get(carrierId: string): Promise<TrackingSession> {
     const existing = this.sessions.get(carrierId);
@@ -42,7 +52,7 @@ export class SessionPool {
     const factory = handCoded[carrierId];
     if (!factory) throw new Error(`unsupported carrier: ${carrierId}`);
     const session = new TrackingSession(factory(), {
-      channel: carrierId === "ups" || carrierId === "fedex" ? "chrome" : undefined,
+      channel: browserChannel(carrierId),
       headless: process.env.HEADLESS !== "false",
       debug: process.env.DEBUG_SCRAPES === "1",
       proxy: proxyForCarrier(carrierId),
@@ -65,6 +75,35 @@ export class SessionPool {
     });
     this.sessions.set(carrierId, { session, createdAt: Date.now(), uses: 1 });
     return session;
+  }
+
+  async track(carrierId: string, trackingNumber: string): Promise<ScrapeResult> {
+    return this.withCarrierLock(carrierId, async () => {
+      const session = await this.get(carrierId);
+      const result = await session.track(trackingNumber);
+      if (!result.ok && /Target page|context or browser|Browser has been closed/i.test(result.error ?? "")) {
+        await this.invalidate(carrierId);
+      }
+      return result;
+    });
+  }
+
+  private async withCarrierLock<T>(carrierId: string, fn: () => Promise<T>): Promise<T> {
+    const previous = this.locks.get(carrierId) ?? Promise.resolve();
+    let release!: () => void;
+    const current = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const chain = previous.then(() => current);
+    this.locks.set(carrierId, chain);
+
+    await previous.catch(() => {});
+    try {
+      return await fn();
+    } finally {
+      release();
+      if (this.locks.get(carrierId) === chain) this.locks.delete(carrierId);
+    }
   }
 
   async invalidate(carrierId: string): Promise<void> {

@@ -34,8 +34,7 @@ async function run() {
       const existing = existingResult.rows[0];
       if (!existing) throw new Error("tracking not found");
 
-      const session = await poolSessions.get(carrier);
-      const result = await session.track(job.data.tracking_number);
+      const result = await poolSessions.track(carrier, job.data.tracking_number);
 
       if (!result.ok || !result.track) {
         await query(
