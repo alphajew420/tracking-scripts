@@ -44,7 +44,7 @@ export {
 
 // Hand-coded scraper carriers.
 export { dhlCarrier } from "./carriers/dhl.ts";
-export { dhlExpressCarrier } from "./carriers/dhl-express.ts";
+export { dhlExpressCarrier, createDhlExpressCarrier } from "./carriers/dhl-express.ts";
 export { fedexCarrier, createFedexCarrier } from "./carriers/fedex.ts";
 export { upsCarrier } from "./carriers/ups.ts";
 export { uspsCarrier } from "./carriers/usps.ts";

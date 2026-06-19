@@ -56,7 +56,7 @@ src/
   carriers/
     usps.ts            scraper (fetch via page.evaluate, parse via DOMParser)
     dhl.ts             scraper (JSON XHR to /int-verfolgen/data/search)
-    dhl-express.ts     scraper (SPA HTML parse)
+    dhl-express.ts     scraper (DHL /utapi JSON endpoint after browser challenge warm)
     ups.ts             scraper (XHR POST with XSRF cookie, requires system Chrome)
     fedex.ts           scraper (capture bearer token during warm, then XHR POST)
     configs/           JSON carrier adapter definitions
