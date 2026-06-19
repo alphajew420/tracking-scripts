@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit",
     "proxy:diagnose": "tsx src/tools/proxy-diagnostics.ts",
     "proxy:ip-stability": "tsx src/tools/proxy-ip-stability.ts",
+    "probe:bandwidth-fedex": "tsx probes/bandwidth_fedex_warm.ts",
     "probe:bandwidth-usps": "tsx probes/bandwidth_usps_warm.ts",
     "probe:bandwidth-usps-cold": "tsx probes/bandwidth_usps.ts",
     "postinstall": "patchright install chromium"
