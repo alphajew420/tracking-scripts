@@ -1,0 +1,19 @@
+{
+  "id": "yodel",
+  "displayName": "Yodel",
+  "mode": "scraper",
+  "warmUrl": "https://www.yodel.co.uk/track/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.yodel.co.uk/track/{n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "exception|delay|unable|returned" },
+    { "status": "pickup", "pattern": "pickup|collect" },
+    { "status": "in_transit", "pattern": "transit|depot|arrived|departed|courier" }
+  ],
+  "trackingNumberPattern": "^[A-Z0-9]{8,20}$",
+  "regions": ["GB"],
+  "tier": 1
+}

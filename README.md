@@ -1,6 +1,6 @@
 # tracking-scripts
 
-Carrier tracking library + CLI + bandwidth probes for **UPS, FedEx, DHL, DHL Express, and USPS**. Browser-driven scrapers and official-API clients side by side, behind one `TrackingSession` interface.
+Carrier tracking library + CLI + bandwidth probes for **UPS, FedEx, DHL, DHL Express, USPS**, and config-driven carrier adapters. All carrier lookups are browser-driven scrapers behind one `TrackingSession` interface.
 
 Extracted from the Shippified codebase so the carrier logic can be vendored, audited, or shipped standalone.
 
@@ -16,17 +16,12 @@ System Chrome (`channel: "chrome"`) is required for UPS scraper (reCAPTCHA flags
 ## CLI
 
 ```bash
-# scraper mode (no credentials)
 npm run track -- usps 9400111899223816042167
 npm run track -- ups 1Z999AA10123456784
 npm run track -- fedex 123456789012
 npm run track -- dhl 00340434292135100186
 npm run track -- dhl-express 1234567890
-
-# API mode (credentials in env required)
-DHL_API_KEY=...      npm run track -- dhl 00340434292135100186 --api
-UPS_CLIENT_ID=...    UPS_CLIENT_SECRET=...    npm run track -- ups 1Z... --api
-FEDEX_CLIENT_ID=...  FEDEX_CLIENT_SECRET=...  npm run track -- fedex 12345... --api
+npm run track -- detect 1Z999AA10123456784
 
 # misc flags
 --json     # full ScrapeResult as JSON
@@ -34,46 +29,37 @@ FEDEX_CLIENT_ID=...  FEDEX_CLIENT_SECRET=...  npm run track -- fedex 12345... --
 --chrome   # force system Chrome (auto-on for scraper UPS)
 ```
 
-USPS has no free tracking API — scraper only.
-
 ## Library
 
 ```ts
-import { TrackingSession, uspsCarrier, createUpsApiCarrier } from "tracking-scripts";
+import { TrackingSession, uspsCarrier } from "tracking-scripts";
 
-// Scraper:
-const s1 = new TrackingSession(uspsCarrier);
-const r1 = await s1.track("9400111899223816042167");
-await s1.close();
-
-// Official API:
-const s2 = new TrackingSession(
-  createUpsApiCarrier({ clientId: "...", clientSecret: "..." })
-);
-const r2 = await s2.track("1Z...");
-await s2.close();
+const session = new TrackingSession(uspsCarrier);
+const result = await session.track("9400111899223816042167");
+await session.close();
 ```
 
-A single warm `TrackingSession` can run many queries — re-warming only happens on detected expiry (Akamai cookie aged out, OAuth token rejected, etc.).
+A single warm `TrackingSession` can run many queries. Re-warming only happens on detected expiry, such as an aged-out Akamai cookie.
 
 ## Architecture
 
 ```
 src/
   types.ts         Status, Event, Track, ScrapeResult
-  session.ts       TrackingSession + ScraperCarrier / ApiCarrier interfaces
+  session.ts       TrackingSession + ScraperCarrier interface
   cli.ts           `npm run track` entry
   index.ts         public exports
+  server.ts        REST API skeleton
+  detect.ts        tracking-number carrier detection
+  config/
+    adapter.ts         config-driven scraper adapter factory
   carriers/
     usps.ts            scraper (fetch via page.evaluate, parse via DOMParser)
     dhl.ts             scraper (JSON XHR to /int-verfolgen/data/search)
     dhl-express.ts     scraper (SPA HTML parse)
     ups.ts             scraper (XHR POST with XSRF cookie, requires system Chrome)
     fedex.ts           scraper (capture bearer token during warm, then XHR POST)
-    dhl-api.ts         API client (DHL_API_KEY)
-    dhl-express-api.ts thin wrapper over dhl-api
-    ups-api.ts         API client (UPS_CLIENT_ID + UPS_CLIENT_SECRET, OAuth)
-    fedex-api.ts       API client (FEDEX_CLIENT_ID + FEDEX_CLIENT_SECRET, OAuth)
+    configs/           JSON carrier adapter definitions
 ```
 
 ### How the scrapers stay light
@@ -88,9 +74,9 @@ Heavy resource types (`image`, `font`, `media`, `stylesheet`) and known ad/track
 |---|---|---|
 | Cold `page.goto()` each time | 3.15 MB | Original `bandwidth_usps.ts` baseline |
 | Warm + `page.evaluate(fetch)` (current production) | ~1.22 MB | SPA re-renders + analytics fire per call |
-| Warm + `context.request.get()` (raw) | ~70 KB | Bypasses page lifecycle entirely — 18× cheaper |
+| Warm + tightened route blocker | ~70-100 KB target | Keeps only the response path and anti-bot pings |
 
-The third mode is exercised in `probes/bandwidth_usps_warm.ts` with `MODE=raw`. The carrier scraper itself still uses `page.evaluate(fetch)` because that path is what Akamai signs off on; a future refactor could switch to `context.request` once we verify it doesn't break the carriers' anti-bot detection.
+The carrier scraper uses `page.evaluate(fetch)` because that path is what Akamai signs off on. `context.request` uses Node's network stack and should not be used for anti-bot-sensitive carrier data fetches.
 
 ## Probes
 

@@ -1,0 +1,19 @@
+{
+  "id": "la-poste",
+  "displayName": "La Poste",
+  "mode": "scraper",
+  "warmUrl": "https://www.laposte.fr/outils/suivre-vos-envois?code={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.laposte.fr/outils/suivre-vos-envois?code={n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "livr|delivered" },
+    { "status": "exception", "pattern": "incident|retour|unable|delay" },
+    { "status": "pickup", "pattern": "retrait|pickup" },
+    { "status": "in_transit", "pattern": "transit|achemin|arriv|depart|processed" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}FR$|^\\d[A-Z]\\d{11}$",
+  "regions": ["FR"],
+  "tier": 1
+}

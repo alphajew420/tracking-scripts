@@ -1,0 +1,19 @@
+{
+  "id": "dpd-uk",
+  "displayName": "DPD UK",
+  "mode": "scraper",
+  "warmUrl": "https://www.dpd.co.uk/apps/tracking/?reference={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.dpd.co.uk/apps/tracking/?reference={n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "exception|delay|unable|returned" },
+    { "status": "pickup", "pattern": "pickup|collection" },
+    { "status": "in_transit", "pattern": "in transit|departed|arrived|depot|out for delivery" }
+  ],
+  "trackingNumberPattern": "^\\d{14}$|^[A-Z0-9]{10,16}$",
+  "regions": ["GB"],
+  "tier": 1
+}

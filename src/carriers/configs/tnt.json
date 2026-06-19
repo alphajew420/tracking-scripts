@@ -1,0 +1,19 @@
+{
+  "id": "tnt",
+  "displayName": "TNT",
+  "mode": "scraper",
+  "warmUrl": "https://www.tnt.com/express/en_us/site/shipping-tools/tracking.html?searchType=con&cons={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.tnt.com/express/en_us/site/shipping-tools/tracking.html?searchType=con&cons={n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "exception|delay|unable|returned" },
+    { "status": "pickup", "pattern": "pickup|collection" },
+    { "status": "in_transit", "pattern": "transit|arrived|departed|processed|out for delivery" }
+  ],
+  "trackingNumberPattern": "^\\d{8,13}$",
+  "regions": ["GLOBAL"],
+  "tier": 1
+}

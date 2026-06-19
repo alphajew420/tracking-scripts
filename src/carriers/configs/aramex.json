@@ -1,0 +1,19 @@
+{
+  "id": "aramex",
+  "displayName": "Aramex",
+  "mode": "scraper",
+  "warmUrl": "https://www.aramex.com/track/results?ShipmentNumber={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.aramex.com/track/results?ShipmentNumber={n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "exception|delay|held|returned" },
+    { "status": "pickup", "pattern": "pickup|collected" },
+    { "status": "in_transit", "pattern": "transit|arrived|departed|processed|out for delivery" }
+  ],
+  "trackingNumberPattern": "^\\d{10,12}$",
+  "regions": ["GLOBAL"],
+  "tier": 1
+}

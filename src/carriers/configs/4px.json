@@ -1,0 +1,19 @@
+{
+  "id": "4px",
+  "displayName": "4PX",
+  "mode": "scraper",
+  "warmUrl": "https://track.4px.com/query/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://track.4px.com/query/{n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed" },
+    { "status": "exception", "pattern": "exception|delay|returned|failed" },
+    { "status": "pickup", "pattern": "pickup|received" },
+    { "status": "in_transit", "pattern": "transit|arrived|departed|customs|airport" }
+  ],
+  "trackingNumberPattern": "^4PX[A-Z0-9]{10,24}$|^[A-Z0-9]{12,24}$",
+  "regions": ["CN", "GLOBAL"],
+  "tier": 3
+}

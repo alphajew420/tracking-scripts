@@ -1,0 +1,19 @@
+{
+  "id": "china-post",
+  "displayName": "China Post",
+  "mode": "scraper",
+  "warmUrl": "https://www.ems.com.cn/english/queryList?mailNum={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.ems.com.cn/english/queryList?mailNum={n}",
+  "parseHtml": { "events": ".tracking-event, .event, li, tr", "date": "time, .date, td:nth-child(1)", "location": ".location, td:nth-child(3)", "description": ".status, .description, td:nth-child(2)" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed" },
+    { "status": "exception", "pattern": "returned|failed|exception|delay" },
+    { "status": "pickup", "pattern": "pickup|collection" },
+    { "status": "in_transit", "pattern": "arrived|departed|posting|transit|customs" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}CN$",
+  "regions": ["CN"],
+  "tier": 1
+}

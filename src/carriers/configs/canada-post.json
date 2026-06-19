@@ -1,0 +1,19 @@
+{
+  "id": "canada-post",
+  "displayName": "Canada Post",
+  "mode": "scraper",
+  "warmUrl": "https://www.canadapost-postescanada.ca/track-reperage/en#/details/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.canadapost-postescanada.ca/track-reperage/en#/details/{n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "notice|exception|delay|returned" },
+    { "status": "pickup", "pattern": "pickup|available for pick up" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|accepted" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}CA$|^\\d{16}$",
+  "regions": ["CA"],
+  "tier": 1
+}

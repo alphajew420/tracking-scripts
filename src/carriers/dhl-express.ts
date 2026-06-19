@@ -24,14 +24,26 @@ function classify(desc: string): Status {
  * If a stable JSON XHR is identified later we can swap to that — the strategy
  * lives behind the Carrier interface.
  */
-async function runQuery({ page, request }: QueryCtx, num: string): Promise<ScrapeResult> {
-  const resp = await request.get(URL_FOR(num), { failOnStatusCode: false });
+async function runQuery({ page }: QueryCtx, num: string): Promise<ScrapeResult> {
+  const raw = await page.evaluate(async (url: string) => {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    try {
+      const response = await fetch(url, {
+        credentials: "include",
+        redirect: "follow",
+        signal: controller.signal,
+      });
+      return { status: response.status, body: await response.text() };
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }, URL_FOR(num));
 
-  const status = resp.status();
-  if (status !== 200) {
-    return { ok: false, error: `DHL Express HTTP ${status}` };
+  if (raw.status !== 200) {
+    return { ok: false, error: `DHL Express HTTP ${raw.status}` };
   }
-  const body = await resp.text();
+  const body = raw.body;
   if (body.includes("Access Denied")) {
     return { ok: false, error: "DHL Express: Access Denied (session expired)" };
   }

@@ -1,0 +1,19 @@
+{
+  "id": "yunexpress",
+  "displayName": "YunExpress",
+  "mode": "scraper",
+  "warmUrl": "https://www.yuntrack.com/track/detail?id={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.yuntrack.com/track/detail?id={n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed" },
+    { "status": "exception", "pattern": "exception|delay|returned|failed" },
+    { "status": "pickup", "pattern": "pickup|received" },
+    { "status": "in_transit", "pattern": "transit|arrived|departed|customs|airport" }
+  ],
+  "trackingNumberPattern": "^YT\\d{16}$|^YUN[A-Z0-9]{10,20}$",
+  "regions": ["CN", "GLOBAL"],
+  "tier": 3
+}

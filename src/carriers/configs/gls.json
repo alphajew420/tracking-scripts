@@ -1,0 +1,19 @@
+{
+  "id": "gls",
+  "displayName": "GLS",
+  "mode": "scraper",
+  "warmUrl": "https://gls-group.com/GROUP/en/parcel-tracking?match={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://gls-group.com/GROUP/en/parcel-tracking?match={n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "exception|delay|return|unable" },
+    { "status": "pickup", "pattern": "parcel shop|pickup" },
+    { "status": "in_transit", "pattern": "transit|depot|arrived|departed|out for delivery" }
+  ],
+  "trackingNumberPattern": "^[A-Z0-9]{8,20}$",
+  "regions": ["EU"],
+  "tier": 1
+}

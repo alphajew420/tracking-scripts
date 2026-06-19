@@ -1,0 +1,19 @@
+{
+  "id": "australia-post",
+  "displayName": "Australia Post",
+  "mode": "scraper",
+  "warmUrl": "https://auspost.com.au/mypost/track/#/details/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://auspost.com.au/mypost/track/#/details/{n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "exception|delayed|unable|returned" },
+    { "status": "pickup", "pattern": "awaiting collection|collection" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|onboard" }
+  ],
+  "trackingNumberPattern": "^[A-Z0-9]{10,22}$",
+  "regions": ["AU"],
+  "tier": 1
+}

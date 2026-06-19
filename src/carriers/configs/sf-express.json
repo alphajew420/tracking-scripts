@@ -1,0 +1,19 @@
+{
+  "id": "sf-express",
+  "displayName": "SF Express",
+  "mode": "scraper",
+  "warmUrl": "https://www.sf-express.com/chn/en/waybill/waybill-detail/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.sf-express.com/chn/en/waybill/waybill-detail/{n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed" },
+    { "status": "exception", "pattern": "exception|delay|returned|failed" },
+    { "status": "pickup", "pattern": "pickup|collected" },
+    { "status": "in_transit", "pattern": "transit|arrived|departed|customs|out for delivery" }
+  ],
+  "trackingNumberPattern": "^SF\\d{12}$|^\\d{12,15}$",
+  "regions": ["CN", "GLOBAL"],
+  "tier": 2
+}

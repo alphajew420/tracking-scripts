@@ -1,0 +1,19 @@
+{
+  "id": "evri",
+  "displayName": "Evri",
+  "mode": "scraper",
+  "warmUrl": "https://www.evri.com/track-a-parcel?parcel={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.evri.com/track-a-parcel?parcel={n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "exception|delay|unable|returned" },
+    { "status": "pickup", "pattern": "pickup|parcelshop" },
+    { "status": "in_transit", "pattern": "transit|depot|arrived|departed|courier" }
+  ],
+  "trackingNumberPattern": "^H\\d{14,16}$|^\\d{16}$",
+  "regions": ["GB"],
+  "tier": 1
+}

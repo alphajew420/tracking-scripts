@@ -1,8 +1,11 @@
 node_modules/
 dist/
+.next/
+tsconfig.tsbuildinfo
 .env
 .env.*
 .cache/
+.browser-profiles/
 *.log
 .DS_Store
 Thumbs.db

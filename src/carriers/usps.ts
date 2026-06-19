@@ -47,13 +47,19 @@ async function runQuery({ page }: QueryCtx, num: string): Promise<ScrapeResult> 
   type RawEvent = { date: string | null; location: string; description: string };
   const parsed = await page.evaluate((html: string): {
     notAvailable: boolean;
+    verificationRequired: boolean;
     events: RawEvent[];
   } => {
     const doc = new DOMParser().parseFromString(html, "text/html");
+    const pageText = doc.body.textContent ?? "";
 
     const notAvailable = !!Array.from(
       doc.querySelectorAll(".banner-header"),
     ).find((el) => /Not Available/i.test((el as HTMLElement).textContent ?? ""));
+    const verificationRequired =
+      /Enter and submit the send date|Send Date \(MM\/DD\/YYYY\)|To ZIP Code/i.test(
+        pageText,
+      );
 
     const events: RawEvent[] = [];
     const stepSelectors = [
@@ -83,8 +89,15 @@ async function runQuery({ page }: QueryCtx, num: string): Promise<ScrapeResult> 
         });
       }
     }
-    return { notAvailable, events };
+    return { notAvailable, verificationRequired, events };
   }, body);
+
+  if (parsed.verificationRequired) {
+    return {
+      ok: false,
+      error: "USPS: tracking lookup requires send date or destination ZIP",
+    };
+  }
 
   if (parsed.notAvailable && parsed.events.length === 0) {
     return {

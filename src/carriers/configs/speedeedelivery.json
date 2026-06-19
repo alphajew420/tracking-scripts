@@ -1,0 +1,19 @@
+{
+  "id": "speedeedelivery",
+  "displayName": "Spee-Dee Delivery",
+  "mode": "scraper",
+  "warmUrl": "https://speedeedelivery.com/track-a-shipment/?tracking={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://speedeedelivery.com/track-a-shipment/?tracking={n}",
+  "parseHtml": { "events": ".tracking-event, .event, li, tr", "date": "time, .date, td:nth-child(1)", "location": ".location, td:nth-child(3)", "description": ".status, .description, td:nth-child(2)" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "exception|delay|unable|returned" },
+    { "status": "pickup", "pattern": "pickup|accepted" },
+    { "status": "in_transit", "pattern": "transit|facility|arrived|departed|out for delivery" }
+  ],
+  "trackingNumberPattern": "^\\d{10,22}$",
+  "regions": ["US"],
+  "tier": 1
+}

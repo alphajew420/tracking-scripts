@@ -51,15 +51,7 @@ function buildResult(status: number, json: any, num: string): ScrapeResult {
   };
 }
 
-/**
- * Raw POST via the warm context. UPS' Akamai SDK hooks window.fetch but
- * not server-issued requests, so request.post() (which bypasses every
- * page-level hook) slips through cleanly.
- *
- * We still pull the XSRF cookie from the page context manually so we can
- * send it in the `x-xsrf-token` header — UPS' API enforces double-submit.
- */
-async function runQuery({ page, request }: QueryCtx, num: string): Promise<ScrapeResult> {
+async function runQuery({ page }: QueryCtx, num: string): Promise<ScrapeResult> {
   const cookies = await page.context().cookies();
   const xsrf =
     cookies.find((c) => c.name === "X-XSRF-TOKEN-ST")?.value ??
@@ -69,20 +61,34 @@ async function runQuery({ page, request }: QueryCtx, num: string): Promise<Scrap
     return { ok: false, error: "UPS: XSRF token cookie missing (warm may have failed)" };
   }
 
-  const resp = await request.post(`${API_URL}?loc=en_US`, {
-    failOnStatusCode: false,
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json, text/plain, */*",
-      "x-xsrf-token": xsrf,
+  const raw = await page.evaluate(
+    async ({ url, trackingNumber, token }) => {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          credentials: "include",
+          signal: controller.signal,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json, text/plain, */*",
+            "x-xsrf-token": token,
+          },
+          body: JSON.stringify({ Locale: "en_US", TrackingNumber: [trackingNumber] }),
+        });
+        const text = await response.text();
+        return { status: response.status, text };
+      } finally {
+        window.clearTimeout(timeout);
+      }
     },
-    data: { Locale: "en_US", TrackingNumber: [num] },
-  });
+    { url: `${API_URL}?loc=en_US`, trackingNumber: num, token: xsrf },
+  );
 
-  const status = resp.status();
   let json: any = null;
-  try { json = await resp.json(); } catch { /* */ }
-  return buildResult(status, json, num);
+  try { json = JSON.parse(raw.text); } catch { /* */ }
+  return buildResult(raw.status, json, num);
 }
 
 export const upsCarrier: Carrier = {

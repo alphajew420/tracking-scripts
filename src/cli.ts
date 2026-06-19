@@ -4,10 +4,9 @@ import { dhlExpressCarrier } from "./carriers/dhl-express.ts";
 import { fedexCarrier } from "./carriers/fedex.ts";
 import { upsCarrier } from "./carriers/ups.ts";
 import { uspsCarrier } from "./carriers/usps.ts";
-import { createDhlApiCarrier } from "./carriers/dhl-api.ts";
-import { createDhlExpressApiCarrier } from "./carriers/dhl-express-api.ts";
-import { createUpsApiCarrier } from "./carriers/ups-api.ts";
-import { createFedexApiCarrier } from "./carriers/fedex-api.ts";
+import { createConfigCarrier, listCarrierConfigIds } from "./config/adapter.ts";
+import { detectCarrier } from "./detect.ts";
+import { proxyForCarrier } from "./proxy.ts";
 import type { ScrapeResult } from "./types.ts";
 
 const SCRAPER_REGISTRY: Record<string, () => Carrier> = {
@@ -17,14 +16,9 @@ const SCRAPER_REGISTRY: Record<string, () => Carrier> = {
   ups: () => upsCarrier,
   usps: () => uspsCarrier,
 };
-
-const API_REGISTRY: Record<string, () => Carrier> = {
-  dhl: () => createDhlApiCarrier(),
-  "dhl-express": () => createDhlExpressApiCarrier(),
-  fedex: () => createFedexApiCarrier(),
-  ups: () => createUpsApiCarrier(),
-  // No usps: official tracking API is paid.
-};
+for (const id of listCarrierConfigIds()) {
+  SCRAPER_REGISTRY[id] ??= () => createConfigCarrier(id);
+}
 
 process.on("unhandledRejection", (err: any) => {
   const msg = String(err?.message ?? err);
@@ -33,18 +27,17 @@ process.on("unhandledRejection", (err: any) => {
 });
 
 function usage(): never {
-  console.error(`usage: track <carrier> <tracking-number> [<num> ...] [--api] [--json] [--debug] [--chrome]
+  console.error(`usage: track <carrier> <tracking-number> [<num> ...] [--json] [--debug] [--chrome]
+       track detect <tracking-number>
 
-  carriers (scraper):  ${Object.keys(SCRAPER_REGISTRY).join(", ")}
-  carriers (--api):    ${Object.keys(API_REGISTRY).join(", ")}   (USPS Tracking API is paid — scraper only)
+  carriers:  ${Object.keys(SCRAPER_REGISTRY).join(", ")}
 
-  --api      use the official carrier API instead of scraping. Requires creds:
-             DHL_API_KEY, UPS_CLIENT_ID/SECRET, FEDEX_CLIENT_ID/SECRET.
   --json     print full JSON result
   --debug    verbose logging
   --chrome   force system Chrome (auto-on for scraper UPS)
+  --headless run browser without a visible window
 
-  multiple tracking numbers reuse one warm session (scraper mode only).`);
+  multiple tracking numbers reuse one warm scraper session.`);
   process.exit(2);
 }
 
@@ -79,33 +72,51 @@ async function main() {
   if (positional.length < 2) usage();
   const [carrierKey, ...numbers] = positional;
 
-  const useApi = flags.has("--api");
-  const registry = useApi ? API_REGISTRY : SCRAPER_REGISTRY;
-  const make = registry[carrierKey];
+  if (carrierKey === "detect") {
+    const candidates = detectCarrier(numbers[0]!);
+    console.log(JSON.stringify({ trackingNumber: numbers[0], candidates }, null, 2));
+    return;
+  }
+
+  const make = SCRAPER_REGISTRY[carrierKey];
   if (!make) {
-    if (useApi && carrierKey === "usps") {
-      console.error("USPS tracking has no free API — drop --api to use the scraper.");
-    } else {
-      console.error(`unknown carrier${useApi ? " (in API mode)" : ""}: ${carrierKey}`);
-    }
+    console.error(`unknown carrier: ${carrierKey}`);
     usage();
   }
 
   const debug = flags.has("--debug");
   const asJson = flags.has("--json");
-  // Scraper UPS needs system Chrome to clear reCAPTCHA.
+  // Some carrier sites behave differently in bundled automation browsers.
   const channel: "chrome" | undefined =
-    !useApi && (flags.has("--chrome") || carrierKey === "ups") ? "chrome" : undefined;
+    flags.has("--chrome") || carrierKey === "ups" || carrierKey === "fedex"
+      ? "chrome"
+      : undefined;
   // Akamai's sensor.js detects headless Chrome on USPS / DHL / FedEx. Default
   // scrapers to headed mode; the user can opt back into headless with --headless
-  // if their stealth fingerprint is good enough (or for API mode where the
-  // browser never opens).
-  const headless = useApi ? true : flags.has("--headless");
+  // if their stealth fingerprint is good enough.
+  const headless = flags.has("--headless");
 
   const session = new TrackingSession(make(), {
     debug,
     channel,
     headless,
+    proxy: proxyForCarrier(carrierKey),
+    proxyMode:
+      process.env[`PROXY_${carrierKey.toUpperCase().replaceAll("-", "_")}_MODE`] === "extension" ||
+      process.env.PROXY_MODE === "extension"
+        ? "extension"
+        : "native",
+    userAgent: carrierKey === "fedex" ? null : undefined,
+    disableBlocking: carrierKey === "fedex",
+    warmTimeoutMs:
+      carrierKey === "fedex"
+        ? Number(process.env.FEDEX_WARM_TIMEOUT_MS ?? 180000)
+        : undefined,
+    warmWaitUntil: carrierKey === "fedex" ? "domcontentloaded" : undefined,
+    persistentProfileDir:
+      carrierKey === "fedex"
+        ? process.env.FEDEX_PROFILE_DIR ?? ".browser-profiles/fedex"
+        : undefined,
     onWarm: debug ? () => console.error(`[session] warmed`) : undefined,
   });
   try {
@@ -119,7 +130,11 @@ async function main() {
   }
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+main()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });

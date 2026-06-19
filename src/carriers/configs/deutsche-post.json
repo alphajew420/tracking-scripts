@@ -1,0 +1,19 @@
+{
+  "id": "deutsche-post",
+  "displayName": "Deutsche Post",
+  "mode": "scraper",
+  "warmUrl": "https://www.deutschepost.de/sendung/simpleQuery.html?piececode={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.deutschepost.de/sendung/simpleQuery.html?piececode={n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|zugestellt" },
+    { "status": "exception", "pattern": "exception|problem|retoure|returned" },
+    { "status": "pickup", "pattern": "pickup|abholung" },
+    { "status": "in_transit", "pattern": "transit|arrived|departed|processed|bearbeitet" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}DE$|^\\d{12,20}$",
+  "regions": ["DE"],
+  "tier": 1
+}

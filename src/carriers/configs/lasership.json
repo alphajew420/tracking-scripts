@@ -1,0 +1,19 @@
+{
+  "id": "lasership",
+  "displayName": "LaserShip",
+  "mode": "scraper",
+  "warmUrl": "https://www.lasership.com/track/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.lasership.com/track/{n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "exception|delay|unable|returned" },
+    { "status": "pickup", "pattern": "pickup|accepted" },
+    { "status": "in_transit", "pattern": "transit|facility|arrived|departed|out for delivery" }
+  ],
+  "trackingNumberPattern": "^1LS[A-Z0-9]{12,20}$|^LX[A-Z0-9]{10,20}$",
+  "regions": ["US"],
+  "tier": 1
+}

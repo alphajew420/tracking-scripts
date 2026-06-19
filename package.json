@@ -1,11 +1,21 @@
 {
   "name": "tracking-scripts",
   "version": "0.1.0",
-  "description": "Carrier tracking library + CLI + bandwidth probes for UPS, FedEx, DHL, DHL Express, and USPS. Scrapers (browser-driven) and official APIs side by side.",
+  "description": "Carrier tracking library + CLI + API skeleton built around browser-driven scrapers for UPS, FedEx, DHL, DHL Express, USPS, and config-driven carriers.",
   "type": "module",
   "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "track": "tsx src/cli.ts",
+    "api": "tsx src/server.ts",
+    "worker": "tsx src/workers/scrape-worker.ts",
+    "webhook-worker": "tsx src/workers/webhook-worker.ts",
+    "scheduler": "tsx src/workers/scheduler.ts",
+    "migrate": "tsx src/db.ts",
     "typecheck": "tsc --noEmit",
+    "proxy:diagnose": "tsx src/tools/proxy-diagnostics.ts",
+    "proxy:ip-stability": "tsx src/tools/proxy-ip-stability.ts",
     "probe:bandwidth-usps": "tsx probes/bandwidth_usps_warm.ts",
     "probe:bandwidth-usps-cold": "tsx probes/bandwidth_usps.ts",
     "postinstall": "patchright install chromium"
@@ -14,10 +24,20 @@
     "track": "src/cli.ts"
   },
   "dependencies": {
-    "patchright": "^1.49.0"
+    "bullmq": "^5.78.0",
+    "ioredis": "^5.11.1",
+    "lucide-react": "^0.468.0",
+    "next": "^15.0.3",
+    "patchright": "^1.49.0",
+    "pg": "^8.21.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   },

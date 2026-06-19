@@ -1,0 +1,19 @@
+{
+  "id": "royal-mail",
+  "displayName": "Royal Mail",
+  "mode": "scraper",
+  "warmUrl": "https://www.royalmail.com/track-your-item#/tracking-results/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.royalmail.com/track-your-item#/tracking-results/{n}",
+  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description, .event-description" },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered" },
+    { "status": "exception", "pattern": "exception|unable|returned|failed" },
+    { "status": "pickup", "pattern": "ready for collection|collect" },
+    { "status": "in_transit", "pattern": "in transit|arrived|departed|processed|accepted" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}GB$",
+  "regions": ["GB"],
+  "tier": 1
+}
