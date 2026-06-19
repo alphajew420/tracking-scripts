@@ -29,6 +29,12 @@ interface PooledSession {
 const maxAgeMs = Number(process.env.SESSION_MAX_AGE_MS ?? 60 * 60_000);
 const maxUses = Number(process.env.SESSION_MAX_USES ?? 250);
 
+function booleanEnv(name: string, fallback: boolean): boolean {
+  const value = process.env[name];
+  if (value == null || value === "") return fallback;
+  return /^(1|true|yes)$/i.test(value);
+}
+
 function browserChannel(carrierId: string): "chrome" | "msedge" | undefined {
   const key = `BROWSER_CHANNEL_${carrierId.toUpperCase().replaceAll("-", "_")}`;
   const value = process.env[key] ?? process.env.BROWSER_CHANNEL;
@@ -61,8 +67,11 @@ export class SessionPool {
         process.env.PROXY_MODE === "extension"
           ? "extension"
           : "native",
-      userAgent: carrierId === "fedex" ? null : undefined,
-      disableBlocking: carrierId === "fedex",
+      userAgent: carrierId === "fedex" || carrierId === "dhl" ? null : undefined,
+      disableBlocking:
+        carrierId === "fedex"
+          ? booleanEnv("FEDEX_DISABLE_BLOCKING", false)
+          : booleanEnv(`DISABLE_BLOCKING_${carrierId.toUpperCase().replaceAll("-", "_")}`, false),
       warmTimeoutMs:
         carrierId === "fedex"
           ? Number(process.env.FEDEX_WARM_TIMEOUT_MS ?? 180000)

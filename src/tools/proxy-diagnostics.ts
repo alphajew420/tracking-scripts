@@ -15,6 +15,12 @@ const REGISTRY: Record<string, () => Carrier> = {
   usps: () => uspsCarrier,
 };
 
+function booleanEnv(name: string, fallback: boolean): boolean {
+  const value = process.env[name];
+  if (value == null || value === "") return fallback;
+  return /^(1|true|yes)$/i.test(value);
+}
+
 function usage(): never {
   console.error(`usage: proxy:diagnose <carrier> <tracking-number> [--attempts=N] [--country=us]
 
@@ -95,8 +101,11 @@ async function main() {
       headless: process.env.HEADLESS !== "false",
       debug: process.env.DEBUG_SCRAPES === "1",
       proxy,
-      userAgent: carrierId === "fedex" ? null : undefined,
-      disableBlocking: carrierId === "fedex",
+      userAgent: carrierId === "fedex" || carrierId === "dhl" ? null : undefined,
+      disableBlocking:
+        carrierId === "fedex"
+          ? booleanEnv("FEDEX_DISABLE_BLOCKING", false)
+          : booleanEnv(`DISABLE_BLOCKING_${carrierId!.toUpperCase().replaceAll("-", "_")}`, false),
       persistentProfileDir:
         carrierId === "fedex" ? `/tmp/trackified-fedex-proxy-${session}` : undefined,
     });

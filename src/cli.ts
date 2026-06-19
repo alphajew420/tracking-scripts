@@ -20,6 +20,12 @@ for (const id of listCarrierConfigIds()) {
   SCRAPER_REGISTRY[id] ??= () => createConfigCarrier(id);
 }
 
+function booleanEnv(name: string, fallback: boolean): boolean {
+  const value = process.env[name];
+  if (value == null || value === "") return fallback;
+  return /^(1|true|yes)$/i.test(value);
+}
+
 process.on("unhandledRejection", (err: any) => {
   const msg = String(err?.message ?? err);
   if (/Target page, context or browser has been closed/.test(msg)) return;
@@ -106,8 +112,11 @@ async function main() {
       process.env.PROXY_MODE === "extension"
         ? "extension"
         : "native",
-    userAgent: carrierKey === "fedex" ? null : undefined,
-    disableBlocking: carrierKey === "fedex",
+    userAgent: carrierKey === "fedex" || carrierKey === "dhl" ? null : undefined,
+    disableBlocking:
+      carrierKey === "fedex"
+        ? booleanEnv("FEDEX_DISABLE_BLOCKING", false)
+        : booleanEnv(`DISABLE_BLOCKING_${carrierKey.toUpperCase().replaceAll("-", "_")}`, false),
     warmTimeoutMs:
       carrierKey === "fedex"
         ? Number(process.env.FEDEX_WARM_TIMEOUT_MS ?? 180000)

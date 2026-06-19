@@ -44,33 +44,51 @@ function normalize(json: any, trackingNumber: string): Track {
 }
 
 /**
- * Raw HTTP request via the warm context. Cookies + Chrome TLS fingerprint
- * carry over from the goto'd page, but no SPA chrome re-runs. The /int-
- * verfolgen/data/search endpoint returns JSON directly.
+ * Browser-side fetch from the warm page. This keeps the request on Chrome's
+ * network path and avoids loading the full SPA for every tracking lookup.
  *
  * `maxRedirects: 0` so we see the 303 (tracking-not-found) instead of
  * silently following it to a generic HTML error page.
  */
-async function runQuery({ request }: QueryCtx, num: string): Promise<ScrapeResult> {
-  const resp = await request.get(SEARCH_URL(num), {
-    failOnStatusCode: false,
-    maxRedirects: 0,
-  });
+async function runQuery({ page }: QueryCtx, num: string): Promise<ScrapeResult> {
+  const raw = await page.evaluate(async (url: string) => {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    try {
+      const response = await fetch(url, {
+        credentials: "include",
+        redirect: "follow",
+        signal: controller.signal,
+        headers: { Accept: "application/json, text/plain, */*" },
+      });
+      return {
+        status: response.status,
+        contentType: response.headers.get("content-type") ?? "",
+        finalUrl: response.url,
+        body: await response.text(),
+      };
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }, SEARCH_URL(num));
 
-  const status = resp.status();
+  const status = raw.status;
   if (status >= 300 && status < 400) {
     return { ok: false, error: "DHL: tracking number not found" };
   }
   if (status === 404) return { ok: false, error: "DHL: tracking number not found" };
   if (status !== 200) return { ok: false, error: `DHL HTTP ${status}` };
 
-  const ct = resp.headers()["content-type"] || "";
+  const ct = raw.contentType;
   if (!ct.includes("json")) {
+    if (/not.?found|keine sendung|no shipment|no result|nicht gefunden/i.test(raw.body)) {
+      return { ok: false, error: "DHL: tracking number not found" };
+    }
     return { ok: false, error: "DHL: session expired (got HTML)" };
   }
 
   let json: any;
-  try { json = await resp.json(); } catch {
+  try { json = JSON.parse(raw.body); } catch {
     return { ok: false, error: "DHL: invalid JSON" };
   }
 

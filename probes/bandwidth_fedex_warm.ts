@@ -21,6 +21,18 @@ const NUMS = process.argv.slice(2).length > 0
 
 const API_URL = "https://api.fedex.com/track/v2/shipments";
 const PRICE_PER_GB = Number(process.env.PROXY_PRICE_PER_GB ?? 0.25);
+const BLOCKED_TYPES = new Set(["image", "font", "media", "stylesheet"]);
+const BLOCKED_DOMAINS = [
+  "googletagmanager.com",
+  "google-analytics.com",
+  "googleadservices.com",
+  "doubleclick.net",
+  "facebook.com",
+  "facebook.net",
+  "fast.fonts.net",
+  "adobedtm.com",
+  "demdex.net",
+];
 
 interface Counter {
   count: number;
@@ -190,6 +202,23 @@ const context = await chromium.launchPersistentContext(profileDir, {
   viewport: { width: 1280, height: 800 },
   locale: "en-US",
 });
+
+let postWarm = false;
+if (process.env.FEDEX_PROBE_DISABLE_BLOCKING !== "true") {
+  await context.route("**/*", (route, req) => {
+    const url = req.url();
+    if (postWarm) {
+      const rt = req.resourceType();
+      if (rt === "document" || rt === "xhr" || rt === "fetch") return route.continue();
+      if (url.includes(".json")) return route.continue();
+      if (/akamai|edgesuite|_abck/i.test(url)) return route.continue();
+      return route.abort();
+    }
+    if (BLOCKED_TYPES.has(req.resourceType())) return route.abort();
+    if (BLOCKED_DOMAINS.some((domain) => url.includes(domain))) return route.abort();
+    return route.continue();
+  });
+}
 const page = await context.newPage();
 
 page.on("response", async (resp: Response) => {
@@ -224,6 +253,7 @@ page.on("response", async (resp: Response) => {
 try {
   console.log(`FedEx bandwidth probe - ${NUMS.length} same-session queries`);
   console.log(`Proxy mode: ${extension ? "extension" : process.env.PROXY_FEDEX ? "native/none" : "none"}`);
+  console.log(`Route blocking: ${process.env.FEDEX_PROBE_DISABLE_BLOCKING === "true" ? "disabled" : "enabled"}`);
 
   const warm = active = newCounter();
   const warmT0 = Date.now();
@@ -232,6 +262,7 @@ try {
     timeout: Number(process.env.FEDEX_WARM_TIMEOUT_MS ?? 180000),
   });
   if (fedexCarrier.awaitReady) await fedexCarrier.awaitReady(page, NUMS[0]!);
+  postWarm = true;
   const warmMs = Date.now() - warmT0;
   dumpCounter("WARM one-time browser/session", warm, warmMs);
 
