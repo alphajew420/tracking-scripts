@@ -6,6 +6,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ca-certificates \
+  gnupg \
+  wget \
   fonts-liberation \
   libasound2 \
   libatk-bridge2.0-0 \
@@ -24,6 +26,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libxrandr2 \
   xvfb \
   xdg-utils \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN wget -qO- https://dl.google.com/linux/linux_signing_key.pub \
+  | gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg \
+  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" \
+  > /etc/apt/sources.list.d/google-chrome.list \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends google-chrome-stable \
   && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json ./
