@@ -16,7 +16,13 @@ export async function query<T extends pg.QueryResultRow = pg.QueryResultRow>(
 }
 
 export async function migrate(): Promise<void> {
-  await query(`
+  const client = await pool.connect();
+  const run = (text: string, values: unknown[] = []) => client.query(text, values);
+
+  try {
+    await run(`select pg_advisory_lock(hashtext('trackified:migrate'));`);
+    try {
+  await run(`
     create table if not exists accounts (
       id text primary key,
       name text not null,
@@ -33,11 +39,11 @@ export async function migrate(): Promise<void> {
       updated_at timestamptz not null default now()
     );
   `);
-  await query(`alter table accounts add column if not exists stripe_customer_id text;`);
-  await query(`alter table accounts add column if not exists stripe_subscription_id text;`);
-  await query(`alter table accounts add column if not exists billing_status text not null default 'not_connected';`);
+  await run(`alter table accounts add column if not exists stripe_customer_id text;`);
+  await run(`alter table accounts add column if not exists stripe_subscription_id text;`);
+  await run(`alter table accounts add column if not exists billing_status text not null default 'not_connected';`);
 
-  await query(`
+  await run(`
     create table if not exists users (
       id text primary key,
       account_id text not null references accounts(id),
@@ -49,10 +55,10 @@ export async function migrate(): Promise<void> {
       updated_at timestamptz not null default now()
     );
   `);
-  await query(`alter table users add column if not exists email_verified_at timestamptz;`);
-  await query(`create index if not exists users_account_idx on users(account_id);`);
+  await run(`alter table users add column if not exists email_verified_at timestamptz;`);
+  await run(`create index if not exists users_account_idx on users(account_id);`);
 
-  await query(`
+  await run(`
     create table if not exists user_tokens (
       id text primary key,
       user_id text not null references users(id) on delete cascade,
@@ -63,9 +69,9 @@ export async function migrate(): Promise<void> {
       created_at timestamptz not null default now()
     );
   `);
-  await query(`create index if not exists user_tokens_user_idx on user_tokens(user_id);`);
+  await run(`create index if not exists user_tokens_user_idx on user_tokens(user_id);`);
 
-  await query(`
+  await run(`
     create table if not exists email_outbox (
       id text primary key,
       account_id text references accounts(id),
@@ -79,10 +85,10 @@ export async function migrate(): Promise<void> {
       created_at timestamptz not null default now()
     );
   `);
-  await query(`create index if not exists email_outbox_account_idx on email_outbox(account_id);`);
-  await query(`create index if not exists email_outbox_status_idx on email_outbox(status);`);
+  await run(`create index if not exists email_outbox_account_idx on email_outbox(account_id);`);
+  await run(`create index if not exists email_outbox_status_idx on email_outbox(status);`);
 
-  await query(`
+  await run(`
     create table if not exists team_invites (
       id text primary key,
       account_id text not null references accounts(id),
@@ -95,9 +101,9 @@ export async function migrate(): Promise<void> {
       created_at timestamptz not null default now()
     );
   `);
-  await query(`create index if not exists team_invites_account_idx on team_invites(account_id);`);
+  await run(`create index if not exists team_invites_account_idx on team_invites(account_id);`);
 
-  await query(`
+  await run(`
     create table if not exists billing_events (
       id text primary key,
       account_id text references accounts(id),
@@ -107,9 +113,9 @@ export async function migrate(): Promise<void> {
       created_at timestamptz not null default now()
     );
   `);
-  await query(`create index if not exists billing_events_account_idx on billing_events(account_id);`);
+  await run(`create index if not exists billing_events_account_idx on billing_events(account_id);`);
 
-  await query(`
+  await run(`
     create table if not exists sessions (
       id text primary key,
       user_id text not null references users(id) on delete cascade,
@@ -120,10 +126,10 @@ export async function migrate(): Promise<void> {
       revoked_at timestamptz
     );
   `);
-  await query(`create index if not exists sessions_token_hash_idx on sessions(token_hash);`);
-  await query(`create index if not exists sessions_account_idx on sessions(account_id);`);
+  await run(`create index if not exists sessions_token_hash_idx on sessions(token_hash);`);
+  await run(`create index if not exists sessions_account_idx on sessions(account_id);`);
 
-  await query(`
+  await run(`
     create table if not exists white_label_settings (
       account_id text primary key references accounts(id),
       domain text,
@@ -134,13 +140,13 @@ export async function migrate(): Promise<void> {
       updated_at timestamptz not null default now()
     );
   `);
-  await query(`
+  await run(`
     insert into accounts (id, name)
     values ('acct_dev', 'Development account')
     on conflict (id) do nothing;
   `);
 
-  await query(`
+  await run(`
     create table if not exists trackings (
       id text primary key,
       account_id text not null default 'acct_dev' references accounts(id),
@@ -167,13 +173,13 @@ export async function migrate(): Promise<void> {
       updated_at timestamptz not null
     );
   `);
-  await query(`alter table trackings add column if not exists account_id text not null default 'acct_dev' references accounts(id);`);
-  await query(`create index if not exists trackings_status_idx on trackings(status);`);
-  await query(`create index if not exists trackings_carrier_idx on trackings(carrier);`);
-  await query(`create index if not exists trackings_account_idx on trackings(account_id);`);
-  await query(`create index if not exists trackings_next_scrape_idx on trackings(next_scrape_at) where stopped_at is null;`);
+  await run(`alter table trackings add column if not exists account_id text not null default 'acct_dev' references accounts(id);`);
+  await run(`create index if not exists trackings_status_idx on trackings(status);`);
+  await run(`create index if not exists trackings_carrier_idx on trackings(carrier);`);
+  await run(`create index if not exists trackings_account_idx on trackings(account_id);`);
+  await run(`create index if not exists trackings_next_scrape_idx on trackings(next_scrape_at) where stopped_at is null;`);
 
-  await query(`
+  await run(`
     create table if not exists api_keys (
       id text primary key,
       account_id text not null default 'acct_dev' references accounts(id),
@@ -187,10 +193,10 @@ export async function migrate(): Promise<void> {
       revoked_at timestamptz
     );
   `);
-  await query(`alter table api_keys add column if not exists account_id text not null default 'acct_dev' references accounts(id);`);
-  await query(`create index if not exists api_keys_account_idx on api_keys(account_id);`);
+  await run(`alter table api_keys add column if not exists account_id text not null default 'acct_dev' references accounts(id);`);
+  await run(`create index if not exists api_keys_account_idx on api_keys(account_id);`);
 
-  await query(`
+  await run(`
     create table if not exists webhooks (
       id text primary key,
       account_id text not null default 'acct_dev' references accounts(id),
@@ -203,10 +209,10 @@ export async function migrate(): Promise<void> {
       disabled_at timestamptz
     );
   `);
-  await query(`alter table webhooks add column if not exists account_id text not null default 'acct_dev' references accounts(id);`);
-  await query(`create index if not exists webhooks_account_idx on webhooks(account_id);`);
+  await run(`alter table webhooks add column if not exists account_id text not null default 'acct_dev' references accounts(id);`);
+  await run(`create index if not exists webhooks_account_idx on webhooks(account_id);`);
 
-  await query(`
+  await run(`
     create table if not exists webhook_deliveries (
       id text primary key,
       account_id text not null default 'acct_dev' references accounts(id),
@@ -221,11 +227,17 @@ export async function migrate(): Promise<void> {
       created_at timestamptz not null
     );
   `);
-  await query(`alter table webhook_deliveries add column if not exists account_id text not null default 'acct_dev' references accounts(id);`);
-  await query(`alter table webhook_deliveries add column if not exists payload jsonb;`);
-  await query(`alter table webhook_deliveries add column if not exists delivered_at timestamptz;`);
-  await query(`alter table webhook_deliveries add column if not exists next_attempt_at timestamptz;`);
-  await query(`create index if not exists webhook_deliveries_account_idx on webhook_deliveries(account_id);`);
+  await run(`alter table webhook_deliveries add column if not exists account_id text not null default 'acct_dev' references accounts(id);`);
+  await run(`alter table webhook_deliveries add column if not exists payload jsonb;`);
+  await run(`alter table webhook_deliveries add column if not exists delivered_at timestamptz;`);
+  await run(`alter table webhook_deliveries add column if not exists next_attempt_at timestamptz;`);
+  await run(`create index if not exists webhook_deliveries_account_idx on webhook_deliveries(account_id);`);
+    } finally {
+      await run(`select pg_advisory_unlock(hashtext('trackified:migrate'));`);
+    }
+  } finally {
+    client.release();
+  }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
