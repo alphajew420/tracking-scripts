@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { query } from "./db.ts";
 import { enqueueWebhook } from "./queue.ts";
+import { inferTrackingId, publishRealtimeEvent } from "./realtime.ts";
 import type { WebhookEvent, WebhookEventType } from "./webhooks.ts";
 
 interface WebhookRow {
@@ -23,6 +24,14 @@ export async function enqueueWebhookEvent(accountId: string, type: WebhookEventT
     created_at: new Date().toISOString(),
     data,
   };
+
+  await publishRealtimeEvent({
+    ...event,
+    account_id: accountId,
+    tracking_id: inferTrackingId(data),
+  }).catch((error) => {
+    console.error("[realtime] publish failed", error);
+  });
 
   for (const hook of hooks.rows) {
     const deliveryId = `whd_${randomUUID().replaceAll("-", "")}`;

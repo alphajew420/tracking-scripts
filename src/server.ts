@@ -6,6 +6,7 @@ import { migrate, pool, query } from "./db.ts";
 import { detectCarrier } from "./detect.ts";
 import { appUrl, sendEmail } from "./email.ts";
 import { enqueueScrape } from "./queue.ts";
+import { attachRealtimeServer } from "./realtime.ts";
 import { enqueueWebhookEvent } from "./webhook-dispatch.ts";
 import { signWebhookBody, type WebhookEventType } from "./webhooks.ts";
 
@@ -85,7 +86,7 @@ interface RateBucket {
   resetAt: number;
 }
 
-interface AuthContext {
+export interface AuthContext {
   accountId: string;
   apiKeyId: string | null;
   userId: string | null;
@@ -222,31 +223,32 @@ function readRawBody(req: IncomingMessage): Promise<string> {
   });
 }
 
+async function authToken(token: string): Promise<AuthContext | null> {
+  if (bootstrapKeys.includes(token)) {
+    return {
+      accountId: process.env.DEV_ACCOUNT_ID ?? "acct_dev",
+      apiKeyId: null,
+      userId: null,
+      mode: token.startsWith("live_") ? "live" : "test",
+      scopes: ["*"],
+    };
+  }
+  const result = await query<ApiKeyRow>(
+    `update api_keys
+     set last_used_at = now()
+     where token_hash = $1 and revoked_at is null
+     returning id, account_id, mode, scopes`,
+    [tokenHash(token)],
+  );
+  const key = result.rows[0];
+  return key ? { accountId: key.account_id, apiKeyId: key.id, userId: null, mode: key.mode, scopes: key.scopes } : null;
+}
+
 async function auth(req: IncomingMessage): Promise<AuthContext | null> {
   const header = req.headers.authorization ?? "";
   const value = Array.isArray(header) ? header[0] ?? "" : header;
   const match = /^Bearer\s+(.+)$/i.exec(value);
-  if (match) {
-    const token = match[1]!;
-    if (bootstrapKeys.includes(token)) {
-      return {
-        accountId: process.env.DEV_ACCOUNT_ID ?? "acct_dev",
-        apiKeyId: null,
-        userId: null,
-        mode: token.startsWith("live_") ? "live" : "test",
-        scopes: ["*"],
-      };
-    }
-    const result = await query<ApiKeyRow>(
-      `update api_keys
-       set last_used_at = now()
-       where token_hash = $1 and revoked_at is null
-       returning id, account_id, mode, scopes`,
-      [tokenHash(token)],
-    );
-    const key = result.rows[0];
-    if (key) return { accountId: key.account_id, apiKeyId: key.id, userId: null, mode: key.mode, scopes: key.scopes };
-  }
+  if (match) return authToken(match[1]!);
 
   const sessionToken = parseCookies(req).trackified_session;
   if (!sessionToken) return null;
@@ -1482,17 +1484,29 @@ const port = Number(process.env.PORT ?? 8787);
 
 await migrate();
 
-createServer((req, res) => {
+const server = createServer((req, res) => {
   const requestId = req.headers["x-request-id"]?.toString() ?? randomUUID();
   route(req, res, requestId).catch((err) => {
     error(res, 500, "internal_error", String(err?.message ?? err), requestId);
   });
-}).listen(port, () => {
+});
+
+const realtime = attachRealtimeServer({
+  server,
+  authenticate: (req, token) => token ? authToken(token) : auth(req),
+});
+
+server.listen(port, () => {
   const digest = createHmac("sha256", "trackified").update(String(port)).digest("hex").slice(0, 8);
   console.error(`[tracking-api] listening on http://localhost:${port} (${digest})`);
 });
 
-process.on("SIGTERM", async () => {
+const shutdown = async () => {
+  await realtime.close();
+  await new Promise<void>((resolve) => server.close(() => resolve()));
   await pool.end();
   process.exit(0);
-});
+};
+
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
