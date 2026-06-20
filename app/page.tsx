@@ -62,20 +62,22 @@ export default function Home() {
           </div>
         </nav>
 
-        <div className="landing-hero-copy">
-          <p className="eyebrow">Shipment visibility infrastructure</p>
-          <h1>The delivery data layer for modern commerce and logistics teams.</h1>
-          <p className="landing-lede">
-            Trackified unifies carrier tracking, branded delivery pages, operational dashboards, signed webhooks,
-            and developer APIs into one infrastructure platform.
-          </p>
-          <div className="actions">
-            <Link href="/dashboard" className="button primary"><ArrowRight size={16} /> Open console</Link>
-            <Link href={`${apiBase}/openapi.json`} className="button">View OpenAPI</Link>
+        <div className="landing-hero-stage">
+          <div className="landing-hero-copy">
+            <p className="eyebrow">Shipment visibility infrastructure</p>
+            <h1>The delivery data layer for modern commerce and logistics teams.</h1>
+            <p className="landing-lede">
+              Trackified unifies carrier tracking, branded delivery pages, operational dashboards, signed webhooks,
+              and developer APIs into one infrastructure platform.
+            </p>
+            <div className="actions">
+              <Link href="/dashboard" className="button primary"><ArrowRight size={16} /> Open console</Link>
+              <Link href={`${apiBase}/openapi.json`} className="button">View OpenAPI</Link>
+            </div>
           </div>
-        </div>
 
-        <HeroTrackingTimeline />
+          <HeroTrackingTimeline />
+        </div>
       </section>
 
       <section className="logo-wall" aria-label="Market proof">
