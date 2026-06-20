@@ -15,6 +15,7 @@ import {
   Workflow,
   type LucideIcon,
 } from "lucide-react";
+import { HeroTrackingTimeline } from "@/components/hero-tracking-timeline";
 import { comparisons, pricingPlans, productPages, solutionPages } from "@/lib/marketing";
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.trackified.15-204-158-166.sslip.io";
@@ -74,23 +75,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="hero-console" aria-label="Live shipment summary">
-          <div>
-            <p className="eyebrow">Platform</p>
-            <strong>API</strong>
-            <span>tracking, carriers, webhooks</span>
-          </div>
-          <div>
-            <p className="eyebrow">Network</p>
-            <strong>200+</strong>
-            <span>v1 carrier target</span>
-          </div>
-          <div>
-            <p className="eyebrow">Delivery</p>
-            <strong>Push</strong>
-            <span>signed webhook events</span>
-          </div>
-        </div>
+        <HeroTrackingTimeline />
       </section>
 
       <section className="logo-wall" aria-label="Market proof">
