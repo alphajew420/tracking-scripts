@@ -145,7 +145,7 @@ function nowIso(): string {
 }
 
 function json(res: ServerResponse, status: number, body: unknown, requestId: string): void {
-  const origin = process.env.CORS_ORIGIN ?? "http://localhost:3017";
+  const origin = process.env.CORS_ORIGIN ?? process.env.PUBLIC_WEB_BASE_URL ?? "https://trackified.15-204-158-166.sslip.io";
   res.writeHead(status, {
     "content-type": "application/json; charset=utf-8",
     "x-request-id": requestId,
@@ -177,11 +177,15 @@ function sessionCookie(token: string, maxAgeSeconds: number): string {
 }
 
 function publicToken(token?: string) {
-  return process.env.EMAIL_PROVIDER === "dev" ? token : undefined;
+  return process.env.NODE_ENV !== "production" && process.env.EMAIL_PROVIDER === "dev" ? token : undefined;
 }
 
 function error(res: ServerResponse, status: number, code: string, message: string, requestId: string): void {
   json(res, status, { error: { code, message, request_id: requestId } }, requestId);
+}
+
+function publicApiBaseUrl(): string {
+  return process.env.API_PUBLIC_BASE_URL ?? "https://api.trackified.15-204-158-166.sslip.io";
 }
 
 function readBody(req: IncomingMessage): Promise<Record<string, unknown>> {
@@ -378,6 +382,22 @@ function pageParams(url: URL) {
   const limit = Math.min(Number(url.searchParams.get("limit") ?? 50), 100);
   const offset = Math.max(Number(url.searchParams.get("offset") ?? 0), 0);
   return { limit, offset };
+}
+
+function bulkRows(body: Record<string, unknown>): { ok: true; rows: unknown[] } | { ok: false; message: string } {
+  if (!Array.isArray(body.trackings)) return { ok: false, message: "trackings must be an array" };
+  if (body.trackings.length === 0) return { ok: false, message: "trackings must include at least one item" };
+  if (body.trackings.length > 40) return { ok: false, message: "bulk requests are limited to 40 trackings" };
+  return { ok: true, rows: body.trackings };
+}
+
+function validWebhookUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "https:" || (process.env.NODE_ENV !== "production" && parsed.protocol === "http:");
+  } catch {
+    return false;
+  }
 }
 
 async function listTrackings(url: URL) {
@@ -723,7 +743,7 @@ function openApi() {
       version: "1.0.0",
       description: "REST API for shipment tracking registration, carrier detection, event timelines, webhooks, account usage, and API key management.",
     },
-    servers: [{ url: "https://api.trackified.dev" }, { url: "http://localhost:8788" }],
+    servers: [{ url: publicApiBaseUrl() }, { url: "http://localhost:8788" }],
     security: [{ bearerAuth: [] }],
     paths: {
       "/v1/auth/signup": {
@@ -758,7 +778,7 @@ function openApi() {
         post: { summary: "Request email verification", responses: { "200": ok({ type: "object", properties: { requested: { type: "boolean" } } }) } },
       },
       "/v1/auth/email-verification/confirm": {
-        post: { summary: "Confirm email verification", responses: { "200": ok({ type: "object", properties: { verified: { type: "boolean" } } }), "400": errorResponse } },
+        post: { summary: "Confirm email verification", security: [], responses: { "200": ok({ type: "object", properties: { verified: { type: "boolean" } } }), "400": errorResponse } },
       },
       "/v1/billing/stripe/webhook": {
         post: { summary: "Receive Stripe billing events", security: [], responses: { "200": ok({ type: "object", properties: { received: { type: "boolean" } } }), "400": errorResponse } },
@@ -798,6 +818,13 @@ function openApi() {
       "/v1/trackings/lookup/bulk": {
         post: {
           summary: "Queue synchronous-style bulk lookup",
+          requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["trackings"], properties: { trackings: { type: "array", maxItems: 40, items: { $ref: "#/components/schemas/CreateTrackingRequest" } } } } } } },
+          responses: { "202": ok({ type: "object", properties: { timeout_ms: { type: "integer" }, data: { type: "array", items: { $ref: "#/components/schemas/BulkLookupResult" } } } }) },
+        },
+      },
+      "/v1/trackings/getrack/bulk": {
+        post: {
+          summary: "Compatibility alias for bulk tracking lookup",
           requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["trackings"], properties: { trackings: { type: "array", maxItems: 40, items: { $ref: "#/components/schemas/CreateTrackingRequest" } } } } } } },
           responses: { "202": ok({ type: "object", properties: { timeout_ms: { type: "integer" }, data: { type: "array", items: { $ref: "#/components/schemas/BulkLookupResult" } } } }) },
         },
@@ -842,7 +869,7 @@ function openApi() {
         post: { summary: "Create team invite", responses: { "201": created({ type: "object" }), "400": errorResponse } },
       },
       "/v1/account/team/invites/accept": {
-        post: { summary: "Accept team invite", responses: { "200": ok({ $ref: "#/components/schemas/AuthResponse" }), "400": errorResponse } },
+        post: { summary: "Accept team invite", security: [], responses: { "200": ok({ $ref: "#/components/schemas/AuthResponse" }), "400": errorResponse } },
       },
       "/v1/account/white-label": {
         get: { summary: "Get white-label tracking page settings", responses: { "200": ok({ $ref: "#/components/schemas/WhiteLabelSettings" }) } },
@@ -1038,6 +1065,47 @@ async function route(req: IncomingMessage, res: ServerResponse, requestId: strin
     return json(res, 200, { reset: true }, requestId);
   }
 
+  if (req.method === "POST" && url.pathname === "/v1/auth/email-verification/confirm") {
+    const body = await readBody(req);
+    const token = typeof body.token === "string" ? body.token : "";
+    const tokenResult = await query<{ id: string; user_id: string }>(
+      `select id, user_id from user_tokens
+       where token_hash = $1 and kind = 'email_verify' and used_at is null and expires_at > now()`,
+      [tokenHash(token)],
+    );
+    const row = tokenResult.rows[0];
+    if (!row) return error(res, 400, "bad_request", "invalid or expired verification token", requestId);
+    await query(`update users set email_verified_at = now(), updated_at = now() where id = $1`, [row.user_id]);
+    await query(`update user_tokens set used_at = now() where id = $1`, [row.id]);
+    return json(res, 200, { verified: true }, requestId);
+  }
+
+  if (req.method === "POST" && url.pathname === "/v1/account/team/invites/accept") {
+    const body = await readBody(req);
+    const token = typeof body.token === "string" ? body.token : "";
+    const name = typeof body.name === "string" && body.name.trim() ? body.name.trim() : null;
+    const password = typeof body.password === "string" ? body.password : "";
+    if (password.length < 8) return error(res, 400, "bad_request", "password must be at least 8 characters", requestId);
+    const inviteResult = await query<{ id: string; account_id: string; email: string }>(
+      `select id, account_id, email from team_invites
+       where token_hash = $1 and accepted_at is null and expires_at > now()`,
+      [tokenHash(token)],
+    );
+    const invite = inviteResult.rows[0];
+    if (!invite) return error(res, 400, "bad_request", "invalid or expired invite", requestId);
+    const userId = `usr_${randomUUID().replaceAll("-", "")}`;
+    const userResult = await query<UserRow>(
+      `insert into users (id, account_id, email, name, password_hash)
+       values ($1, $2, $3, $4, $5)
+       on conflict (email) do update set account_id = excluded.account_id, password_hash = excluded.password_hash, name = coalesce(excluded.name, users.name), updated_at = now()
+       returning *`,
+      [userId, invite.account_id, invite.email, name, passwordHash(password)],
+    );
+    await query(`update team_invites set accepted_at = now() where id = $1`, [invite.id]);
+    await createSession(res, userResult.rows[0]!);
+    return json(res, 200, { user: publicUser(userResult.rows[0]!) }, requestId);
+  }
+
   const ctx = await auth(req);
   if (!ctx) return error(res, 401, "unauthorized", "missing or invalid API key", requestId);
   const rateLimit = await assertRateLimit(ctx);
@@ -1079,21 +1147,6 @@ async function route(req: IncomingMessage, res: ServerResponse, requestId: strin
     const total = Number((result.rows[0] as { total_count?: string } | undefined)?.total_count ?? 0);
     return json(res, 200, { data: result.rows, pagination: { limit, offset, total } }, requestId);
   }
-  if (req.method === "POST" && url.pathname === "/v1/auth/email-verification/confirm") {
-    const body = await readBody(req);
-    const token = typeof body.token === "string" ? body.token : "";
-    const tokenResult = await query<{ id: string; user_id: string }>(
-      `select id, user_id from user_tokens
-       where token_hash = $1 and kind = 'email_verify' and used_at is null and expires_at > now()`,
-      [tokenHash(token)],
-    );
-    const row = tokenResult.rows[0];
-    if (!row) return error(res, 400, "bad_request", "invalid or expired verification token", requestId);
-    await query(`update users set email_verified_at = now(), updated_at = now() where id = $1`, [row.user_id]);
-    await query(`update user_tokens set used_at = now() where id = $1`, [row.id]);
-    return json(res, 200, { verified: true }, requestId);
-  }
-
   if (req.method === "GET" && url.pathname === "/v1/carriers") {
     const { limit, offset } = pageParams(url);
     const catalog = listCarrierCatalog();
@@ -1122,7 +1175,9 @@ async function route(req: IncomingMessage, res: ServerResponse, requestId: strin
   }
   if (req.method === "POST" && url.pathname === "/v1/trackings/bulk") {
     const body = await readBody(req);
-    const rows = Array.isArray(body.trackings) ? body.trackings.slice(0, 40) : [];
+    const parsedRows = bulkRows(body);
+    if (!parsedRows.ok) return error(res, 400, "bad_request", parsedRows.message, requestId);
+    const rows = parsedRows.rows;
     const quota = await assertTrackingQuota(ctx, rows.length);
     if (!quota.ok) return error(res, 402, "quota_exceeded", `monthly tracking quota exceeded (${quota.used}/${quota.limit})`, requestId);
     const data = [];
@@ -1137,9 +1192,11 @@ async function route(req: IncomingMessage, res: ServerResponse, requestId: strin
     }
     return json(res, 207, { data }, requestId);
   }
-  if (req.method === "POST" && url.pathname === "/v1/trackings/lookup/bulk") {
+  if (req.method === "POST" && (url.pathname === "/v1/trackings/lookup/bulk" || url.pathname === "/v1/trackings/getrack/bulk")) {
     const body = await readBody(req);
-    const rows = Array.isArray(body.trackings) ? body.trackings.slice(0, 40) : [];
+    const parsedRows = bulkRows(body);
+    if (!parsedRows.ok) return error(res, 400, "bad_request", parsedRows.message, requestId);
+    const rows = parsedRows.rows;
     const quota = await assertTrackingQuota(ctx, rows.length);
     if (!quota.ok) return error(res, 402, "quota_exceeded", `monthly tracking quota exceeded (${quota.used}/${quota.limit})`, requestId);
     const data = [];
@@ -1207,6 +1264,7 @@ async function route(req: IncomingMessage, res: ServerResponse, requestId: strin
   if (req.method === "POST" && url.pathname === "/v1/webhooks") {
     const body = await readBody(req);
     if (typeof body.url !== "string") return error(res, 400, "bad_request", "url is required", requestId);
+    if (!validWebhookUrl(body.url)) return error(res, 400, "bad_request", "webhook url must be a valid HTTPS URL", requestId);
     const secret = `whsec_${randomBytes(24).toString("base64url")}`;
     const result = await query<WebhookRow>(
       `insert into webhooks (id, account_id, url, event_types, secret, created_at)
@@ -1396,31 +1454,6 @@ async function route(req: IncomingMessage, res: ServerResponse, requestId: strin
       body: `Accept your invite: ${appUrl(`/accept-invite?token=${encodeURIComponent(token)}`)}`,
     });
     return json(res, 201, { invite: result.rows[0], token: publicToken(token) }, requestId);
-  }
-  if (req.method === "POST" && url.pathname === "/v1/account/team/invites/accept") {
-    const body = await readBody(req);
-    const token = typeof body.token === "string" ? body.token : "";
-    const name = typeof body.name === "string" && body.name.trim() ? body.name.trim() : null;
-    const password = typeof body.password === "string" ? body.password : "";
-    if (password.length < 8) return error(res, 400, "bad_request", "password must be at least 8 characters", requestId);
-    const inviteResult = await query<{ id: string; account_id: string; email: string }>(
-      `select id, account_id, email from team_invites
-       where token_hash = $1 and accepted_at is null and expires_at > now()`,
-      [tokenHash(token)],
-    );
-    const invite = inviteResult.rows[0];
-    if (!invite) return error(res, 400, "bad_request", "invalid or expired invite", requestId);
-    const userId = `usr_${randomUUID().replaceAll("-", "")}`;
-    const userResult = await query<UserRow>(
-      `insert into users (id, account_id, email, name, password_hash)
-       values ($1, $2, $3, $4, $5)
-       on conflict (email) do update set account_id = excluded.account_id, updated_at = now()
-       returning *`,
-      [userId, invite.account_id, invite.email, name, passwordHash(password)],
-    );
-    await query(`update team_invites set accepted_at = now() where id = $1`, [invite.id]);
-    await createSession(res, userResult.rows[0]!);
-    return json(res, 200, { user: publicUser(userResult.rows[0]!) }, requestId);
   }
   if (req.method === "GET" && url.pathname === "/v1/account/api-keys") {
     return json(res, 200, await listApiKeys(url, ctx), requestId);

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AppShell } from "../../components/app-shell";
+import { DashboardOverview } from "../../components/dashboard-overview";
 import { DashboardTrackings } from "../../components/dashboard-trackings";
 
 export default function DashboardPage() {
@@ -13,10 +14,7 @@ export default function DashboardPage() {
       </div>
 
       <section className="grid" aria-label="Tracking summary">
-        <div className="panel pad metric span-3"><p className="eyebrow">Active</p><strong>0</strong><p>No trackings registered yet.</p></div>
-        <div className="panel pad metric span-3"><p className="eyebrow">Delivered</p><strong>—</strong><p>Available after shipments complete.</p></div>
-        <div className="panel pad metric span-3"><p className="eyebrow">Webhooks</p><strong>0</strong><p>No endpoints configured.</p></div>
-        <div className="panel pad metric span-3"><p className="eyebrow">Carrier health</p><strong>—</strong><p>Starts after live traffic.</p></div>
+        <DashboardOverview />
 
         <DashboardTrackings />
 
