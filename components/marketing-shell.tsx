@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, PackageSearch } from "lucide-react";
 
+const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.trackified.15-204-158-166.sslip.io";
+
 const nav = [
   ["Product", "/product/tracking-api"],
   ["Solutions", "/solutions/ecommerce"],
@@ -37,7 +39,7 @@ export function MarketingFooter() {
           Trackified
         </Link>
         <p>Shipment visibility infrastructure for stores, resellers, 3PLs, support teams, and AI agents.</p>
-        <span>Local API: localhost:8788 · Web: localhost:3017</span>
+        <span>API: {apiBase.replace(/^https?:\/\//, "")}</span>
       </div>
       <div className="footer-columns">
         <div>

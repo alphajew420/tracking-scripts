@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { comparisons, pricingPlans, productPages, solutionPages } from "@/lib/marketing";
 
+const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.trackified.15-204-158-166.sslip.io";
+
 const apiFeatures: Array<[LucideIcon, string, string]> = [
   [PackageSearch, "Shipment API", "Register, monitor, update, and retrieve package timelines through one normalized contract."],
   [Globe2, "Carrier network", "Identify likely carriers, normalize milestones, and keep multi-carrier shipments readable."],
@@ -68,7 +70,7 @@ export default function Home() {
           </p>
           <div className="actions">
             <Link href="/dashboard" className="button primary"><ArrowRight size={16} /> Open console</Link>
-            <Link href="http://localhost:8788/openapi.json" className="button">View OpenAPI</Link>
+            <Link href={`${apiBase}/openapi.json`} className="button">View OpenAPI</Link>
           </div>
         </div>
 

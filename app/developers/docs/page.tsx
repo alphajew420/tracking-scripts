@@ -8,7 +8,9 @@ const guides = [
   ["Force retrack", "POST /v1/trackings/:id/retrack runs a rate-limited live refresh."],
 ];
 
-const quickstart = `curl -X POST http://localhost:8788/v1/trackings \\
+const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.trackified.15-204-158-166.sslip.io";
+
+const quickstart = `curl -X POST ${apiBase}/v1/trackings \\
   -H "Authorization: Bearer test_or_live_api_key" \\
   -H "Content-Type: application/json" \\
   -d '{
