@@ -481,6 +481,9 @@ export function createFedexCarrier(): Carrier {
         }
 
         const status = raw.status;
+        if (process.env.FEDEX_DEBUG_BODY === "1") {
+          console.error(`[fedex] api status=${status} body=${raw.text.slice(0, 1000)}`);
+        }
         if (status === 401) {
           bearerToken = null;
           return { ok: false, error: "FedEx HTTP 401 (token expired)" };
