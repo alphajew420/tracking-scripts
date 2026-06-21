@@ -114,6 +114,13 @@ export async function handleTrackingRoutes({ req, res, url, auth, requestId, dep
       return true;
     }
     if (req.method === "POST" && trackingAction[2] === "retrack") {
+      await deps.query(
+        `update trackings
+         set next_scrape_at = now() + interval '1 minute',
+             updated_at = now()
+         where id = $1 and account_id = $2 and stopped_at is null`,
+        [(tracking as { id: string }).id, auth.accountId],
+      );
       await deps.enqueueScrape({ tracking_id: (tracking as { id: string; carrier: string | null; tracking_number: string }).id, carrier: (tracking as { carrier: string | null }).carrier, tracking_number: (tracking as { tracking_number: string }).tracking_number, reason: "retrack" });
       deps.json(res, 202, { queued: true, tracking }, requestId);
       return true;

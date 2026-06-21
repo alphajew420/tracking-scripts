@@ -2,6 +2,7 @@ import { Worker } from "bullmq";
 import { migrate, pool, query } from "../db.ts";
 import { createLogger } from "../logger.ts";
 import { redisConnection, type ScrapeJob } from "../queue.ts";
+import { failedScrapeRetryAt, nextScrapeAt } from "../scrape-cadence.ts";
 import { enqueueWebhookEvent } from "../webhook-dispatch.ts";
 import { SessionPool } from "./session-pool.ts";
 
@@ -41,9 +42,12 @@ async function run() {
       if (!result.ok || !result.track) {
         await query(
           `update trackings
-           set exception = $2, last_scraped_at = now(), updated_at = now()
+           set exception = $2,
+               last_scraped_at = now(),
+               next_scrape_at = $3::timestamptz,
+               updated_at = now()
            where id = $1`,
-          [job.data.tracking_id, result.error ?? "scrape failed"],
+          [job.data.tracking_id, result.error ?? "scrape failed", failedScrapeRetryAt()],
         );
         await enqueueWebhookEvent(existing.account_id, "tracking.exception", {
           tracking_id: job.data.tracking_id,
@@ -55,6 +59,7 @@ async function run() {
       const status = result.track.delivered
         ? "delivered"
         : normalizeStatus(result.track.events[0]?.status);
+      const nextScrape = nextScrapeAt(status);
       const updateResult = await query(
         `update trackings
          set status = $2,
@@ -64,7 +69,7 @@ async function run() {
              exception = null,
              delivered_at = case when $2 = 'delivered' then coalesce(delivered_at, now()) else delivered_at end,
              last_scraped_at = now(),
-             next_scrape_at = case when $2 in ('delivered', 'exception') then null else next_scrape_at end,
+             next_scrape_at = $6::timestamptz,
              updated_at = now()
          where id = $1
          returning *`,
@@ -74,6 +79,7 @@ async function run() {
           JSON.stringify(result.track.events),
           result.track.serviceLevel ?? null,
           result.track.weightGrams ?? null,
+          nextScrape,
         ],
       );
       const updated = updateResult.rows[0];

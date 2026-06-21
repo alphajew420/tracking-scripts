@@ -12,6 +12,7 @@ import { attachRealtimeServer } from "./realtime.ts";
 import { enqueueWebhookEvent } from "./webhook-dispatch.ts";
 import { signWebhookBody, type WebhookEventType } from "./webhooks.ts";
 import { bulkRows, pageParams, validWebhookUrl } from "./api-helpers.ts";
+import { initialScrapeFallbackAt } from "./scrape-cadence.ts";
 import { handlePublicRoutes } from "./api/public.ts";
 import { handleAccountRoutes } from "./api/account.ts";
 import { handleCarrierRoutes } from "./api/carriers.ts";
@@ -275,16 +276,6 @@ async function auth(req: IncomingMessage): Promise<AuthContext | null> {
   return session ? { accountId: session.account_id, apiKeyId: null, userId: session.user_id, mode: "live", scopes: ["*"] } : null;
 }
 
-function nextScrapeAt(status: TrackingStatus, from = new Date()): string | null {
-  const minutes: Partial<Record<TrackingStatus, number>> = {
-    not_yet_scanned: 240,
-    in_transit: 120,
-    out_for_delivery: 30,
-  };
-  const value = minutes[status];
-  return value ? new Date(from.getTime() + value * 60_000).toISOString() : null;
-}
-
 async function accountPlan(accountId: string): Promise<AccountRow> {
   const result = await query<AccountRow>(`select * from accounts where id = $1`, [accountId]);
   const account = result.rows[0];
@@ -360,7 +351,7 @@ async function insertTracking(input: Record<string, unknown>, ctx: AuthContext):
     carrier: typeof input.carrier === "string" ? input.carrier : candidates[0]?.carrier ?? null,
     carrier_detected: typeof input.carrier !== "string" && candidates.length > 0,
     status,
-    next_scrape_at: nextScrapeAt(status),
+    next_scrape_at: initialScrapeFallbackAt(),
     custom_id: typeof input.custom_id === "string" ? input.custom_id : null,
     customer_email: typeof input.customer_email === "string" ? input.customer_email : null,
   };

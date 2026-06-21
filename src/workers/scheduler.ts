@@ -1,25 +1,13 @@
 import { migrate, pool, query } from "../db.ts";
 import { createLogger } from "../logger.ts";
 import { enqueueScrape, enqueueWebhook } from "../queue.ts";
+import { scrapeCadenceInterval } from "../scrape-cadence.ts";
 
 interface DueTracking {
   id: string;
   tracking_number: string;
   carrier: string | null;
   status: string;
-}
-
-function cadence(status: string): string | null {
-  switch (status) {
-    case "not_yet_scanned":
-      return "4 hours";
-    case "in_transit":
-      return "2 hours";
-    case "out_for_delivery":
-      return "30 minutes";
-    default:
-      return null;
-  }
 }
 
 async function tick(): Promise<void> {
@@ -37,7 +25,7 @@ async function tick(): Promise<void> {
   );
 
   for (const tracking of result.rows) {
-    const interval = cadence(tracking.status);
+    const interval = scrapeCadenceInterval(tracking.status);
     await enqueueScrape({
       tracking_id: tracking.id,
       carrier: tracking.carrier,
