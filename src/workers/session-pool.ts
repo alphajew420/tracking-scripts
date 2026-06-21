@@ -4,11 +4,13 @@ import { proxyForCarrier } from "../proxy.ts";
 import type { ScrapeResult } from "../types.ts";
 import { buildCarrierSessionOptions } from "../carrier-runtime.ts";
 import { getBrowserSidecarEndpoint, invalidateBrowserSidecar } from "../browser-sidecar.ts";
+import type { BrowserProxy } from "../proxy.ts";
 
 interface PooledSession {
   session: TrackingSession;
   createdAt: number;
   uses: number;
+  proxy?: BrowserProxy;
 }
 
 const maxAgeMs = Number(process.env.SESSION_MAX_AGE_MS ?? 60 * 60_000);
@@ -47,7 +49,11 @@ export class SessionPool {
       existing.uses += 1;
       return existing.session;
     }
-    if (existing) await existing.session.close();
+    if (existing) {
+      this.sessions.delete(carrierId);
+      await existing.session.close();
+      await invalidateBrowserSidecar(carrierId, existing.proxy);
+    }
 
     const factory = getCarrierFactory(carrierId);
     if (!factory) throw new Error(`unsupported carrier: ${carrierId}`);
@@ -75,7 +81,7 @@ export class SessionPool {
                 : undefined,
       }),
     );
-    this.sessions.set(carrierId, { session, createdAt: Date.now(), uses: 1 });
+    this.sessions.set(carrierId, { session, createdAt: Date.now(), uses: 1, proxy });
     return session;
   }
 
@@ -95,7 +101,7 @@ export class SessionPool {
         }
 
         await this.invalidate(carrierId);
-        await invalidateBrowserSidecar(carrierId);
+        await this.invalidateSidecar(carrierId);
         const freshSidecarSession = await this.get(carrierId);
         return await freshSidecarSession.track(trackingNumber);
       }
@@ -126,6 +132,12 @@ export class SessionPool {
     if (!existing) return;
     this.sessions.delete(carrierId);
     await existing.session.close();
+    await invalidateBrowserSidecar(carrierId, existing.proxy);
+  }
+
+  private async invalidateSidecar(carrierId: string): Promise<void> {
+    const existing = this.sessions.get(carrierId);
+    await invalidateBrowserSidecar(carrierId, existing?.proxy);
   }
 
   async close(): Promise<void> {

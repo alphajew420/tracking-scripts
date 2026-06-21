@@ -1,4 +1,5 @@
 import { Queue } from "bullmq";
+import Redis from "ioredis";
 
 export const redisUrl = process.env.REDIS_URL ?? "redis://localhost:6379";
 
@@ -43,7 +44,40 @@ export const webhookQueue = new Queue<WebhookJob>("webhooks", {
   },
 });
 
+const enqueueLockRedis = new Redis(redisConnection());
+
+function scrapeLockTtlSeconds(reason: ScrapeJob["reason"]): number {
+  if (reason === "bulk_lookup" || reason === "retrack") return 30;
+  return Number(process.env.SCRAPE_ENQUEUE_LOCK_SECONDS ?? 600);
+}
+
 export async function enqueueScrape(job: ScrapeJob, delay = 0): Promise<void> {
+  const lockKey = `scrape:enqueue:${job.tracking_id}`;
+  const lockTtl = scrapeLockTtlSeconds(job.reason);
+  const locked = await enqueueLockRedis.set(lockKey, "1", "EX", lockTtl, "NX");
+  if (!locked && job.reason !== "retrack") return;
+
+  let added = false;
+  try {
+    await scrapeQueue.add(
+      "scrape",
+      job,
+      {
+        delay,
+        jobId: `${job.reason}-${job.tracking_id}-${Date.now()}`,
+      },
+    );
+    added = true;
+  } finally {
+    if (!added) await enqueueLockRedis.del(lockKey).catch(() => {});
+  }
+}
+
+export async function releaseScrapeEnqueueLock(trackingId: string): Promise<void> {
+  await enqueueLockRedis.del(`scrape:enqueue:${trackingId}`).catch(() => {});
+}
+
+export async function enqueueScrapeUnlocked(job: ScrapeJob, delay = 0): Promise<void> {
   await scrapeQueue.add(
     "scrape",
     job,
