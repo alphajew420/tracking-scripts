@@ -124,6 +124,13 @@ async function main() {
     }).catch(() => {});
 
     await page.waitForLoadState("domcontentloaded", { timeout: 90000 }).catch(() => {});
+    await page.waitForTimeout(3000);
+    if (!responses.some((entry) => entry.url.includes("/track/v2/shipments"))) {
+      await page.goto(
+        `https://www.fedex.com/fedextrack/?trknbr=${encodeURIComponent(trackingNumber)}&trkqual=${encodeURIComponent(`12030~${trackingNumber}~FDEG`)}`,
+        { waitUntil: "domcontentloaded", timeout: 90000 },
+      ).catch(() => {});
+    }
     await page.waitForTimeout(Number(process.env.FEDEX_RENDER_SETTLE_MS ?? 12000));
 
     const state = await page.evaluate(() => {

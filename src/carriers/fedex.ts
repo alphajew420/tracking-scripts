@@ -217,6 +217,13 @@ async function navigateAndParse(page: Page, num: string): Promise<ScrapeResult |
   if (targetUrl === LANDING_URL) {
     await clearFedExOverlays(page);
     await submitTrackingFromLanding(page, num);
+    await page.waitForTimeout(3000);
+    const renderedAfterSubmit = await parseRenderedPage(page, num);
+    if (renderedAfterSubmit) return renderedAfterSubmit;
+    await page.goto(TRACK_URL(num), {
+      waitUntil: "domcontentloaded",
+      timeout: Number(process.env.FEDEX_NAVIGATION_TIMEOUT_MS ?? 45000),
+    }).catch(() => {});
   }
 
   await page.waitForTimeout(Number(process.env.FEDEX_RENDER_SETTLE_MS ?? 12000));
