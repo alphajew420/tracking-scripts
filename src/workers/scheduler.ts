@@ -1,7 +1,6 @@
 import { migrate, pool, query } from "../db.ts";
 import { createLogger } from "../logger.ts";
 import { enqueueScrape, enqueueWebhook } from "../queue.ts";
-import { scrapeCadenceInterval } from "../scrape-cadence.ts";
 
 interface DueTracking {
   id: string;
@@ -24,8 +23,8 @@ async function tick(): Promise<void> {
     [Number(process.env.SCHEDULER_BATCH_SIZE ?? 100)],
   );
 
+  const leaseSeconds = Number(process.env.SCHEDULER_SCRAPE_LEASE_SECONDS ?? 300);
   for (const tracking of result.rows) {
-    const interval = scrapeCadenceInterval(tracking.status);
     await enqueueScrape({
       tracking_id: tracking.id,
       carrier: tracking.carrier,
@@ -34,10 +33,10 @@ async function tick(): Promise<void> {
     });
     await query(
       `update trackings
-       set next_scrape_at = case when $2::text is null then null else now() + ($2::text)::interval end,
+       set next_scrape_at = now() + ($2::text || ' seconds')::interval,
            updated_at = now()
        where id = $1`,
-      [tracking.id, interval],
+      [tracking.id, leaseSeconds],
     );
   }
 
