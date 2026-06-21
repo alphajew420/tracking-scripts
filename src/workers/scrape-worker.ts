@@ -94,6 +94,7 @@ async function run() {
 
       try {
         if (!result.ok || !result.track) {
+          await poolSessions.invalidate(carrier);
           await query(
             `update trackings
              set exception = $2,
