@@ -1,13 +1,20 @@
 import { createServer } from "node:net";
-import { existsSync } from "node:fs";
-import { spawn } from "node:child_process";
+import { existsSync, rmSync } from "node:fs";
+import { spawn, type ChildProcess } from "node:child_process";
 import { homedir, platform } from "node:os";
 import { join } from "node:path";
 import { proxyForCarrier } from "./proxy.ts";
 import { createProxyExtension } from "./session.ts";
 import type { BrowserProxy } from "./proxy.ts";
 
-const launched = new Map<string, Promise<string | undefined>>();
+interface SidecarState {
+  endpoint: string | undefined;
+  child?: ChildProcess;
+  profile?: string;
+  explicitEndpoint?: boolean;
+}
+
+const launched = new Map<string, Promise<SidecarState>>();
 
 function chromePath(): string {
   const explicit = process.env.CHROME_PATH;
@@ -80,12 +87,27 @@ async function waitForEndpoint(endpoint: string, timeoutMs = 20_000): Promise<vo
   throw new Error(`CDP endpoint did not become ready: ${endpoint}`);
 }
 
-async function launchSidecar(carrier: string, proxy?: BrowserProxy): Promise<string | undefined> {
-  if (!shouldAutoLaunch(carrier)) return undefined;
+function cacheKeyFor(carrier: string, proxy?: BrowserProxy): string {
+  return `${carrier}:${proxy ? "proxy" : "direct"}`;
+}
+
+function safeRemoveProfile(profile: string | undefined): void {
+  if (!profile) return;
+  const normalized = profile.replaceAll("\\", "/");
+  const allowed =
+    normalized.includes("/tmp/") ||
+    normalized.includes(".browser-profiles/") ||
+    normalized.includes("trackified-");
+  if (!allowed) return;
+  rmSync(profile, { recursive: true, force: true });
+}
+
+async function launchSidecar(carrier: string, proxy?: BrowserProxy): Promise<SidecarState> {
+  if (!shouldAutoLaunch(carrier)) return { endpoint: undefined };
 
   const explicitEndpoint =
     process.env[carrierEnvName("BROWSER_CDP_ENDPOINT", carrier)] ?? process.env.BROWSER_CDP_ENDPOINT;
-  if (explicitEndpoint) return explicitEndpoint;
+  if (explicitEndpoint) return { endpoint: explicitEndpoint, explicitEndpoint: true };
 
   const port = Number(process.env[carrierEnvName("BROWSER_CDP_PORT", carrier)] ?? process.env.BROWSER_CDP_PORT ?? 0) || await pickFreePort();
   const profile =
@@ -135,18 +157,50 @@ async function launchSidecar(carrier: string, proxy?: BrowserProxy): Promise<str
 
   const endpoint = `http://127.0.0.1:${port}`;
   await waitForEndpoint(endpoint);
-  return endpoint;
+  return { endpoint, child, profile };
 }
 
 export async function getBrowserSidecarEndpoint(carrier: string, proxy?: BrowserProxy): Promise<string | undefined> {
-  const cacheKey = `${carrier}:${proxy ? "proxy" : "direct"}`;
+  const cacheKey = cacheKeyFor(carrier, proxy);
   const existing = launched.get(cacheKey);
-  if (existing) return existing;
+  if (existing) return (await existing).endpoint;
 
   const promise = launchSidecar(carrier, proxy).catch((error) => {
     launched.delete(cacheKey);
     throw error;
   });
   launched.set(cacheKey, promise);
-  return promise;
+  return (await promise).endpoint;
+}
+
+export async function invalidateBrowserSidecar(carrier: string, proxy?: BrowserProxy): Promise<void> {
+  const cacheKey = cacheKeyFor(carrier, proxy);
+  const existing = launched.get(cacheKey);
+  if (!existing) return;
+  launched.delete(cacheKey);
+
+  let state: SidecarState;
+  try {
+    state = await existing;
+  } catch {
+    return;
+  }
+
+  if (!state.explicitEndpoint && state.child?.pid) {
+    try {
+      process.kill(-state.child.pid, "SIGTERM");
+    } catch {
+      try { state.child.kill("SIGTERM"); } catch { /* */ }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      process.kill(-state.child.pid, "SIGKILL");
+    } catch {
+      try { state.child.kill("SIGKILL"); } catch { /* */ }
+    }
+  }
+
+  if (!state.explicitEndpoint) {
+    safeRemoveProfile(state.profile);
+  }
 }

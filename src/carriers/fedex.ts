@@ -96,11 +96,7 @@ async function parseRenderedPage(page: Page, num: string): Promise<ScrapeResult 
   const parsedResult = await page.evaluate(
     ({ trackingText, trackingNumber }: { trackingText: string; trackingNumber: string }) => {
       const text = trackingText;
-    const looksLikeTrackPage =
-      /tracking id:|scheduled delivery date|we have your package|on the way|out for delivery|travel history|shipment facts/i.test(
-        text,
-      );
-    if (!text.includes(trackingNumber) && !looksLikeTrackPage) {
+    if (!text.includes(trackingNumber)) {
       return null;
     }
     if (/we can.t find that tracking number|tracking number is incorrect/i.test(text)) {

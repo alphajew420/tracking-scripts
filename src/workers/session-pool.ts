@@ -3,7 +3,7 @@ import { getCarrierFactory } from "../carriers/registry.ts";
 import { proxyForCarrier } from "../proxy.ts";
 import type { ScrapeResult } from "../types.ts";
 import { buildCarrierSessionOptions } from "../carrier-runtime.ts";
-import { getBrowserSidecarEndpoint } from "../browser-sidecar.ts";
+import { getBrowserSidecarEndpoint, invalidateBrowserSidecar } from "../browser-sidecar.ts";
 
 interface PooledSession {
   session: TrackingSession;
@@ -69,6 +69,12 @@ export class SessionPool {
       if (!result.ok && /Target page|context or browser|Browser has been closed/i.test(result.error ?? "")) {
         await this.invalidate(carrierId);
       }
+      if (!result.ok && shouldRetryWithFreshSidecar(carrierId, result)) {
+        await this.invalidate(carrierId);
+        await invalidateBrowserSidecar(carrierId);
+        const freshSession = await this.get(carrierId);
+        return await freshSession.track(trackingNumber);
+      }
       return result;
     });
   }
@@ -102,4 +108,11 @@ export class SessionPool {
     await Promise.all(Array.from(this.sessions.values()).map((entry) => entry.session.close()));
     this.sessions.clear();
   }
+}
+
+function shouldRetryWithFreshSidecar(carrierId: string, result: ScrapeResult): boolean {
+  if (carrierId !== "fedex") return false;
+  return /tracking number not found|no results found|rendered tracking data not available|system-error/i.test(
+    result.error ?? "",
+  );
 }
