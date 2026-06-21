@@ -37,7 +37,22 @@ async function run() {
       const existing = existingResult.rows[0];
       if (!existing) throw new Error("tracking not found");
 
+      const startedAt = Date.now();
+      logger.info("scrape started", {
+        job_id: job.id,
+        tracking_id: job.data.tracking_id,
+        carrier,
+        reason: job.data.reason,
+      });
       const result = await poolSessions.track(carrier, job.data.tracking_number);
+      logger.info("scrape finished", {
+        job_id: job.id,
+        tracking_id: job.data.tracking_id,
+        carrier,
+        ok: result.ok,
+        elapsed_ms: Date.now() - startedAt,
+        error: result.ok ? undefined : result.error,
+      });
 
       if (!result.ok || !result.track) {
         await query(
