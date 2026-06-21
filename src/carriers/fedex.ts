@@ -3,6 +3,8 @@ import type { Carrier, QueryCtx } from "../session.ts";
 import type { Event, ScrapeResult, Status } from "../types.ts";
 
 const LANDING_URL = "https://www.fedex.com/en-us/tracking.html";
+const TRACKING_QUALIFIER = (n: string) =>
+  process.env[`FEDEX_TRKQUAL_${n.replace(/\W/g, "_")}`] ?? process.env.FEDEX_TRKQUAL ?? `12030~${n}~FDEG`;
 const TRACK_URL = (n: string) => {
   const template = process.env.FEDEX_TRACK_URL_TEMPLATE;
   if (template) return template.replaceAll("{n}", encodeURIComponent(n));
@@ -11,8 +13,7 @@ const TRACK_URL = (n: string) => {
     return LANDING_URL;
   }
 
-  const trkqual =
-    process.env[`FEDEX_TRKQUAL_${n.replace(/\W/g, "_")}`] ?? process.env.FEDEX_TRKQUAL ?? `12030~${n}~FDEG`;
+  const trkqual = TRACKING_QUALIFIER(n);
   if (trkqual) {
     return `https://www.fedex.com/fedextrack/?trknbr=${encodeURIComponent(n)}&trkqual=${encodeURIComponent(trkqual)}`;
   }
@@ -428,8 +429,8 @@ export function createFedexCarrier(): Carrier {
             {
               trackNumberInfo: {
                 trackingNumber: num,
-                trackingQualifier: "",
-                trackingCarrier: "",
+                trackingQualifier: TRACKING_QUALIFIER(num),
+                trackingCarrier: "FDEG",
               },
             },
           ],
