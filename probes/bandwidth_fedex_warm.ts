@@ -4,7 +4,7 @@
  * Measures:
  *  - one-time browser warm bytes
  *  - page-owned tracking POST bytes during warm, if FedEx fires one
- *  - repeated same-session tracking POST bytes via page.evaluate(fetch)
+ *  - repeated same-session lookups through the active FedEx carrier runtime
  *
  * Run:
  *   npm run probe:bandwidth-fedex -- 123456789012 123456789012 123456789012
@@ -21,6 +21,7 @@ const NUMS = process.argv.slice(2).length > 0
 
 const API_URL = "https://api.fedex.com/track/v2/shipments";
 const PRICE_PER_GB = Number(process.env.PROXY_PRICE_PER_GB ?? 0.25);
+const QUERY_MODE = process.env.FEDEX_PROBE_QUERY_MODE ?? "carrier";
 const BLOCKED_TYPES = new Set(["image", "font", "media", "stylesheet"]);
 const BLOCKED_DOMAINS = [
   "googletagmanager.com",
@@ -220,6 +221,7 @@ if (process.env.FEDEX_PROBE_DISABLE_BLOCKING !== "true") {
   });
 }
 const page = await context.newPage();
+if (fedexCarrier.setupPage) await fedexCarrier.setupPage(page);
 
 page.on("response", async (resp: Response) => {
   const url = resp.url();
@@ -266,17 +268,28 @@ try {
   const warmMs = Date.now() - warmT0;
   dumpCounter("WARM one-time browser/session", warm, warmMs);
 
-  const waitStart = Date.now();
-  while (!bearerToken && Date.now() - waitStart < 15000) {
-    await page.waitForTimeout(250);
+  if (QUERY_MODE === "fetch") {
+    const waitStart = Date.now();
+    while (!bearerToken && Date.now() - waitStart < 15000) {
+      await page.waitForTimeout(250);
+    }
+    if (!bearerToken) throw new Error("FedEx bearer token was not captured during warm");
   }
-  if (!bearerToken) throw new Error("FedEx bearer token was not captured during warm");
 
   const queryCounters: Array<{ num: string; counter: Counter; fetchMs: number; ok: boolean; status: number; bodyBytes: number }> = [];
   for (const num of NUMS) {
     const counter = active = newCounter();
     const t0 = Date.now();
-    const result = await postFedExTrack(page, bearerToken, num);
+    const result =
+      QUERY_MODE === "fetch"
+        ? await postFedExTrack(page, bearerToken!, num)
+        : await fedexCarrier.runQuery({ page, request: context.request }, num).then((scrape) => ({
+            status: scrape.ok ? 200 : 599,
+            ms: Date.now() - t0,
+            bodyBytes: scrape.ok ? new TextEncoder().encode(JSON.stringify(scrape.track)).length : 0,
+            ok: scrape.ok,
+            hasPackageData: Boolean(scrape.ok && scrape.track?.events.length),
+          }));
     const elapsedMs = Date.now() - t0;
     queryCounters.push({
       num,
