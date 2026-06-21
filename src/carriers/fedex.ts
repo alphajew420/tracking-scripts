@@ -5,6 +5,13 @@ import type { Event, ScrapeResult, Status } from "../types.ts";
 const LANDING_URL = "https://www.fedex.com/en-us/tracking.html";
 const TRACKING_QUALIFIER = (n: string) =>
   process.env[`FEDEX_TRKQUAL_${n.replace(/\W/g, "_")}`] ?? process.env.FEDEX_TRKQUAL ?? `12030~${n}~FDEG`;
+const DEEP_LINK_URL = (n: string) => {
+  const trkqual = TRACKING_QUALIFIER(n);
+  if (trkqual) {
+    return `https://www.fedex.com/fedextrack/?trknbr=${encodeURIComponent(n)}&trkqual=${encodeURIComponent(trkqual)}`;
+  }
+  return `https://www.fedex.com/fedextrack/?trknbr=${encodeURIComponent(n)}`;
+};
 const TRACK_URL = (n: string) => {
   const template = process.env.FEDEX_TRACK_URL_TEMPLATE;
   if (template) return template.replaceAll("{n}", encodeURIComponent(n));
@@ -13,12 +20,7 @@ const TRACK_URL = (n: string) => {
     return LANDING_URL;
   }
 
-  const trkqual = TRACKING_QUALIFIER(n);
-  if (trkqual) {
-    return `https://www.fedex.com/fedextrack/?trknbr=${encodeURIComponent(n)}&trkqual=${encodeURIComponent(trkqual)}`;
-  }
-
-  return `https://www.fedex.com/fedextrack/?trknbr=${encodeURIComponent(n)}`;
+  return DEEP_LINK_URL(n);
 };
 const API_URL = "https://api.fedex.com/track/v2/shipments";
 const BROWSER_FETCH_TIMEOUT_MS = () => Number(process.env.FEDEX_BROWSER_FETCH_TIMEOUT_MS ?? 20000);
@@ -220,7 +222,7 @@ async function navigateAndParse(page: Page, num: string): Promise<ScrapeResult |
     await page.waitForTimeout(3000);
     const renderedAfterSubmit = await parseRenderedPage(page, num);
     if (renderedAfterSubmit) return renderedAfterSubmit;
-    await page.goto(TRACK_URL(num), {
+    await page.goto(DEEP_LINK_URL(num), {
       waitUntil: "domcontentloaded",
       timeout: Number(process.env.FEDEX_NAVIGATION_TIMEOUT_MS ?? 45000),
     }).catch(() => {});
