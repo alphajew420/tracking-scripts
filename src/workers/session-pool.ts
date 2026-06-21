@@ -20,13 +20,26 @@ function booleanEnv(name: string, fallback: boolean): boolean {
   return /^(1|true|yes)$/i.test(value);
 }
 
+function maxUsesForCarrier(carrierId: string): number {
+  const envName = `SESSION_MAX_USES_${carrierId.toUpperCase().replaceAll("-", "_")}`;
+  const override = process.env[envName];
+  if (override != null && override !== "") return Number(override);
+
+  // FedEx is safe to amortize at the Chrome sidecar level, but reusing the
+  // same tracking page across different numbers can poison later lookups.
+  // A clean page per job keeps the browser/proxy warm without a full relaunch.
+  if (carrierId === "fedex") return 1;
+  return maxUses;
+}
+
 export class SessionPool {
   private sessions = new Map<string, PooledSession>();
   private locks = new Map<string, Promise<unknown>>();
 
   async get(carrierId: string): Promise<TrackingSession> {
     const existing = this.sessions.get(carrierId);
-    if (existing && Date.now() - existing.createdAt < maxAgeMs && existing.uses < maxUses) {
+    const carrierMaxUses = maxUsesForCarrier(carrierId);
+    if (existing && Date.now() - existing.createdAt < maxAgeMs && existing.uses < carrierMaxUses) {
       existing.uses += 1;
       return existing.session;
     }
