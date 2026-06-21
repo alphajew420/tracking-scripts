@@ -94,13 +94,34 @@ async function main() {
       document.querySelector<HTMLButtonElement>("#deny")?.click();
     }).catch(() => {});
 
-    const input = page.locator("input[id^='tracking_number_0_'], #trackingModuleTrackingNum, input[name='trackingNumber']").first();
-    if (await input.isVisible({ timeout: 30000 }).catch(() => false)) {
-      await input.click({ timeout: 10000, force: true });
-      await page.keyboard.press(process.platform === "darwin" ? "Meta+A" : "Control+A");
-      await page.keyboard.type(trackingNumber, { delay: 20 });
+    await page.waitForSelector("input[id^='tracking_number_0_'], #trackingModuleTrackingNum, input[name='trackingNumber']", {
+      state: "attached",
+      timeout: 30000,
+    }).catch(() => {});
+    await page.evaluate((num) => {
+      const inputs = Array.from(
+        document.querySelectorAll<HTMLInputElement>(
+          "input[id^='tracking_number_0_'], #trackingModuleTrackingNum, input[name='trackingNumber']",
+        ),
+      );
+      for (const input of inputs) {
+        if (input.offsetParent === null && input.id !== "trackingModuleTrackingNum") continue;
+        input.value = num;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: num.slice(-1) || "0" }));
+      }
+    }, trackingNumber);
+    const button = page.locator("#btnSingleTrack, button[type='submit']").first();
+    if (await button.isVisible({ timeout: 2500 }).catch(() => false)) {
+      await button.click({ timeout: 10000, force: true }).catch(() => {});
+    } else {
       await page.locator("button:visible").filter({ hasText: /^TRACK$/i }).first().click({ timeout: 10000, force: true }).catch(() => {});
     }
+    await page.evaluate(() => {
+      const form = document.querySelector<HTMLFormElement>("form");
+      if (form) form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+    }).catch(() => {});
 
     await page.waitForLoadState("domcontentloaded", { timeout: 90000 }).catch(() => {});
     await page.waitForTimeout(Number(process.env.FEDEX_RENDER_SETTLE_MS ?? 12000));

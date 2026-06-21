@@ -240,10 +240,6 @@ async function navigateAndParse(page: Page, num: string): Promise<ScrapeResult |
 async function submitTrackingFromLanding(page: Page, num: string): Promise<void> {
   const visibleLandingInput = page.locator("input[id^='tracking_number_0_']").first();
   const trackingInput = page.locator("#trackingModuleTrackingNum, input[name='trackingNumber']").first();
-  const trackButton = page
-    .locator("button:visible")
-    .filter({ hasText: /^TRACK$/i })
-    .first();
 
   if (await visibleLandingInput.isVisible({ timeout: 5000 }).catch(() => false)) {
     await visibleLandingInput.click({ timeout: 10000, force: true });
@@ -272,7 +268,37 @@ async function submitTrackingFromLanding(page: Page, num: string): Promise<void>
     }, num).catch(() => {});
   }
 
-  await trackButton.click({ timeout: 10000, force: true }).catch(() => {});
+  await page.evaluate((trackingNumber) => {
+    const inputs = Array.from(
+      document.querySelectorAll<HTMLInputElement>(
+        "input[id^='tracking_number_0_'], #trackingModuleTrackingNum, input[name='trackingNumber']",
+      ),
+    );
+    for (const input of inputs) {
+      if (input.offsetParent === null && input.id !== "trackingModuleTrackingNum") continue;
+      input.value = trackingNumber;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+      input.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: trackingNumber.slice(-1) || "0" }));
+    }
+  }, num).catch(() => {});
+
+  const specificTrackButton = page.locator("#btnSingleTrack, button[type='submit']").first();
+  if (await specificTrackButton.isVisible({ timeout: 2500 }).catch(() => false)) {
+    await specificTrackButton.click({ timeout: 10000, force: true }).catch(() => {});
+  } else {
+    await page
+      .locator("button:visible")
+      .filter({ hasText: /^TRACK$/i })
+      .first()
+      .click({ timeout: 10000, force: true })
+      .catch(() => {});
+  }
+
+  await page.evaluate(() => {
+    const form = document.querySelector<HTMLFormElement>("form");
+    if (form) form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+  }).catch(() => {});
 }
 
 async function clearFedExOverlays(page: Page): Promise<void> {
