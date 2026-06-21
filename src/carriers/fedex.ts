@@ -21,6 +21,7 @@ const TRACK_URL = (n: string) => {
   return `https://www.fedex.com/fedextrack/?trknbr=${encodeURIComponent(n)}`;
 };
 const API_URL = "https://api.fedex.com/track/v2/shipments";
+const BROWSER_FETCH_TIMEOUT_MS = () => Number(process.env.FEDEX_BROWSER_FETCH_TIMEOUT_MS ?? 20000);
 
 const STATUS_KEYWORDS: Array<[Status, RegExp]> = [
   ["delivered", /delivered/i],
@@ -31,6 +32,20 @@ const STATUS_KEYWORDS: Array<[Status, RegExp]> = [
 function classify(desc: string): Status {
   for (const [s, re] of STATUS_KEYWORDS) if (re.test(desc)) return s;
   return "unknown";
+}
+
+async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  let timeout: NodeJS.Timeout | undefined;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>((_, reject) => {
+        timeout = setTimeout(() => reject(new Error(message)), timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
 }
 
 function buildResult(status: number, json: any, num: string): ScrapeResult {
@@ -442,10 +457,10 @@ export function createFedexCarrier(): Carrier {
 
         let raw: { status: number; text: string } | null = null;
         try {
-          raw = await page.evaluate(
-            async ({ url, token, body }) => {
+          raw = await withTimeout(page.evaluate(
+            async ({ url, token, body, timeoutMs }) => {
               const controller = new AbortController();
-              const timeout = window.setTimeout(() => controller.abort(), 15000);
+              const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
               try {
                 const response = await fetch(url, {
                   method: "POST",
@@ -467,8 +482,8 @@ export function createFedexCarrier(): Carrier {
                 window.clearTimeout(timeout);
               }
             },
-            { url: API_URL, token: bearerToken, body: payload },
-          );
+            { url: API_URL, token: bearerToken, body: payload, timeoutMs: BROWSER_FETCH_TIMEOUT_MS() },
+          ), BROWSER_FETCH_TIMEOUT_MS() + 2000, "FedEx browser fetch timed out");
         } catch (err) {
           const rendered = await parseRenderedPage(page, num);
           if (rendered) return rendered;
