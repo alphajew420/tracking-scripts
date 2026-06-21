@@ -201,6 +201,10 @@ async function navigateAndParse(page: Page, num: string): Promise<ScrapeResult |
 
   await page.waitForTimeout(Number(process.env.FEDEX_RENDER_SETTLE_MS ?? 12000));
 
+  if (page.url().includes("system-error")) {
+    return { ok: false, error: "FedEx system-error" };
+  }
+
   const parsed = await parseRenderedPage(page, num);
   if (parsed) return parsed;
 
