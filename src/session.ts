@@ -21,6 +21,12 @@ const BLOCKED_DOMAINS = [
   "fast.fonts.net",
   "adobedtm.com",
   "demdex.net",
+  "digital.nuance.com",
+  "media-us2.digital.nuance.com",
+  "usercentrics.eu",
+  "optimizely.com",
+  "smetrics.fedex.com",
+  "evergage.com",
 ];
 
 interface CarrierBase {
