@@ -180,6 +180,25 @@ export async function migrate(): Promise<void> {
   await run(`create index if not exists trackings_next_scrape_idx on trackings(next_scrape_at) where stopped_at is null;`);
 
   await run(`
+    create table if not exists carrier_samples (
+      id text primary key,
+      carrier_id text,
+      carrier_name text,
+      tracking_number text not null,
+      source_url text,
+      notes text,
+      detected_candidates jsonb,
+      validation_status text,
+      turnstile_verified boolean,
+      pow_nonce text,
+      discord_notified boolean not null default false,
+      created_at timestamptz not null default now()
+    );
+  `);
+  await run(`create index if not exists carrier_samples_carrier_idx on carrier_samples(carrier_id);`);
+  await run(`create index if not exists carrier_samples_created_idx on carrier_samples(created_at desc);`);
+
+  await run(`
     create table if not exists api_keys (
       id text primary key,
       account_id text not null default 'acct_dev' references accounts(id),

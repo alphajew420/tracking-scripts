@@ -1,0 +1,35 @@
+{
+  "id": "nz-post",
+  "displayName": "NZ Post",
+  "mode": "scraper",
+  "warmUrl": "https://www.nzpost.co.nz/tools/tracking?trackid={n}",
+  "awaitReady": "body",
+  "queryStrategy": "json_endpoint",
+  "fetchUrl": "https://tools.nzpost.co.nz/tracking/api/parceltrack/parcels?tracking_reference={n}",
+  "request": {
+    "method": "GET",
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "content-type": "application/json",
+      "pragma": "no-cache",
+      "cache-control": "no-cache"
+    }
+  },
+  "parseJson": {
+    "eventsPath": "results.0.tracking_events",
+    "datePath": "date_time",
+    "locationPath": "location",
+    "descriptionPath": "description",
+    "statusPath": "edifact_code"
+  },
+  "failurePatterns": ["No data found for this Tracking Reference", "\"tracking_events\"\\s*:\\s*\\[\\s*\\]"],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed|completed" },
+    { "status": "exception", "pattern": "exception|delay|failed|returned|unable|customs|held" },
+    { "status": "pickup", "pattern": "accepted|received|collected|pickup|lodged" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|out for delivery|sorting|dispatch" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}NZ$|^[A-Z0-9]{10,24}$",
+  "regions": ["NZ"],
+  "tier": 1
+}

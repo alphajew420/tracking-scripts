@@ -98,6 +98,10 @@ export interface SessionOptions {
   };
   /** Use a Chrome extension to set/authenticate the proxy instead of Playwright's proxy option. */
   proxyMode?: "native" | "extension";
+  /** Attach to an already-running Chrome instance, e.g. http://127.0.0.1:9222. */
+  cdpEndpoint?: string;
+  /** Extra Chromium launch args for carrier-specific transport workarounds. */
+  launchArgs?: string[];
 }
 
 const DEFAULT_EXPIRED_MARKERS =
@@ -108,6 +112,7 @@ export class TrackingSession {
   private context: BrowserContext | null = null;
   private page: Page | null = null;
   private browserProcess: { kill(signal?: NodeJS.Signals | number): boolean } | null = null;
+  private attachedBrowser = false;
   private _warm = false;
 
   constructor(
@@ -148,13 +153,13 @@ export class TrackingSession {
   async close(): Promise<void> {
     // Tear down in reverse order. System Chrome can occasionally hang on
     // close, so every close operation is bounded.
-    if (this.opts.channel && this.browserProcess) {
+    if (!this.attachedBrowser && this.opts.channel && this.browserProcess) {
       try { this.browserProcess.kill("SIGTERM"); } catch { /* */ }
       await new Promise((resolve) => setTimeout(resolve, 250));
     }
-    if (this.page) await closeWithTimeout(() => this.page!.close(), 3000);
-    if (this.context) await closeWithTimeout(() => this.context!.close(), 5000);
-    if (this.browser) {
+    if (this.page && !this.attachedBrowser) await closeWithTimeout(() => this.page!.close(), 3000);
+    if (this.context && !this.attachedBrowser) await closeWithTimeout(() => this.context!.close(), 5000);
+    if (this.browser && !this.attachedBrowser) {
       const closed = await closeWithTimeout(() => this.browser!.close(), 5000);
       if (!closed) {
         try { this.browserProcess?.kill("SIGTERM"); } catch { /* */ }
@@ -164,6 +169,7 @@ export class TrackingSession {
     this.context = null;
     this.browser = null;
     this.browserProcess = null;
+    this.attachedBrowser = false;
     this._warm = false;
   }
 
@@ -205,17 +211,49 @@ export class TrackingSession {
           `--load-extension=${extensionProxy}`,
         ]
       : [];
+    const launchArgs = [
+      "--disable-blink-features=AutomationControlled",
+      ...extensionArgs,
+      ...(this.opts.launchArgs ?? []),
+    ];
 
-    if (this.opts.persistentProfileDir) {
-      this.context = await chromium.launchPersistentContext(
-        this.opts.persistentProfileDir,
-        {
-          ...contextOptions,
-          headless: this.opts.headless ?? true,
-          args: ["--disable-blink-features=AutomationControlled", ...extensionArgs],
-          ...(this.opts.channel ? { channel: this.opts.channel } : {}),
-        },
-      );
+    if (this.opts.cdpEndpoint) {
+      this.browser = await chromium.connectOverCDP(this.opts.cdpEndpoint, { noDefaults: true });
+      this.attachedBrowser = true;
+      const deadline = Date.now() + 10_000;
+      while (!this.browser.contexts().length && Date.now() < deadline) {
+        await new Promise((resolve) => setTimeout(resolve, 250));
+      }
+      this.context = this.browser.contexts()[0] ?? null;
+      if (!this.context) {
+        throw new Error(`CDP browser at ${this.opts.cdpEndpoint} has no available context`);
+      }
+    } else if (this.opts.persistentProfileDir) {
+      const persistentOptions = {
+        ...contextOptions,
+        headless: this.opts.headless ?? true,
+        args: launchArgs,
+      };
+      try {
+        this.context = await chromium.launchPersistentContext(
+          this.opts.persistentProfileDir,
+          {
+            ...persistentOptions,
+            ...(this.opts.channel ? { channel: this.opts.channel } : {}),
+          },
+        );
+      } catch (err) {
+        if (!this.opts.channel) throw err;
+        if (this.opts.debug) {
+          console.error(
+            `[session:${this.carrier.name}] launchPersistentContext with channel=${this.opts.channel} failed; retrying bundled Chromium: ${formatCarrierError(err)}`,
+          );
+        }
+        this.context = await chromium.launchPersistentContext(
+          this.opts.persistentProfileDir,
+          persistentOptions,
+        );
+      }
       this.browser = this.context.browser();
       this.browserProcess =
         (this.browser as unknown as {
@@ -223,11 +261,24 @@ export class TrackingSession {
         })?.process?.() ?? null;
     } else {
       if (!this.browser) {
-        this.browser = await chromium.launch({
-          headless: this.opts.headless ?? true,
-          args: ["--disable-blink-features=AutomationControlled", ...extensionArgs],
-          ...(this.opts.channel ? { channel: this.opts.channel } : {}),
-        });
+        try {
+          this.browser = await chromium.launch({
+            headless: this.opts.headless ?? true,
+            args: launchArgs,
+            ...(this.opts.channel ? { channel: this.opts.channel } : {}),
+          });
+        } catch (err) {
+          if (!this.opts.channel) throw err;
+          if (this.opts.debug) {
+            console.error(
+              `[session:${this.carrier.name}] launch with channel=${this.opts.channel} failed; retrying bundled Chromium: ${formatCarrierError(err)}`,
+            );
+          }
+          this.browser = await chromium.launch({
+            headless: this.opts.headless ?? true,
+            args: launchArgs,
+          });
+        }
         this.browserProcess =
           (this.browser as unknown as {
             process?: () => { kill(signal?: NodeJS.Signals | number): boolean } | null;
@@ -249,6 +300,7 @@ export class TrackingSession {
       await this.context.route("**/*", (route, req) => {
         const url = req.url();
         if (postWarm) {
+          if (req.method() === "OPTIONS") return route.continue();
           // Tightened: keep only navigations/document fetches + JSON,
           // and Akamai sensor pings (they keep the session valid).
           const rt = req.resourceType();
@@ -310,7 +362,7 @@ export class TrackingSession {
   }
 }
 
-function createProxyExtension(
+export function createProxyExtension(
   proxy: NonNullable<SessionOptions["proxy"]>,
   carrierName: string,
 ): string {
@@ -360,7 +412,7 @@ chrome.webRequest.onAuthRequired.addListener(
     }
   }),
   { urls: ["<all_urls>"] },
-  ["asyncBlocking"]
+  ["blocking"]
 );
 `.trimStart(),
   );

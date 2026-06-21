@@ -1,0 +1,31 @@
+{
+  "id": "swiss-post",
+  "displayName": "Swiss Post",
+  "mode": "scraper",
+  "warmUrl": "https://service.post.ch/EasyTrack/submitParcelData.do?p_language=en&formattedParcelCodes={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://service.post.ch/EasyTrack/submitParcelData.do?p_language=en&formattedParcelCodes={n}",
+  "parseHtml": {
+    "events": ".event, .tracking-event, .shipment-event, .timeline-item, [class*='event'], [class*='timeline'] li",
+    "date": "time, .date, .event-date, [class*='date']",
+    "location": ".location, .event-location, [class*='location'], [class*='place']",
+    "description": ".status, .description, .event-description, [class*='status'], [class*='description'], h3, h4"
+  },
+  "failurePatterns": [
+    "keine Sendung gefunden",
+    "no consignment found",
+    "not found",
+    "unknown consignment",
+    "keine Informationen"
+  ],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|zugestellt|distribu|consegnat|signed" },
+    { "status": "exception", "pattern": "exception|delay|failed|returned|retour|unable|customs|held|problem" },
+    { "status": "pickup", "pattern": "accepted|posted|received|collected|pickup|aufgegeben" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|out for delivery|sort|transport|unterwegs" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}CH$|^\\d{12,24}$",
+  "regions": ["CH"],
+  "tier": 1
+}

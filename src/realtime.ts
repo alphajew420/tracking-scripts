@@ -3,7 +3,7 @@ import Redis from "ioredis";
 import { WebSocketServer, type RawData, type WebSocket } from "ws";
 import { query } from "./db.ts";
 import { redisUrl } from "./queue.ts";
-import type { AuthContext } from "./server.ts";
+import type { AuthContext } from "./api/types.ts";
 import type { WebhookEventType } from "./webhooks.ts";
 
 const realtimeChannel = "trackified:realtime:v1";

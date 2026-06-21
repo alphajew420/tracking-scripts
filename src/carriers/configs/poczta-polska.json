@@ -1,0 +1,25 @@
+{
+  "id": "poczta-polska",
+  "displayName": "Poczta Polska",
+  "mode": "scraper",
+  "warmUrl": "https://emonitoring.poczta-polska.pl/?numer={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://emonitoring.poczta-polska.pl/?numer={n}",
+  "parseHtml": {
+    "events": "tr, .tracking-event, .shipment-event, .event, .timeline-item, [class*='event']",
+    "date": "td:nth-child(1), time, .date, .event-date, [class*='date']",
+    "location": "td:nth-child(2), .location, .event-location, [class*='location']",
+    "description": "td:nth-child(3), .status, .description, .event-description, [class*='status'], [class*='description']"
+  },
+  "failurePatterns": ["not found", "no shipment", "no information", "could not find", "invalid", "brak danych", "nie znaleziono"],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed|doręczono|wydano" },
+    { "status": "exception", "pattern": "exception|delay|failed|returned|unable|customs|held|zwrot" },
+    { "status": "pickup", "pattern": "accepted|received|collected|pickup|nadanie|przyjęto" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|out for delivery|sort|transport|przybyła|wysłano" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}PL$|^[A-Z0-9]{10,24}$",
+  "regions": ["PL"],
+  "tier": 1
+}

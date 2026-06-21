@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { query } from "./db.ts";
+import { appUrl } from "../lib/site.ts";
 
 export interface EmailMessage {
   accountId?: string | null;
@@ -44,9 +45,4 @@ export async function sendEmail(message: EmailMessage): Promise<void> {
   }
 
   throw new Error(`unsupported EMAIL_PROVIDER: ${provider}`);
-}
-
-export function appUrl(path: string): string {
-  const base = process.env.APP_BASE_URL ?? "http://localhost:3017";
-  return `${base}${path}`;
 }

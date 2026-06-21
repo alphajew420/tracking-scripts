@@ -1,0 +1,24 @@
+{
+  "id": "cainiao",
+  "displayName": "Cainiao",
+  "mode": "scraper",
+  "warmUrl": "https://global.cainiao.com/detail.htm?mailNoList={n}",
+  "awaitReady": "body",
+  "queryStrategy": "json_endpoint",
+  "fetchUrl": "https://global.cainiao.com/global/detail.json?mailNos={n}",
+  "parseJson": {
+    "eventsPath": "module.0.detailList",
+    "datePath": "timeStr",
+    "locationPath": "pointName",
+    "descriptionPath": "desc"
+  },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed|delivery successful" },
+    { "status": "exception", "pattern": "exception|delay|returned|failed|abnormal" },
+    { "status": "pickup", "pattern": "pickup|accepted|received" },
+    { "status": "in_transit", "pattern": "transit|arrived|departed|customs|handover" }
+  ],
+  "trackingNumberPattern": "^(LP\\d{12,18}|S000\\d{8,18}|[A-Z]{2}\\d{9}[A-Z]{2}|[A-Z]{2}\\d{10,24})$",
+  "regions": ["CN", "GLOBAL"],
+  "tier": 3
+}

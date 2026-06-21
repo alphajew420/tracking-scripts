@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { apiBaseUrl } from "@/lib/site";
 
 type PublicTracking = {
   id: string;
@@ -15,7 +16,7 @@ type PublicTracking = {
 };
 
 async function getTracking(id: string): Promise<PublicTracking> {
-  const base = process.env.API_INTERNAL_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8788";
+  const base = process.env.API_INTERNAL_BASE_URL ?? apiBaseUrl().replace(/^https?:\/\//, "http://");
   const response = await fetch(`${base}/public/trackings/${id}`, { cache: "no-store" });
   if (response.status === 404) notFound();
   if (!response.ok) throw new Error("Unable to load tracking page");

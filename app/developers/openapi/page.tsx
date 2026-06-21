@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { MarketingChrome } from "@/components/marketing-shell";
-
-const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.trackified.15-204-158-166.sslip.io";
+import { apiBaseUrl } from "@/lib/site";
 
 export default function Page() {
   return (
@@ -11,7 +10,7 @@ export default function Page() {
         <h1>Import the live API contract into your tooling.</h1>
         <p>The running API exposes an OpenAPI document for Postman, Insomnia, codegen, and SDK generation.</p>
         <div className="actions">
-          <Link href={`${apiBase}/openapi.json`} className="button primary">Open openapi.json</Link>
+          <Link href={`${apiBaseUrl()}/openapi.json`} className="button primary">Open openapi.json</Link>
           <Link href="/developers/api-reference" className="button">View endpoint map</Link>
         </div>
       </section>

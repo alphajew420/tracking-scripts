@@ -1,0 +1,39 @@
+{
+  "id": "austrian-post",
+  "displayName": "Austrian Post",
+  "mode": "scraper",
+  "warmUrl": "https://www.post.at/s/sendungsdetails?snr={n}&lang=en",
+  "awaitReady": "body",
+  "queryStrategy": "json_endpoint",
+  "fetchUrl": "https://api.post.at/sendungen/sv/graphqlPublic",
+  "request": {
+    "method": "POST",
+    "credentials": "omit",
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "accept-language": "en-US",
+      "content-type": "application/json"
+    },
+    "bodyTemplate": "{\"query\":\"query { einzelsendung(sendungsnummer: \\\"{n}\\\") { sendungsnummer externalIdentityCode branchkey estimatedDelivery { startDate endDate startTime endTime } dimensions { height width length } status weight sendungsEvents { timestamp status reasontypecode text textEn eventpostalcode eventcountry eventPlaceName } customsInformation { customsDocumentAvailable userDocumentNeeded } hasPayment } }\"}"
+  },
+  "parseJson": {
+    "eventsPath": "data.einzelsendung.sendungsEvents",
+    "datePath": "timestamp",
+    "locationPath": "eventPlaceName",
+    "descriptionPath": "textEn",
+    "statusPath": "status"
+  },
+  "failurePatterns": [
+    "\"einzelsendung\"\\s*:\\s*null",
+    "\"sendungsEvents\"\\s*:\\s*\\[\\s*\\]"
+  ],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|zugestellt|delivered successfully|signed" },
+    { "status": "exception", "pattern": "exception|delay|failed|returned|retour|unable|customs|held|problem" },
+    { "status": "pickup", "pattern": "accepted|posted|received|collected|pickup|aufgegeben|annahme" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|out for delivery|sort|transport|unterwegs|verteilung" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}AT$|^\\d{10,24}$",
+  "regions": ["AT"],
+  "tier": 1
+}

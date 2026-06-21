@@ -24,12 +24,19 @@ export type {
 export {
   createConfigCarrier,
   createConfigScraperCarrier,
-  listCarrierCatalog,
   listCarrierConfigIds,
   loadCarrierConfig,
   type CarrierAdapterConfig,
   type CarrierCatalogEntry,
 } from "./config/adapter.ts";
+export {
+  getCarrierFactory,
+  listPublicCarrierCatalog,
+  listRegisteredCarrierIds,
+  listRegisteredCarriers,
+  type CarrierFactory,
+  type RegisteredCarrier,
+} from "./carriers/registry.ts";
 export { detectCarrier, type CarrierCandidate } from "./detect.ts";
 export {
   deliverWebhook,

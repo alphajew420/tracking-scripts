@@ -1,0 +1,26 @@
+{
+  "id": "lso",
+  "displayName": "LSO / Lone Star Overnight",
+  "mode": "scraper",
+  "warmUrl": "https://api-prod.lso.com/tracking/track_barcode?barcodes={n}",
+  "awaitReady": "body",
+  "queryStrategy": "json_endpoint",
+  "fetchUrl": "https://api-prod.lso.com/tracking/track_barcode?barcodes={n}",
+  "parseJson": {
+    "eventsPath": "message.0.Package.scanevents",
+    "datePath": "eventtimestamp",
+    "locationPath": "city",
+    "descriptionPath": "statusdescription",
+    "statusPath": "statuscode"
+  },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|pod|signed" },
+    { "status": "exception", "pattern": "exception|delay|attempt|unable|returned|damaged|bad address|refused" },
+    { "status": "warning", "pattern": "scheduled|appointment|pending|hold" },
+    { "status": "pickup", "pattern": "pickup|picked up|accepted|received|origin scan" },
+    { "status": "in_transit", "pattern": "in transit|arrived|departed|facility|out for delivery|loaded|scan" }
+  ],
+  "trackingNumberPattern": "^(LS[A-Z0-9]{8,20}|[A-Z0-9]{9,20})$",
+  "regions": ["US"],
+  "tier": 3
+}

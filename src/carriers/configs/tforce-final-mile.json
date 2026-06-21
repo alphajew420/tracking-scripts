@@ -1,0 +1,32 @@
+{
+  "id": "tforce-final-mile",
+  "displayName": "TForce Final Mile",
+  "mode": "scraper",
+  "warmUrl": "https://direct.tfesg.com/finalmiletrack/Track?trackingNumber={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://direct.tfesg.com/finalmiletrack/Track?trackingNumber={n}",
+  "parseHtml": {
+    "events": "#trackingContent table tbody tr, #trackingContent .panel, #trackingContent .tracking-event, #trackingContent .event, #trackingContent li",
+    "date": "td:nth-child(1), time, .date, .event-date",
+    "location": "td:nth-child(2), .location, .event-location",
+    "description": "td:nth-child(3), .status, .description, .event-description, .panel-heading"
+  },
+  "failurePatterns": [
+    "The tracking number entered is not valid",
+    "No matching",
+    "No tracking",
+    "not found",
+    "unable to locate"
+  ],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|completed" },
+    { "status": "exception", "pattern": "exception|delay|unable|attempted|failed|returned|refused" },
+    { "status": "warning", "pattern": "scheduled|appointment|pending|notice" },
+    { "status": "pickup", "pattern": "picked up|pickup|received|accepted" },
+    { "status": "in_transit", "pattern": "in transit|out for delivery|arrived|departed|loaded|en route" }
+  ],
+  "trackingNumberPattern": "^(TF\\d{8,13}|DX[A-Z]{2,}[A-Z0-9]{6,20}|[A-Z]{2}\\d{8,13})$",
+  "regions": ["US", "CA"],
+  "tier": 2
+}

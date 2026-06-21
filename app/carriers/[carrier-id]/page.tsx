@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
+import { CarrierIntake } from "@/components/carrier-intake";
 import { MarketingChrome } from "@/components/marketing-shell";
+import { getCarrierValidation } from "@/lib/carrier-validation";
 import { carriers } from "@/lib/marketing";
 
 export function generateStaticParams() {
@@ -22,6 +24,7 @@ export default async function Page({ params }: { params: Promise<{ "carrier-id":
   const resolvedParams = await params;
   const carrier = carriers.find((item) => item.id === resolvedParams["carrier-id"]);
   if (!carrier || carrier.status !== "Live coverage") notFound();
+  const validation = getCarrierValidation(carrier.id);
   const relatedCarriers = carriers
     .filter((item) => item.id !== carrier.id && (item.tier === carrier.tier || item.region === carrier.region || item.status === carrier.status))
     .slice(0, 3);
@@ -48,6 +51,8 @@ export default async function Page({ params }: { params: Promise<{ "carrier-id":
           <p>{carrier.launchStage}</p>
         </aside>
       </section>
+
+      <CarrierIntake carrierId={carrier.id} carrierName={carrier.name} validationStatus={validation.status} />
 
       <section className="carrier-longform">
         <article>
@@ -79,6 +84,11 @@ export default async function Page({ params }: { params: Promise<{ "carrier-id":
           <p className="eyebrow">Reliability notes</p>
           <h2>{carrier.reliability}</h2>
           <p>{carrier.updateCadence}</p>
+          <div className={`carrier-status-chip ${validation.status}`} style={{ marginTop: 18 }}>
+            <span />
+            <strong>{validation.status.replaceAll("_", " ")}</strong>
+          </div>
+          <p style={{ marginTop: 14 }}>{validation.result}</p>
         </article>
         <article className="carrier-profile-panel">
           <p className="eyebrow">Services</p>

@@ -1,0 +1,3109 @@
+{
+  "generated_at": "2026-06-20T16:42:49.764Z",
+  "source_catalog": "data/carrier-catalogs/combined-carrier-candidates.json",
+  "methodology": "Prioritized manually by global parcel/ecommerce importance, competitor-parity value, and whether the carrier is absent from current dedicated/config scraper IDs. Source ids/slugs are resolved from the combined AfterShip + 17TRACK candidate catalog.",
+  "current_implemented_ids": [
+    "4px",
+    "aramex",
+    "australia-post",
+    "canada-post",
+    "china-post",
+    "deutsche-post",
+    "dhl",
+    "dhl-express",
+    "dpd-uk",
+    "ems",
+    "evri",
+    "fedex",
+    "gls",
+    "japan-post",
+    "la-poste",
+    "lasership",
+    "ontrac",
+    "registry",
+    "royal-mail",
+    "sf-express",
+    "speedeedelivery",
+    "tnt",
+    "ups",
+    "usps",
+    "yodel",
+    "yunexpress"
+  ],
+  "count": 51,
+  "carriers": [
+    {
+      "rank": 1,
+      "priority_tier": "P0",
+      "carrier_name": "Amazon Logistics",
+      "canonical_slug": "amazon-logistics",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": false,
+      "score": 100,
+      "countries": [
+        "DE",
+        "ES",
+        "FR",
+        "GB",
+        "IN",
+        "IT",
+        "JP",
+        "US"
+      ],
+      "aftership_slugs": [
+        "amazon",
+        "amazon-es",
+        "amazon-fba-swiship",
+        "amazon-fba-swiship-de",
+        "amazon-fba-swiship-in",
+        "amazon-mcf",
+        "amazon-uk-api"
+      ],
+      "seventeen_track_keys": [
+        "100214",
+        "100308",
+        "100309",
+        "100312",
+        "100417",
+        "100750",
+        "101001",
+        "101081",
+        "101392"
+      ],
+      "source_records": [
+        {
+          "display_name": "Amazon",
+          "aftership_slug": "amazon-es",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Amazon MCF",
+          "aftership_slug": "amazon-mcf",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Amazon Shipping",
+          "aftership_slug": "amazon-uk-api",
+          "seventeen_track_key": "101392",
+          "country_iso": "US",
+          "url": "https://www.amazon.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Amazon Shipping (ES)",
+          "aftership_slug": null,
+          "seventeen_track_key": "101081",
+          "country_iso": "ES",
+          "url": "https://track.amazon.es/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Amazon Shipping (FR)",
+          "aftership_slug": null,
+          "seventeen_track_key": "101001",
+          "country_iso": "FR",
+          "url": "https://www.amazon.fr/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Amazon Shipping (IN)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100417",
+          "country_iso": "IN",
+          "url": "https://track.amazon.in/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Amazon Shipping (IT)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100750",
+          "country_iso": "IT",
+          "url": "https://track.amazon.it/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Amazon Shipping (UK)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100309",
+          "country_iso": "GB",
+          "url": "https://ship.amazon.co.uk/requestinfo/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Amazon Shipping + Amazon MCF",
+          "aftership_slug": "amazon",
+          "seventeen_track_key": "100308",
+          "country_iso": "US",
+          "url": "https://track.amazon.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Swiship DE",
+          "aftership_slug": "amazon-fba-swiship-de",
+          "seventeen_track_key": "100312",
+          "country_iso": "DE",
+          "url": "https://www.swiship.de/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Swiship IN",
+          "aftership_slug": "amazon-fba-swiship-in",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Swiship UK",
+          "aftership_slug": "amazon-fba-swiship",
+          "seventeen_track_key": "100214",
+          "country_iso": "GB",
+          "url": "https://www.swiship.co.uk/track/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 12,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "High-volume marketplace delivery gap; likely requires browser session handling and regional tracking-page variants."
+    },
+    {
+      "rank": 2,
+      "priority_tier": "P0",
+      "carrier_name": "DHL eCommerce",
+      "canonical_slug": "dhl-ecommerce",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": true,
+      "score": 98,
+      "countries": [
+        "DE",
+        "GB",
+        "HK",
+        "SG",
+        "TR",
+        "US"
+      ],
+      "aftership_slugs": [
+        "dhl-ecommerce-gc",
+        "dhl-global-mail",
+        "dhl-global-mail-asia",
+        "dhlparcel-uk"
+      ],
+      "seventeen_track_keys": [
+        "100608",
+        "100765",
+        "7047",
+        "7048"
+      ],
+      "source_records": [
+        {
+          "display_name": "DHL eCommerce",
+          "aftership_slug": "dhl-global-mail",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "DHL eCommerce (MNG Kargo)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100608",
+          "country_iso": "TR",
+          "url": "https://www.mngkargo.com.tr/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "DHL eCommerce Asia",
+          "aftership_slug": "dhl-global-mail-asia",
+          "seventeen_track_key": "7048",
+          "country_iso": "DE",
+          "url": "https://ecommerceportal.dhl.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "DHL eCommerce CN",
+          "aftership_slug": null,
+          "seventeen_track_key": "100765",
+          "country_iso": "DE",
+          "url": "https://www.dhl.com/global-en/home/our-divisions/ecommerce-solutions.html",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "DHL eCommerce UK",
+          "aftership_slug": "dhlparcel-uk",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "DHL eCommerce US",
+          "aftership_slug": null,
+          "seventeen_track_key": "7047",
+          "country_iso": "DE",
+          "url": "https://www.dhl.com/us-en/home/tracking/tracking-ecommerce.html",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "DHL Global Forwarding eCommerce",
+          "aftership_slug": "dhl-ecommerce-gc",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 7,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Complements existing DHL/DHL Express coverage; major cross-border ecommerce network with multiple catalog identities."
+    },
+    {
+      "rank": 3,
+      "priority_tier": "P0",
+      "carrier_name": "PostNL",
+      "canonical_slug": "postnl",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 96,
+      "countries": [
+        "NL"
+      ],
+      "aftership_slugs": [
+        "postnl",
+        "postnl-international"
+      ],
+      "seventeen_track_keys": [
+        "14041",
+        "14044"
+      ],
+      "source_records": [
+        {
+          "display_name": "PostNL",
+          "aftership_slug": null,
+          "seventeen_track_key": "14041",
+          "country_iso": "NL",
+          "url": "https://www.postnl.nl/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "PostNL Domestic",
+          "aftership_slug": "postnl",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "PostNL International",
+          "aftership_slug": "postnl-international",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "PostNL International Mail",
+          "aftership_slug": null,
+          "seventeen_track_key": "14044",
+          "country_iso": "NL",
+          "url": "http://www.postnl.post/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 4,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Large EU postal/export gap and common China-to-EU handoff carrier; likely adapter-friendly if public HTML remains stable."
+    },
+    {
+      "rank": 4,
+      "priority_tier": "P0",
+      "carrier_name": "Correos de Espana",
+      "canonical_slug": "correos-de-espana",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 94,
+      "countries": [
+        "ES"
+      ],
+      "aftership_slugs": [
+        "correosexpress",
+        "spain-correos-es"
+      ],
+      "seventeen_track_keys": [
+        "100048"
+      ],
+      "source_records": [
+        {
+          "display_name": "Correos de España",
+          "aftership_slug": "spain-correos-es",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Correos Express",
+          "aftership_slug": "correosexpress",
+          "seventeen_track_key": "100048",
+          "country_iso": "ES",
+          "url": "https://www.correosexpress.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 2,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Spain; important EU parity gap."
+    },
+    {
+      "rank": 5,
+      "priority_tier": "P0",
+      "carrier_name": "Poste Italiane",
+      "canonical_slug": "poste-italiane",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 93,
+      "countries": [
+        "IT"
+      ],
+      "aftership_slugs": [
+        "poste-italiane"
+      ],
+      "seventeen_track_keys": [
+        "9071"
+      ],
+      "source_records": [
+        {
+          "display_name": "Poste Italiane",
+          "aftership_slug": "poste-italiane",
+          "seventeen_track_key": "9071",
+          "country_iso": "IT",
+          "url": "http://www.poste.it/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Italy; broad domestic and international handoff volume."
+    },
+    {
+      "rank": 6,
+      "priority_tier": "P0",
+      "carrier_name": "Bpost",
+      "canonical_slug": "bpost",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 92,
+      "countries": [
+        "BE"
+      ],
+      "aftership_slugs": [
+        "bpost",
+        "bpost-international"
+      ],
+      "seventeen_track_keys": [
+        "2061",
+        "2063"
+      ],
+      "source_records": [
+        {
+          "display_name": "Bpost",
+          "aftership_slug": "bpost",
+          "seventeen_track_key": "2061",
+          "country_iso": "BE",
+          "url": "https://track.bpost.cloud/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Bpost international",
+          "aftership_slug": "bpost-international",
+          "seventeen_track_key": "2063",
+          "country_iso": "BE",
+          "url": "http://www.bpost2.be/bpostinternational/track_trace/find.php",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 2,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Belgium postal and international ecommerce carrier; common EU cross-border gap."
+    },
+    {
+      "rank": 7,
+      "priority_tier": "P0",
+      "carrier_name": "Swiss Post",
+      "canonical_slug": "swiss-post",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 91,
+      "countries": [
+        "CH"
+      ],
+      "aftership_slugs": [
+        "swiss-post"
+      ],
+      "seventeen_track_keys": [
+        "19251"
+      ],
+      "source_records": [
+        {
+          "display_name": "Swiss Post",
+          "aftership_slug": "swiss-post",
+          "seventeen_track_key": "19251",
+          "country_iso": "CH",
+          "url": "https://www.post.ch/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Switzerland; high-value EU-adjacent market."
+    },
+    {
+      "rank": 8,
+      "priority_tier": "P0",
+      "carrier_name": "Austrian Post",
+      "canonical_slug": "austrian-post",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 90,
+      "countries": [
+        "AT"
+      ],
+      "aftership_slugs": [
+        "austrian-post",
+        "austrian-post-registered"
+      ],
+      "seventeen_track_keys": [
+        "1161"
+      ],
+      "source_records": [
+        {
+          "display_name": "Austrian Post",
+          "aftership_slug": null,
+          "seventeen_track_key": "1161",
+          "country_iso": "AT",
+          "url": "http://www.post.at/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Austrian Post (Express)",
+          "aftership_slug": "austrian-post",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Austrian Post (Registered)",
+          "aftership_slug": "austrian-post-registered",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 3,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Austria; fills DACH coverage gap after Deutsche Post."
+    },
+    {
+      "rank": 9,
+      "priority_tier": "P1",
+      "carrier_name": "Purolator",
+      "canonical_slug": "purolator",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 89,
+      "countries": [
+        "CA",
+        "US"
+      ],
+      "aftership_slugs": [
+        "purolator",
+        "purolator-international"
+      ],
+      "seventeen_track_keys": [
+        "100042",
+        "100999",
+        "101000",
+        "101353"
+      ],
+      "source_records": [
+        {
+          "display_name": "Purolator",
+          "aftership_slug": "purolator",
+          "seventeen_track_key": "100042",
+          "country_iso": "CA",
+          "url": "https://www.purolator.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Purolator Freight",
+          "aftership_slug": null,
+          "seventeen_track_key": "101353",
+          "country_iso": "CA",
+          "url": "https://freight.purolator.com/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Purolator International",
+          "aftership_slug": "purolator-international",
+          "seventeen_track_key": "101000",
+          "country_iso": "CA",
+          "url": "https://www.purolatorinternational.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Purolator Shipping",
+          "aftership_slug": null,
+          "seventeen_track_key": "100999",
+          "country_iso": "CA",
+          "url": "https://tracking.purolatorshipping.com/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 4,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major Canadian parcel carrier; complements existing Canada Post support."
+    },
+    {
+      "rank": 10,
+      "priority_tier": "P1",
+      "carrier_name": "Intelcom",
+      "canonical_slug": "intelcom",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": false,
+      "score": 88,
+      "countries": [
+        "CA"
+      ],
+      "aftership_slugs": [],
+      "seventeen_track_keys": [
+        "100555"
+      ],
+      "source_records": [
+        {
+          "display_name": "Intelcom (CA)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100555",
+          "country_iso": "CA",
+          "url": "https://intelcom.ca/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "High Canadian ecommerce last-mile volume; likely dynamic tracking site."
+    },
+    {
+      "rank": 11,
+      "priority_tier": "P1",
+      "carrier_name": "TForce",
+      "canonical_slug": "tforce",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 87,
+      "countries": [
+        "CA",
+        "US"
+      ],
+      "aftership_slugs": [
+        "tforce-finalmile",
+        "tforce-freight"
+      ],
+      "seventeen_track_keys": [
+        "100061",
+        "100399"
+      ],
+      "source_records": [
+        {
+          "display_name": "TForce Final Mile",
+          "aftership_slug": "tforce-finalmile",
+          "seventeen_track_key": "100061",
+          "country_iso": "US",
+          "url": "https://www.tforcelogistics.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "TForce Freight (UPS Freight)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100399",
+          "country_iso": "US",
+          "url": "https://www.tforcefreight.com/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Tforce-freight",
+          "aftership_slug": "tforce-freight",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 3,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "North American parcel/freight gap; include final-mile and freight catalog variants."
+    },
+    {
+      "rank": 12,
+      "priority_tier": "P1",
+      "carrier_name": "Blue Dart",
+      "canonical_slug": "blue-dart",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": true,
+      "score": 86,
+      "countries": [
+        "IN"
+      ],
+      "aftership_slugs": [],
+      "seventeen_track_keys": [
+        "100055"
+      ],
+      "source_records": [
+        {
+          "display_name": "Blue Dart Express",
+          "aftership_slug": null,
+          "seventeen_track_key": "100055",
+          "country_iso": "IN",
+          "url": "https://bluedart.com/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major Indian express carrier and DHL affiliate; high competitor-parity value."
+    },
+    {
+      "rank": 13,
+      "priority_tier": "P1",
+      "carrier_name": "Delhivery",
+      "canonical_slug": "delhivery",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": true,
+      "score": 85,
+      "countries": [
+        "IN"
+      ],
+      "aftership_slugs": [
+        "delhivery-webhook"
+      ],
+      "seventeen_track_keys": [
+        "100060"
+      ],
+      "source_records": [
+        {
+          "display_name": "Delhivery",
+          "aftership_slug": "delhivery-webhook",
+          "seventeen_track_key": "100060",
+          "country_iso": "IN",
+          "url": "https://www.delhivery.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major India ecommerce logistics provider; expect dynamic app/API-backed tracking."
+    },
+    {
+      "rank": 14,
+      "priority_tier": "P1",
+      "carrier_name": "Ekart",
+      "canonical_slug": "ekart",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": false,
+      "score": 84,
+      "countries": [
+        "IN"
+      ],
+      "aftership_slugs": [
+        "ekart"
+      ],
+      "seventeen_track_keys": [
+        "100056"
+      ],
+      "source_records": [
+        {
+          "display_name": "Ekart",
+          "aftership_slug": "ekart",
+          "seventeen_track_key": "100056",
+          "country_iso": "IN",
+          "url": "https://ekartlogistics.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Flipkart logistics network; important India marketplace coverage gap."
+    },
+    {
+      "rank": 15,
+      "priority_tier": "P1",
+      "carrier_name": "XpressBees",
+      "canonical_slug": "xpressbees",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": true,
+      "score": 83,
+      "countries": [
+        "IN"
+      ],
+      "aftership_slugs": [
+        "xpressbees"
+      ],
+      "seventeen_track_keys": [
+        "100101"
+      ],
+      "source_records": [
+        {
+          "display_name": "XpressBees",
+          "aftership_slug": "xpressbees",
+          "seventeen_track_key": "100101",
+          "country_iso": "IN",
+          "url": "http://www.xpressbees.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Large India ecommerce carrier; likely needs dedicated browser/API-flow scraper."
+    },
+    {
+      "rank": 16,
+      "priority_tier": "P1",
+      "carrier_name": "Pos Malaysia",
+      "canonical_slug": "pos-malaysia",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 82,
+      "countries": [
+        "MY"
+      ],
+      "aftership_slugs": [],
+      "seventeen_track_keys": [
+        "13051"
+      ],
+      "source_records": [
+        {
+          "display_name": "Pos Malaysia",
+          "aftership_slug": null,
+          "seventeen_track_key": "13051",
+          "country_iso": "MY",
+          "url": "http://www.pos.com.my/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Malaysia; fills Southeast Asia postal gap."
+    },
+    {
+      "rank": 17,
+      "priority_tier": "P1",
+      "carrier_name": "Ninja Van",
+      "canonical_slug": "ninja-van",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": true,
+      "score": 81,
+      "countries": [
+        "ID",
+        "MY",
+        "PH",
+        "SG",
+        "TH",
+        "VN"
+      ],
+      "aftership_slugs": [
+        "ninjavan",
+        "ninjavan-id",
+        "ninjavan-my",
+        "ninjavan-thai"
+      ],
+      "seventeen_track_keys": [
+        "100597"
+      ],
+      "source_records": [
+        {
+          "display_name": "Ninja Van (International Tracking)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100597",
+          "country_iso": "SG",
+          "url": "https://www.ninjavan.co/en-sg/tracking",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Ninja Van Indonesia",
+          "aftership_slug": "ninjavan-id",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Ninja Van Malaysia",
+          "aftership_slug": "ninjavan-my",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Ninja Van Singapore",
+          "aftership_slug": "ninjavan",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Ninja Van Thailand",
+          "aftership_slug": "ninjavan-thai",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 5,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major Southeast Asia ecommerce last-mile network with regional catalog variants."
+    },
+    {
+      "rank": 18,
+      "priority_tier": "P1",
+      "carrier_name": "J&T Express",
+      "canonical_slug": "j-t-express",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": true,
+      "score": 80,
+      "countries": [
+        "AE",
+        "BR",
+        "CN",
+        "CO",
+        "EG",
+        "ID",
+        "MX",
+        "MY",
+        "PH",
+        "SA",
+        "SG",
+        "TH",
+        "VN"
+      ],
+      "aftership_slugs": [
+        "jtexpress",
+        "jtexpress-br-api",
+        "jtexpress-id-api",
+        "jtexpress-ph",
+        "jtexpress-vn",
+        "simplypost"
+      ],
+      "seventeen_track_keys": [
+        "100074",
+        "100079",
+        "100229",
+        "100240",
+        "100271",
+        "100388",
+        "100402",
+        "100456",
+        "100619",
+        "100797",
+        "100856",
+        "101372",
+        "190442"
+      ],
+      "source_records": [
+        {
+          "display_name": "J&T Express (AE)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100856",
+          "country_iso": "AE",
+          "url": "https://www.jtexpress.ae/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (BR)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100797",
+          "country_iso": "BR",
+          "url": "https://www.jtexpress.com.br/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (CN)",
+          "aftership_slug": null,
+          "seventeen_track_key": "190442",
+          "country_iso": "CN",
+          "url": "http://www.jtexpress.com.cn/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (CO)",
+          "aftership_slug": null,
+          "seventeen_track_key": "101372",
+          "country_iso": "CO",
+          "url": "https://www.jtexpress.co/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (EG)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100619",
+          "country_iso": "EG",
+          "url": "https://www.jtexpress-eg.com/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (ID)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100074",
+          "country_iso": "ID",
+          "url": "https://www.jet.co.id/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (MX)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100388",
+          "country_iso": "MX",
+          "url": "https://www.jtexpress.mx/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (MY)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100079",
+          "country_iso": "MY",
+          "url": "https://jtexpress.my/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (PH)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100240",
+          "country_iso": "PH",
+          "url": "https://www.jtexpress.ph/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (SA)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100402",
+          "country_iso": "SA",
+          "url": "https://www.jtexpress-sa.com/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (SG)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100229",
+          "country_iso": "SG",
+          "url": "https://www.jtexpress.sg/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (TH)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100271",
+          "country_iso": "TH",
+          "url": "https://www.jtexpress.co.th/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express (VN)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100456",
+          "country_iso": "VN",
+          "url": "https://jtexpress.vn/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "J&T Express Brazil",
+          "aftership_slug": "jtexpress-br-api",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "J&T Express Indonesia",
+          "aftership_slug": "jtexpress-id-api",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "J&T EXPRESS MALAYSIA",
+          "aftership_slug": "jtexpress",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "J&T Express Philippines",
+          "aftership_slug": "jtexpress-ph",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "J&T Express Singapore",
+          "aftership_slug": "simplypost",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "J&T Express Vietnam",
+          "aftership_slug": "jtexpress-vn",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 19,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Fast-growing global ecommerce carrier; prioritize ID/MY/PH/TH before smaller country variants."
+    },
+    {
+      "rank": 19,
+      "priority_tier": "P1",
+      "carrier_name": "Flash Express",
+      "canonical_slug": "flash-express",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": false,
+      "score": 79,
+      "countries": [
+        "LA",
+        "MY",
+        "PH",
+        "TH"
+      ],
+      "aftership_slugs": [
+        "flashexpress",
+        "flashexpress-ph-api"
+      ],
+      "seventeen_track_keys": [
+        "100235",
+        "100480",
+        "100481",
+        "100482"
+      ],
+      "source_records": [
+        {
+          "display_name": "Flash Express",
+          "aftership_slug": "flashexpress",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Flash Express (LA)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100482",
+          "country_iso": "LA",
+          "url": "https://www.flashexpress.la/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Flash Express (MY)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100481",
+          "country_iso": "MY",
+          "url": "https://www.flashexpress.my/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Flash Express (TH)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100235",
+          "country_iso": "TH",
+          "url": "https://www.flashexpress.co.th/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Flash Express PH",
+          "aftership_slug": "flashexpress-ph-api",
+          "seventeen_track_key": "100480",
+          "country_iso": "PH",
+          "url": "https://www.flashexpress.ph/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 5,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "High-volume Southeast Asia parcel network; likely dynamic regional tracking flows."
+    },
+    {
+      "rank": 20,
+      "priority_tier": "P1",
+      "carrier_name": "Kerry Express",
+      "canonical_slug": "kerry-express",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": false,
+      "score": 78,
+      "countries": [
+        "HK",
+        "TH",
+        "TW",
+        "VN"
+      ],
+      "aftership_slugs": [
+        "kerry-express-tw-api",
+        "kerry-logistics",
+        "kerryttc-vn",
+        "tgx"
+      ],
+      "seventeen_track_keys": [
+        "100236",
+        "100338",
+        "100634"
+      ],
+      "source_records": [
+        {
+          "display_name": "Kerry Express",
+          "aftership_slug": null,
+          "seventeen_track_key": "100634",
+          "country_iso": "TW",
+          "url": "http://www.kerryexpress.com.tw/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Kerry Express (HK)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100338",
+          "country_iso": "HK",
+          "url": "https://hk.kerryexpress.com/home",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Kerry Express (TH)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100236",
+          "country_iso": "TH",
+          "url": "https://th.kerryexpress.com/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Kerry Express (Vietnam) Co Ltd",
+          "aftership_slug": "kerryttc-vn",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Kerry Express Hong Kong",
+          "aftership_slug": "tgx",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Kerry Express TaiWan",
+          "aftership_slug": "kerry-express-tw-api",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Kerry Express Thailand",
+          "aftership_slug": "kerry-logistics",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 7,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major Southeast Asia and Hong Kong parcel carrier; regional implementations may differ."
+    },
+    {
+      "rank": 21,
+      "priority_tier": "P1",
+      "carrier_name": "Pos Indonesia",
+      "canonical_slug": "pos-indonesia",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 77,
+      "countries": [
+        "ID"
+      ],
+      "aftership_slugs": [
+        "pos-indonesia"
+      ],
+      "seventeen_track_keys": [
+        "9031"
+      ],
+      "source_records": [
+        {
+          "display_name": "Pos Indonesia",
+          "aftership_slug": null,
+          "seventeen_track_key": "9031",
+          "country_iso": "ID",
+          "url": "https://www.posindonesia.co.id/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Pos Indonesia Domestic",
+          "aftership_slug": "pos-indonesia",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 2,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Indonesia; important SEA postal coverage gap."
+    },
+    {
+      "rank": 22,
+      "priority_tier": "P1",
+      "carrier_name": "JNE Express",
+      "canonical_slug": "jne-express",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": true,
+      "score": 76,
+      "countries": [
+        "ID"
+      ],
+      "aftership_slugs": [
+        "jne",
+        "jne-api"
+      ],
+      "seventeen_track_keys": [
+        "100086"
+      ],
+      "source_records": [
+        {
+          "display_name": "JNE",
+          "aftership_slug": "jne",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "JNE (API)",
+          "aftership_slug": "jne-api",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "JNE Express",
+          "aftership_slug": null,
+          "seventeen_track_key": "100086",
+          "country_iso": "ID",
+          "url": "https://www.jne.co.id/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 3,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Large Indonesia ecommerce carrier; likely API-backed web tracking."
+    },
+    {
+      "rank": 23,
+      "priority_tier": "P1",
+      "carrier_name": "ZTO Express",
+      "canonical_slug": "zto-express",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": true,
+      "score": 75,
+      "countries": [
+        "CN"
+      ],
+      "aftership_slugs": [
+        "zto-domestic",
+        "zto-express"
+      ],
+      "seventeen_track_keys": [
+        "190455"
+      ],
+      "source_records": [
+        {
+          "display_name": "ZTO Express",
+          "aftership_slug": null,
+          "seventeen_track_key": "190455",
+          "country_iso": "CN",
+          "url": "https://www.zto.com",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "ZTO Express China",
+          "aftership_slug": "zto-domestic",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "ZTO Express Global",
+          "aftership_slug": "zto-express",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 3,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Top China parcel carrier; high export/ecommerce relevance beyond existing China Post/SF/YunExpress/4PX."
+    },
+    {
+      "rank": 24,
+      "priority_tier": "P1",
+      "carrier_name": "YTO Express",
+      "canonical_slug": "yto-express",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": false,
+      "score": 74,
+      "countries": [
+        "CN",
+        "KZ",
+        "PH"
+      ],
+      "aftership_slugs": [
+        "yto"
+      ],
+      "seventeen_track_keys": [
+        "101330",
+        "190157",
+        "192030"
+      ],
+      "source_records": [
+        {
+          "display_name": "YTO Express",
+          "aftership_slug": "yto",
+          "seventeen_track_key": "190157",
+          "country_iso": "CN",
+          "url": "http://www.yto.net.cn/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "YTO Express (KZ)",
+          "aftership_slug": null,
+          "seventeen_track_key": "192030",
+          "country_iso": "KZ",
+          "url": "https://kzyto.com",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "YTO Express (PH)",
+          "aftership_slug": null,
+          "seventeen_track_key": "101330",
+          "country_iso": "PH",
+          "url": "https://www.ytoexpress.ph/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 3,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Top China parcel carrier; competitor parity gap for domestic/export Chinese marketplaces."
+    },
+    {
+      "rank": 25,
+      "priority_tier": "P1",
+      "carrier_name": "STO Express",
+      "canonical_slug": "sto-express",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": false,
+      "score": 73,
+      "countries": [
+        "CN"
+      ],
+      "aftership_slugs": [
+        "sto"
+      ],
+      "seventeen_track_keys": [
+        "190324"
+      ],
+      "source_records": [
+        {
+          "display_name": "STO Express",
+          "aftership_slug": "sto",
+          "seventeen_track_key": "190324",
+          "country_iso": "CN",
+          "url": "http://www.sto.cn/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Top China parcel carrier; validate catalog matching because short name can collide with unrelated carriers."
+    },
+    {
+      "rank": 26,
+      "priority_tier": "P1",
+      "carrier_name": "JD Logistics",
+      "canonical_slug": "jd-logistics",
+      "suggested_implementation_mode": "dedicated_scraper",
+      "future_api_if_ever_applicable": true,
+      "score": 72,
+      "countries": [
+        "CN"
+      ],
+      "aftership_slugs": [],
+      "seventeen_track_keys": [
+        "191121"
+      ],
+      "source_records": [
+        {
+          "display_name": "JD Logistics",
+          "aftership_slug": null,
+          "seventeen_track_key": "191121",
+          "country_iso": "CN",
+          "url": "https://www.jdl.com/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major China marketplace logistics network; likely requires dedicated dynamic scraper."
+    },
+    {
+      "rank": 27,
+      "priority_tier": "P2",
+      "carrier_name": "Chronopost",
+      "canonical_slug": "chronopost",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 71,
+      "countries": [
+        "FR",
+        "MA"
+      ],
+      "aftership_slugs": [
+        "chronopost-france",
+        "chronopost-portugal"
+      ],
+      "seventeen_track_keys": [
+        "100137",
+        "100273",
+        "199993"
+      ],
+      "source_records": [
+        {
+          "display_name": "Chronopost",
+          "aftership_slug": null,
+          "seventeen_track_key": "100273",
+          "country_iso": "FR",
+          "url": "http://www.chronopost.fr/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Chronopost (FR)",
+          "aftership_slug": null,
+          "seventeen_track_key": "199993",
+          "country_iso": "FR",
+          "url": "https://www.chronopost.fr/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Chronopost France",
+          "aftership_slug": "chronopost-france",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Chronopost Morocco",
+          "aftership_slug": null,
+          "seventeen_track_key": "100137",
+          "country_iso": "MA",
+          "url": "https://chronopost.ma/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Chronopost Portugal(DPD)",
+          "aftership_slug": "chronopost-portugal",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 5,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major French express carrier; complements existing La Poste."
+    },
+    {
+      "rank": 28,
+      "priority_tier": "P2",
+      "carrier_name": "Colissimo",
+      "canonical_slug": "colissimo",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 70,
+      "countries": [
+        "FR"
+      ],
+      "aftership_slugs": [
+        "colissimo",
+        "la-poste-colissimo"
+      ],
+      "seventeen_track_keys": [
+        "6051"
+      ],
+      "source_records": [
+        {
+          "display_name": "Colissimo",
+          "aftership_slug": "colissimo",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "La Poste",
+          "aftership_slug": "la-poste-colissimo",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "La Poste (Colissimo)",
+          "aftership_slug": null,
+          "seventeen_track_key": "6051",
+          "country_iso": "FR",
+          "url": "http://www.laposte.fr/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 3,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Important French parcel product; may share infrastructure with La Poste but should be tracked explicitly."
+    },
+    {
+      "rank": 29,
+      "priority_tier": "P2",
+      "carrier_name": "Mondial Relay",
+      "canonical_slug": "mondial-relay",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 69,
+      "countries": [
+        "BE",
+        "ES",
+        "FR"
+      ],
+      "aftership_slugs": [
+        "mondialrelay",
+        "mondialrelay-es",
+        "mondialrelay-fr"
+      ],
+      "seventeen_track_keys": [
+        "100304"
+      ],
+      "source_records": [
+        {
+          "display_name": "Mondial Relay",
+          "aftership_slug": "mondialrelay",
+          "seventeen_track_key": "100304",
+          "country_iso": "FR",
+          "url": "https://www.mondialrelay.fr/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Mondial Relay France",
+          "aftership_slug": "mondialrelay-fr",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Mondial Relay Spain(Punto Pack)",
+          "aftership_slug": "mondialrelay-es",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 3,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Large European out-of-home parcel network; good adapter candidate if public tracking HTML is stable."
+    },
+    {
+      "rank": 30,
+      "priority_tier": "P2",
+      "carrier_name": "Colis Prive",
+      "canonical_slug": "colis-prive",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 68,
+      "countries": [
+        "FR"
+      ],
+      "aftership_slugs": [
+        "colis-prive"
+      ],
+      "seventeen_track_keys": [
+        "100027"
+      ],
+      "source_records": [
+        {
+          "display_name": "Colis Privé",
+          "aftership_slug": "colis-prive",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Colis Prive(Colis Privé)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100027",
+          "country_iso": "FR",
+          "url": "http://www.colisprive.com/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 2,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "French ecommerce last-mile carrier; regional parity gap."
+    },
+    {
+      "rank": 31,
+      "priority_tier": "P2",
+      "carrier_name": "Parcelforce",
+      "canonical_slug": "parcelforce",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 67,
+      "countries": [
+        "GB"
+      ],
+      "aftership_slugs": [
+        "parcel-force"
+      ],
+      "seventeen_track_keys": [
+        "11033"
+      ],
+      "source_records": [
+        {
+          "display_name": "Parcel Force",
+          "aftership_slug": "parcel-force",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Parcelforce",
+          "aftership_slug": null,
+          "seventeen_track_key": "11033",
+          "country_iso": "GB",
+          "url": "https://www.parcelforce.com/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 2,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "UK parcel carrier adjacent to Royal Mail; important for heavier parcels."
+    },
+    {
+      "rank": 32,
+      "priority_tier": "P2",
+      "carrier_name": "Hermesworld",
+      "canonical_slug": "hermesworld",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 66,
+      "countries": [
+        "DE",
+        "GB"
+      ],
+      "aftership_slugs": [
+        "hermes",
+        "hermes-2mann-handling",
+        "hermes-de"
+      ],
+      "seventeen_track_keys": [
+        "100018",
+        "100031",
+        "100091",
+        "101083"
+      ],
+      "source_records": [
+        {
+          "display_name": "Hermes",
+          "aftership_slug": null,
+          "seventeen_track_key": "100018",
+          "country_iso": "DE",
+          "url": "https://www.hermesworld.com/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Hermes (DE)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100031",
+          "country_iso": "DE",
+          "url": "https://www.myhermes.de/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Hermes Borderguru",
+          "aftership_slug": null,
+          "seventeen_track_key": "100091",
+          "country_iso": null,
+          "url": "https://hermesborderguru.io/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Hermes Einrichtungs Service",
+          "aftership_slug": null,
+          "seventeen_track_key": "101083",
+          "country_iso": "DE",
+          "url": "https://myhes.de/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Hermes Einrichtungs Service GmbH & Co. KG",
+          "aftership_slug": "hermes-2mann-handling",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Hermes Germany",
+          "aftership_slug": "hermes-de",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Hermesworld",
+          "aftership_slug": "hermes",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 7,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Legacy Hermes identity still appears in catalogs and labels; map carefully against existing Evri coverage."
+    },
+    {
+      "rank": 33,
+      "priority_tier": "P2",
+      "carrier_name": "InPost",
+      "canonical_slug": "inpost",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 65,
+      "countries": [
+        "ES",
+        "GB",
+        "IT",
+        "PL",
+        "PT"
+      ],
+      "aftership_slugs": [
+        "inpost-it",
+        "inpost-paczkomaty",
+        "inpost-uk",
+        "inpost-webhook"
+      ],
+      "seventeen_track_keys": [
+        "100043",
+        "100462",
+        "100469",
+        "100594",
+        "100598"
+      ],
+      "source_records": [
+        {
+          "display_name": "InPost",
+          "aftership_slug": "inpost-uk",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "InPost (ES)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100594",
+          "country_iso": "ES",
+          "url": "https://www.inpost.es/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "InPost (IT)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100469",
+          "country_iso": "IT",
+          "url": "https://inpost.it/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "InPost (PL)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100043",
+          "country_iso": "PL",
+          "url": "https://inpost.pl/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "InPost (PT)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100598",
+          "country_iso": "PT",
+          "url": "https://www.inpost.pt/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "InPost (UK)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100462",
+          "country_iso": "GB",
+          "url": "https://inpost.co.uk/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "InPost Global",
+          "aftership_slug": "inpost-webhook",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Inpost Italy",
+          "aftership_slug": "inpost-it",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "InPost Paczkomaty",
+          "aftership_slug": "inpost-paczkomaty",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 9,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Large parcel-locker network across Europe; start with PL/UK/IT variants."
+    },
+    {
+      "rank": 34,
+      "priority_tier": "P2",
+      "carrier_name": "Packeta",
+      "canonical_slug": "packeta",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 64,
+      "countries": [
+        "CZ",
+        "HU",
+        "PL",
+        "SK"
+      ],
+      "aftership_slugs": [
+        "packeta"
+      ],
+      "seventeen_track_keys": [
+        "100132"
+      ],
+      "source_records": [
+        {
+          "display_name": "Packeta",
+          "aftership_slug": "packeta",
+          "seventeen_track_key": "100132",
+          "country_iso": "CZ",
+          "url": "https://www.packeta.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Central/Eastern Europe ecommerce pickup network; likely single adapter can cover several countries."
+    },
+    {
+      "rank": 35,
+      "priority_tier": "P2",
+      "carrier_name": "Poczta Polska",
+      "canonical_slug": "poczta-polska",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 63,
+      "countries": [
+        "PL"
+      ],
+      "aftership_slugs": [
+        "poczta-polska"
+      ],
+      "seventeen_track_keys": [],
+      "source_records": [
+        {
+          "display_name": "Poczta Polska",
+          "aftership_slug": "poczta-polska",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Poland."
+    },
+    {
+      "rank": 36,
+      "priority_tier": "P2",
+      "carrier_name": "BRT Bartolini",
+      "canonical_slug": "brt-bartolini",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 62,
+      "countries": [
+        "IT"
+      ],
+      "aftership_slugs": [
+        "brt-it",
+        "brt-it-parcelid",
+        "brt-it-sender-ref"
+      ],
+      "seventeen_track_keys": [
+        "100026",
+        "199997"
+      ],
+      "source_records": [
+        {
+          "display_name": "BRT (IT)",
+          "aftership_slug": null,
+          "seventeen_track_key": "199997",
+          "country_iso": "IT",
+          "url": "http://www.brt.it/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "BRT Bartolini",
+          "aftership_slug": "brt-it",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "BRT Bartolini(DPD)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100026",
+          "country_iso": "IT",
+          "url": "http://www.brt.it/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "BRT Bartolini(Parcel ID)",
+          "aftership_slug": "brt-it-parcelid",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "BRT Bartolini(Sender Reference)",
+          "aftership_slug": "brt-it-sender-ref",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 5,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major Italian parcel carrier; include DPD/BRT catalog variants in dedupe review."
+    },
+    {
+      "rank": 37,
+      "priority_tier": "P2",
+      "carrier_name": "SEUR",
+      "canonical_slug": "seur",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 61,
+      "countries": [
+        "ES",
+        "PT"
+      ],
+      "aftership_slugs": [
+        "international-seur",
+        "portugal-seur",
+        "spanish-seur"
+      ],
+      "seventeen_track_keys": [
+        "100438"
+      ],
+      "source_records": [
+        {
+          "display_name": "International Seur",
+          "aftership_slug": "international-seur",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Portugal Seur",
+          "aftership_slug": "portugal-seur",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Seur",
+          "aftership_slug": null,
+          "seventeen_track_key": "100438",
+          "country_iso": "ES",
+          "url": "https://www.seur.com/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Spanish Seur",
+          "aftership_slug": "spanish-seur",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 4,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major Iberian parcel carrier and DPDgroup member."
+    },
+    {
+      "rank": 38,
+      "priority_tier": "P2",
+      "carrier_name": "MRW",
+      "canonical_slug": "mrw",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 60,
+      "countries": [
+        "ES"
+      ],
+      "aftership_slugs": [
+        "mrw-spain"
+      ],
+      "seventeen_track_keys": [
+        "100175"
+      ],
+      "source_records": [
+        {
+          "display_name": "MRW",
+          "aftership_slug": "mrw-spain",
+          "seventeen_track_key": "100175",
+          "country_iso": "ES",
+          "url": "https://www.mrw.es/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major Spanish courier; complements Correos/SEUR coverage."
+    },
+    {
+      "rank": 39,
+      "priority_tier": "P2",
+      "carrier_name": "Correios Brazil",
+      "canonical_slug": "correios-brazil",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 59,
+      "countries": [
+        "BR"
+      ],
+      "aftership_slugs": [],
+      "seventeen_track_keys": [
+        "2151"
+      ],
+      "source_records": [
+        {
+          "display_name": "Correios Brazil",
+          "aftership_slug": null,
+          "seventeen_track_key": "2151",
+          "country_iso": "BR",
+          "url": "http://www.correios.com.br/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Brazil; major LATAM coverage gap."
+    },
+    {
+      "rank": 40,
+      "priority_tier": "P2",
+      "carrier_name": "MailAmericas",
+      "canonical_slug": "mailamericas",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 58,
+      "countries": [
+        "BR",
+        "CL",
+        "MU",
+        "MX",
+        "US"
+      ],
+      "aftership_slugs": [
+        "mailamericas"
+      ],
+      "seventeen_track_keys": [
+        "13134"
+      ],
+      "source_records": [
+        {
+          "display_name": "MailAmericas",
+          "aftership_slug": "mailamericas",
+          "seventeen_track_key": "13134",
+          "country_iso": "MU",
+          "url": "http://mailamericas.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Cross-border ecommerce consolidator frequently seen in LATAM flows."
+    },
+    {
+      "rank": 41,
+      "priority_tier": "P2",
+      "carrier_name": "Landmark Global",
+      "canonical_slug": "landmark-global",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 57,
+      "countries": [
+        "BE",
+        "CA",
+        "GB",
+        "US"
+      ],
+      "aftership_slugs": [
+        "landmark-global"
+      ],
+      "seventeen_track_keys": [
+        "100021"
+      ],
+      "source_records": [
+        {
+          "display_name": "Landmark Global",
+          "aftership_slug": "landmark-global",
+          "seventeen_track_key": "100021",
+          "country_iso": "BE",
+          "url": "https://landmarkglobal.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Cross-border ecommerce carrier; useful for North America/EU handoffs."
+    },
+    {
+      "rank": 42,
+      "priority_tier": "P2",
+      "carrier_name": "Asendia",
+      "canonical_slug": "asendia",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 56,
+      "countries": [
+        "DE",
+        "FR",
+        "GB",
+        "HK",
+        "US"
+      ],
+      "aftership_slugs": [
+        "asendia",
+        "asendia-de",
+        "asendia-hk",
+        "asendia-uk",
+        "asendia-usa"
+      ],
+      "seventeen_track_keys": [
+        "100016",
+        "100029",
+        "101265"
+      ],
+      "source_records": [
+        {
+          "display_name": "Asendia",
+          "aftership_slug": "asendia-de",
+          "seventeen_track_key": "100029",
+          "country_iso": "FR",
+          "url": "http://www.asendia.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Asendia APAC",
+          "aftership_slug": "asendia-hk",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Asendia France",
+          "aftership_slug": null,
+          "seventeen_track_key": "101265",
+          "country_iso": "FR",
+          "url": "https://asendiafrance.com/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Asendia Global",
+          "aftership_slug": "asendia",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Asendia UK",
+          "aftership_slug": "asendia-uk",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "Asendia USA",
+          "aftership_slug": "asendia-usa",
+          "seventeen_track_key": "100016",
+          "country_iso": "US",
+          "url": "http://www.asendiausa.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 6,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major international mail/ecommerce consolidator; multiple regional catalog rows."
+    },
+    {
+      "rank": 43,
+      "priority_tier": "P2",
+      "carrier_name": "Saudi Post",
+      "canonical_slug": "saudi-post",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 55,
+      "countries": [
+        "CN",
+        "SA"
+      ],
+      "aftership_slugs": [],
+      "seventeen_track_keys": [
+        "19071",
+        "191295"
+      ],
+      "source_records": [
+        {
+          "display_name": "Saudi Post",
+          "aftership_slug": null,
+          "seventeen_track_key": "19071",
+          "country_iso": "SA",
+          "url": "https://splonline.com.sa/ar/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "SPL",
+          "aftership_slug": null,
+          "seventeen_track_key": "191295",
+          "country_iso": "CN",
+          "url": "https://www.spl-express.com/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 2,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Saudi Arabia; MENA coverage gap."
+    },
+    {
+      "rank": 44,
+      "priority_tier": "P2",
+      "carrier_name": "SMSA Express",
+      "canonical_slug": "smsa-express",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 54,
+      "countries": [
+        "SA"
+      ],
+      "aftership_slugs": [
+        "smsa-express"
+      ],
+      "seventeen_track_keys": [
+        "100034"
+      ],
+      "source_records": [
+        {
+          "display_name": "SMSA Express",
+          "aftership_slug": "smsa-express",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "SMSA Express (سمسا)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100034",
+          "country_iso": "SA",
+          "url": "https://www.smsaexpress.com/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 2,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major Saudi courier; good follow-up after Saudi Post."
+    },
+    {
+      "rank": 45,
+      "priority_tier": "P2",
+      "carrier_name": "Qatar Post",
+      "canonical_slug": "qatar-post",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 53,
+      "countries": [
+        "QA"
+      ],
+      "aftership_slugs": [],
+      "seventeen_track_keys": [
+        "17011"
+      ],
+      "source_records": [
+        {
+          "display_name": "Q-Post",
+          "aftership_slug": null,
+          "seventeen_track_key": "17011",
+          "country_iso": "QA",
+          "url": "https://qatarpost.qa/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Qatar."
+    },
+    {
+      "rank": 46,
+      "priority_tier": "P3",
+      "carrier_name": "Gati",
+      "canonical_slug": "gati",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 52,
+      "countries": [
+        "IN"
+      ],
+      "aftership_slugs": [
+        "gati-kwe"
+      ],
+      "seventeen_track_keys": [
+        "100717"
+      ],
+      "source_records": [
+        {
+          "display_name": "Gati",
+          "aftership_slug": null,
+          "seventeen_track_key": "100717",
+          "country_iso": "IN",
+          "url": "https://www.gati.com/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Gati-KWE",
+          "aftership_slug": "gati-kwe",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 2,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Indian express/freight carrier; lower priority than ecommerce-first India carriers."
+    },
+    {
+      "rank": 47,
+      "priority_tier": "P3",
+      "carrier_name": "An Post",
+      "canonical_slug": "an-post",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 51,
+      "countries": [
+        "IE"
+      ],
+      "aftership_slugs": [
+        "an-post"
+      ],
+      "seventeen_track_keys": [
+        "9051"
+      ],
+      "source_records": [
+        {
+          "display_name": "An Post",
+          "aftership_slug": "an-post",
+          "seventeen_track_key": "9051",
+          "country_iso": "IE",
+          "url": "https://www.anpost.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "National postal carrier for Ireland."
+    },
+    {
+      "rank": 48,
+      "priority_tier": "P3",
+      "carrier_name": "PostNord",
+      "canonical_slug": "postnord",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 50,
+      "countries": [
+        "DK",
+        "FI",
+        "NO",
+        "SE"
+      ],
+      "aftership_slugs": [
+        "danmark-post",
+        "postnord",
+        "sweden-posten"
+      ],
+      "seventeen_track_keys": [
+        "100573",
+        "100574",
+        "19241",
+        "4011"
+      ],
+      "source_records": [
+        {
+          "display_name": "PostNord (FI)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100574",
+          "country_iso": "FI",
+          "url": "https://www.postnord.fi/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "PostNord (NO)",
+          "aftership_slug": null,
+          "seventeen_track_key": "100573",
+          "country_iso": "NO",
+          "url": "https://www.postnord.no/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "PostNord Danmark",
+          "aftership_slug": null,
+          "seventeen_track_key": "4011",
+          "country_iso": "DK",
+          "url": "https://www.postnord.dk/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "PostNord Denmark",
+          "aftership_slug": "danmark-post",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "PostNord Logistics",
+          "aftership_slug": "postnord",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        },
+        {
+          "display_name": "PostNord Sweden",
+          "aftership_slug": "sweden-posten",
+          "seventeen_track_key": "19241",
+          "country_iso": "SE",
+          "url": "http://www.postnord.se/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 6,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Nordic postal/logistics gap; implement if present in catalog and public tracking is stable."
+    },
+    {
+      "rank": 49,
+      "priority_tier": "P3",
+      "carrier_name": "Bring",
+      "canonical_slug": "bring",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 49,
+      "countries": [
+        "DK",
+        "NO",
+        "SE"
+      ],
+      "aftership_slugs": [
+        "bring",
+        "posten-norge"
+      ],
+      "seventeen_track_keys": [
+        "100423"
+      ],
+      "source_records": [
+        {
+          "display_name": "Bring",
+          "aftership_slug": "bring",
+          "seventeen_track_key": "100423",
+          "country_iso": "NO",
+          "url": "https://www.bring.com/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Posten Norge / Bring",
+          "aftership_slug": "posten-norge",
+          "seventeen_track_key": null,
+          "country_iso": null,
+          "url": null,
+          "sources": [
+            "aftership"
+          ]
+        }
+      ],
+      "catalog_source_count": 2,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Nordic parcel carrier; useful after PostNord."
+    },
+    {
+      "rank": 50,
+      "priority_tier": "P3",
+      "carrier_name": "Omniva",
+      "canonical_slug": "omniva",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 48,
+      "countries": [
+        "EE",
+        "LT",
+        "LV"
+      ],
+      "aftership_slugs": [
+        "omniva"
+      ],
+      "seventeen_track_keys": [
+        "5041"
+      ],
+      "source_records": [
+        {
+          "display_name": "Omniva",
+          "aftership_slug": "omniva",
+          "seventeen_track_key": "5041",
+          "country_iso": "EE",
+          "url": "https://www.omniva.ee/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 1,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Baltic postal/logistics carrier."
+    },
+    {
+      "rank": 51,
+      "priority_tier": "P3",
+      "carrier_name": "Nova Poshta",
+      "canonical_slug": "nova-poshta",
+      "suggested_implementation_mode": "config_adapter",
+      "future_api_if_ever_applicable": false,
+      "score": 47,
+      "countries": [
+        "PL",
+        "UA"
+      ],
+      "aftership_slugs": [
+        "nova-poshta"
+      ],
+      "seventeen_track_keys": [
+        "100035",
+        "100162",
+        "101176"
+      ],
+      "source_records": [
+        {
+          "display_name": "Nova Poshta",
+          "aftership_slug": "nova-poshta",
+          "seventeen_track_key": "100035",
+          "country_iso": "UA",
+          "url": "http://novaposhta.ua/",
+          "sources": [
+            "aftership",
+            "17track"
+          ]
+        },
+        {
+          "display_name": "Nova Poshta Global",
+          "aftership_slug": null,
+          "seventeen_track_key": "100162",
+          "country_iso": "UA",
+          "url": "https://novaposhtaglobal.ua/en/",
+          "sources": [
+            "17track"
+          ]
+        },
+        {
+          "display_name": "NOVA POST",
+          "aftership_slug": null,
+          "seventeen_track_key": "101176",
+          "country_iso": "PL",
+          "url": "https://novapost.com/en-pl/",
+          "sources": [
+            "17track"
+          ]
+        }
+      ],
+      "catalog_source_count": 3,
+      "coverage_gap": true,
+      "implemented_id_collision": false,
+      "notes": "Major Ukrainian parcel carrier."
+    }
+  ]
+}

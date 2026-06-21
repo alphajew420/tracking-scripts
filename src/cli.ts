@@ -1,42 +1,24 @@
 import { TrackingSession, type Carrier } from "./session.ts";
-import { dhlCarrier } from "./carriers/dhl.ts";
-import { dhlExpressCarrier } from "./carriers/dhl-express.ts";
-import { fedexCarrier } from "./carriers/fedex.ts";
-import { upsCarrier } from "./carriers/ups.ts";
-import { uspsCarrier } from "./carriers/usps.ts";
-import { createConfigCarrier, listCarrierConfigIds } from "./config/adapter.ts";
+import { getCarrierFactory, listRegisteredCarrierIds } from "./carriers/registry.ts";
 import { detectCarrier } from "./detect.ts";
 import { proxyForCarrier } from "./proxy.ts";
+import { createLogger } from "./logger.ts";
+import { buildCarrierSessionOptions } from "./carrier-runtime.ts";
 import type { ScrapeResult } from "./types.ts";
 
-const SCRAPER_REGISTRY: Record<string, () => Carrier> = {
-  dhl: () => dhlCarrier,
-  "dhl-express": () => dhlExpressCarrier,
-  fedex: () => fedexCarrier,
-  ups: () => upsCarrier,
-  usps: () => uspsCarrier,
-};
-for (const id of listCarrierConfigIds()) {
-  SCRAPER_REGISTRY[id] ??= () => createConfigCarrier(id);
-}
-
-function booleanEnv(name: string, fallback: boolean): boolean {
-  const value = process.env[name];
-  if (value == null || value === "") return fallback;
-  return /^(1|true|yes)$/i.test(value);
-}
+const logger = createLogger("cli");
 
 process.on("unhandledRejection", (err: any) => {
   const msg = String(err?.message ?? err);
   if (/Target page, context or browser has been closed/.test(msg)) return;
-  console.error("unhandled rejection:", err);
+  logger.error("unhandled rejection", { error: msg });
 });
 
 function usage(): never {
   console.error(`usage: track <carrier> <tracking-number> [<num> ...] [--json] [--debug] [--chrome]
        track detect <tracking-number>
 
-  carriers:  ${Object.keys(SCRAPER_REGISTRY).join(", ")}
+  carriers:  ${listRegisteredCarrierIds().join(", ")}
 
   --json     print full JSON result
   --debug    verbose logging
@@ -84,7 +66,7 @@ async function main() {
     return;
   }
 
-  const make = SCRAPER_REGISTRY[carrierKey];
+  const make = getCarrierFactory(carrierKey);
   if (!make) {
     console.error(`unknown carrier: ${carrierKey}`);
     usage();
@@ -92,41 +74,11 @@ async function main() {
 
   const debug = flags.has("--debug");
   const asJson = flags.has("--json");
-  // Some carrier sites behave differently in bundled automation browsers.
-  const channel: "chrome" | undefined =
-    flags.has("--chrome") || carrierKey === "ups" || carrierKey === "fedex"
-      ? "chrome"
-      : undefined;
-  // Akamai's sensor.js detects headless Chrome on USPS / DHL / FedEx. Default
-  // scrapers to headed mode; the user can opt back into headless with --headless
-  // if their stealth fingerprint is good enough.
+  // Internal helper only. Public flows should use the API.
   const headless = flags.has("--headless");
-
   const session = new TrackingSession(make(), {
-    debug,
-    channel,
-    headless,
-    proxy: proxyForCarrier(carrierKey),
-    proxyMode:
-      process.env[`PROXY_${carrierKey.toUpperCase().replaceAll("-", "_")}_MODE`] === "extension" ||
-      process.env.PROXY_MODE === "extension"
-        ? "extension"
-        : "native",
-    userAgent: carrierKey === "fedex" || carrierKey === "dhl" ? null : undefined,
-    disableBlocking:
-      carrierKey === "fedex"
-        ? booleanEnv("FEDEX_DISABLE_BLOCKING", false)
-        : booleanEnv(`DISABLE_BLOCKING_${carrierKey.toUpperCase().replaceAll("-", "_")}`, false),
-    warmTimeoutMs:
-      carrierKey === "fedex"
-        ? Number(process.env.FEDEX_WARM_TIMEOUT_MS ?? 180000)
-        : undefined,
-    warmWaitUntil: carrierKey === "fedex" ? "domcontentloaded" : undefined,
-    persistentProfileDir:
-      carrierKey === "fedex"
-        ? process.env.FEDEX_PROFILE_DIR ?? ".browser-profiles/fedex"
-        : undefined,
-    onWarm: debug ? () => console.error(`[session] warmed`) : undefined,
+    ...buildCarrierSessionOptions(carrierKey, { headless, debug, proxy: proxyForCarrier(carrierKey) }),
+    onWarm: debug ? () => logger.info("session warmed", { carrier: carrierKey }) : undefined,
   });
   try {
     for (const num of numbers) {
@@ -144,6 +96,6 @@ main()
     process.exit(0);
   })
   .catch((e) => {
-    console.error(e);
+    logger.error("fatal", { error: String(e) });
     process.exit(1);
   });

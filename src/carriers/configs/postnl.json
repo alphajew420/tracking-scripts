@@ -1,0 +1,24 @@
+{
+  "id": "postnl",
+  "displayName": "PostNL",
+  "mode": "scraper",
+  "warmUrl": "https://jouw.postnl.nl/track-and-trace/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://jouw.postnl.nl/track-and-trace/{n}",
+  "parseHtml": {
+    "events": ".tracking-event, .track-trace-event, .shipment-event, .timeline-item, li",
+    "date": "time, .date, .event-date, .timestamp",
+    "location": ".location, .event-location",
+    "description": ".status, .description, .event-description, .message, h2, h3"
+  },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|bezorgd|afgeleverd" },
+    { "status": "exception", "pattern": "exception|unable|failed|returned|retour|niet bezorgd|vertraging|delay" },
+    { "status": "pickup", "pattern": "pickup|collection|afhalen|ophalen|postnl point|pakketpunt" },
+    { "status": "in_transit", "pattern": "in transit|arrived|departed|processed|accepted|onderweg|gesorteerd|ontvangen|aangekomen" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}NL$|^3S[A-Z0-9]{10,15}$|^[A-Z0-9]{10,24}$",
+  "regions": ["NL"],
+  "tier": 1
+}

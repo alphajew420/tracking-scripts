@@ -2,16 +2,16 @@
   "id": "speedeedelivery",
   "displayName": "Spee-Dee Delivery",
   "mode": "scraper",
-  "warmUrl": "https://speedeedelivery.com/track-a-shipment/?tracking={n}",
-  "awaitReady": "body",
+  "warmUrl": "https://packages.speedeedelivery.com/package_progress.php?v=detail&barcode={n}",
+  "awaitReady": "tbody tr",
   "queryStrategy": "in_page_fetch",
-  "fetchUrl": "https://speedeedelivery.com/track-a-shipment/?tracking={n}",
-  "parseHtml": { "events": ".tracking-event, .event, li, tr", "date": "time, .date, td:nth-child(1)", "location": ".location, td:nth-child(3)", "description": ".status, .description, td:nth-child(2)" },
+  "fetchUrl": "https://packages.speedeedelivery.com/package_progress.php?v=detail&barcode={n}",
+  "parseHtml": { "events": "tbody tr", "date": "td:nth-child(1)", "location": "td:nth-child(2)", "description": "td:nth-child(3)" },
   "statusMap": [
     { "status": "delivered", "pattern": "delivered" },
     { "status": "exception", "pattern": "exception|delay|unable|returned" },
     { "status": "pickup", "pattern": "pickup|accepted" },
-    { "status": "in_transit", "pattern": "transit|facility|arrived|departed|out for delivery" }
+    { "status": "in_transit", "pattern": "transit|facility|arriv|arrival scan|departed|out for delivery" }
   ],
   "trackingNumberPattern": "^\\d{10,22}$",
   "regions": ["US"],

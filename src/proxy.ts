@@ -30,7 +30,7 @@ function renderTemplate(
   opts: ProxyOptions,
 ): string | undefined {
   if (!template) return undefined;
-  const session = opts.session ?? process.env.PROXY_SESSION ?? `${carrierId}-${process.pid}`;
+  const session = opts.session ?? process.env.PROXY_SESSION ?? carrierId;
   const country = opts.country ?? process.env.PROXY_COUNTRY ?? "";
   return template
     .replaceAll("{carrier}", carrierId)

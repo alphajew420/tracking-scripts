@@ -1,0 +1,23 @@
+{
+  "id": "bpost",
+  "displayName": "Bpost",
+  "mode": "scraper",
+  "warmUrl": "https://track.bpost.cloud/btr/web/#/search?lang=en&itemCode={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://track.bpost.cloud/track/items?itemIdentifier={n}&postalCode=&language=en",
+  "parseHtml": {
+    "events": "body",
+    "description": "body"
+  },
+  "failurePatterns": ["NO_DATA_FOUND"],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|deliveredAt|DELIVERED|uitgereikt|livr" },
+    { "status": "exception", "pattern": "NO_DATA_FOUND|exception|failed|returned|return|problem|blocked|REFUSED|incident" },
+    { "status": "pickup", "pattern": "pickup|pick-up|collection|parcel shop|afhaal|retrait" },
+    { "status": "in_transit", "pattern": "in transit|IN_TRANSIT|transit|sorting|processed|arrived|departed|onderweg|achemin" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}[A-Z]{2}$|^\\d{24}$|^[A-Z0-9_-]{8,35}$",
+  "regions": ["BE"],
+  "tier": 2
+}

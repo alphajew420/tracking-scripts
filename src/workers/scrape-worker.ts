@@ -1,5 +1,6 @@
 import { Worker } from "bullmq";
 import { migrate, pool, query } from "../db.ts";
+import { createLogger } from "../logger.ts";
 import { redisConnection, type ScrapeJob } from "../queue.ts";
 import { enqueueWebhookEvent } from "../webhook-dispatch.ts";
 import { SessionPool } from "./session-pool.ts";
@@ -18,6 +19,7 @@ interface ExistingTracking {
 }
 
 async function run() {
+  const logger = createLogger("scrape-worker");
   await migrate();
   const poolSessions = new SessionPool();
   const concurrency = Number(process.env.WORKER_CONCURRENCY ?? 3);
@@ -59,6 +61,7 @@ async function run() {
              events = $3::jsonb,
              service_level = coalesce($4, service_level),
              weight_grams = coalesce($5, weight_grams),
+             exception = null,
              delivered_at = case when $2 = 'delivered' then coalesce(delivered_at, now()) else delivered_at end,
              last_scraped_at = now(),
              next_scrape_at = case when $2 in ('delivered', 'exception') then null else next_scrape_at end,
@@ -101,10 +104,10 @@ async function run() {
 
   process.on("SIGTERM", shutdown);
   process.on("SIGINT", shutdown);
-  console.error(`[scrape-worker] running concurrency=${concurrency}`);
+  logger.info("running", { concurrency });
 }
 
 run().catch((error) => {
-  console.error(error);
+  createLogger("scrape-worker").error("fatal", { error: String(error) });
   process.exit(1);
 });

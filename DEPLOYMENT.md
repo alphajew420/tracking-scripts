@@ -101,6 +101,37 @@ SESSION_MAX_USES=250
 
 The Compose worker runs under `xvfb-run` so `HEADLESS=false` works on a VPS. Do not run FedEx lookups in the API process; `POST /v1/trackings`, `/v1/trackings/bulk`, and `/v1/trackings/{id}/retrack` enqueue jobs, and the worker keeps the browser session hot.
 
+### CDP Browser Sidecar
+
+Royal Mail and PostNord can use an already-running Chrome profile when their public sites behave differently in a freshly launched automation profile. Start a Chrome sidecar with remote debugging, warm/solve the carrier page once, then point the worker at that CDP endpoint:
+
+```bash
+npm run cdp:chrome -- royal-mail --port=9222
+curl -X POST http://localhost:8787/v1/trackings \
+  -H "Authorization: Bearer <api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{"tracking_number":"ME762746131GB","carrier":"royal-mail"}'
+```
+
+For PostNord:
+
+```bash
+npm run cdp:chrome -- postnord-se --port=9223
+curl -X POST http://localhost:8787/v1/trackings \
+  -H "Authorization: Bearer <api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{"tracking_number":"66695159070SE","carrier":"postnord-se"}'
+```
+
+If you use a manual browser proxy extension, launch Chrome with the profile that already has that extension configured, then use `BROWSER_CDP_ENDPOINT_*` to attach. If you use env-based proxies instead, `npm run cdp:chrome` loads Trackified's generated proxy extension automatically when `PROXY_*` env vars are present.
+
+Diagnostic commands:
+
+```bash
+npm run browser:surface -- royal-mail 'https://www.royalmail.com/track-your-item#/tracking-results/ME762746131GB' --country=gb
+npm run proxy:diagnose -- royal-mail ME762746131GB --attempts=1 --country=gb
+```
+
 ## Current Host Note
 
 During setup, Docker hit a disk-full/containerd I/O error while writing browser image layers. The existing stack continued to serve:

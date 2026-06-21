@@ -1,0 +1,25 @@
+{
+  "id": "intelcom",
+  "displayName": "Intelcom",
+  "mode": "scraper",
+  "warmUrl": "https://intelcom.ca/en/track-your-package/?tracking-id={n}",
+  "awaitReady": "body",
+  "queryStrategy": "json_endpoint",
+  "fetchUrl": "https://intelcom.ca/cfworker/v3/tracking/{n}/",
+  "parseJson": {
+    "eventsPath": "data.result.status_list",
+    "datePath": "timestamp",
+    "descriptionPath": "labels.shortLabel.en",
+    "statusPath": "status"
+  },
+  "failurePatterns": ["\"success\"\\s*:\\s*false", "\"code\"\\s*:\\s*\"not_found\"", "\"status\"\\s*:\\s*404"],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|DEL" },
+    { "status": "exception", "pattern": "failed|exception|delay|damaged|unable|cancel|return|RTS" },
+    { "status": "pickup", "pattern": "picked up|pickup|received|accepted|manifest|label|created" },
+    { "status": "in_transit", "pattern": "transit|out for delivery|warehouse|sort|hub|arrived|departed|with driver|OFD" }
+  ],
+  "trackingNumberPattern": "^(INTLC[A-Z]{2}\\d{8,}|[A-Z]{4}\\d{12,})$",
+  "regions": ["CA"],
+  "tier": 1
+}

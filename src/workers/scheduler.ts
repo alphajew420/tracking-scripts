@@ -1,4 +1,5 @@
 import { migrate, pool, query } from "../db.ts";
+import { createLogger } from "../logger.ts";
 import { enqueueScrape, enqueueWebhook } from "../queue.ts";
 
 interface DueTracking {
@@ -68,12 +69,13 @@ async function tick(): Promise<void> {
 }
 
 async function run() {
+  const logger = createLogger("scheduler");
   await migrate();
   const intervalMs = Number(process.env.SCHEDULER_INTERVAL_MS ?? 60_000);
-  console.error(`[scheduler] running interval=${intervalMs}ms`);
+  logger.info("running", { interval_ms: intervalMs });
   await tick();
   const timer = setInterval(() => {
-    tick().catch((error) => console.error("[scheduler]", error));
+    tick().catch((error) => logger.error("tick failed", { error: String(error) }));
   }, intervalMs);
 
   const shutdown = async () => {
@@ -86,6 +88,6 @@ async function run() {
 }
 
 run().catch((error) => {
-  console.error(error);
+  createLogger("scheduler").error("fatal", { error: String(error) });
   process.exit(1);
 });

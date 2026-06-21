@@ -1,0 +1,25 @@
+{
+  "id": "singapore-post",
+  "displayName": "Singapore Post",
+  "mode": "scraper",
+  "warmUrl": "https://www.singpost.com/track-items?track_number={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.singpost.com/track-items?track_number={n}",
+  "parseHtml": {
+    "events": ".tracking-event, .shipment-event, .event, .timeline-item, [class*='event'], [class*='timeline'] li",
+    "date": "time, .date, .event-date, [class*='date']",
+    "location": ".location, .event-location, [class*='location'], [class*='place']",
+    "description": ".status, .description, .event-description, [class*='status'], [class*='description'], h3, h4"
+  },
+  "failurePatterns": ["not found", "no record", "invalid", "unable to locate", "no item"],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed|completed" },
+    { "status": "exception", "pattern": "exception|delay|failed|returned|unable|customs|held" },
+    { "status": "pickup", "pattern": "accepted|received|collected|pickup|posted" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|out for delivery|sorting|dispatch" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}SG$|^[A-Z0-9]{9,24}$",
+  "regions": ["SG"],
+  "tier": 1
+}

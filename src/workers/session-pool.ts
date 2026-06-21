@@ -1,24 +1,9 @@
 import { TrackingSession, type Carrier } from "../session.ts";
-import { createConfigCarrier, listCarrierConfigIds } from "../config/adapter.ts";
-import { dhlCarrier } from "../carriers/dhl.ts";
-import { dhlExpressCarrier } from "../carriers/dhl-express.ts";
-import { fedexCarrier } from "../carriers/fedex.ts";
-import { upsCarrier } from "../carriers/ups.ts";
-import { uspsCarrier } from "../carriers/usps.ts";
+import { getCarrierFactory } from "../carriers/registry.ts";
 import { proxyForCarrier } from "../proxy.ts";
 import type { ScrapeResult } from "../types.ts";
-
-const handCoded: Record<string, () => Carrier> = {
-  dhl: () => dhlCarrier,
-  "dhl-express": () => dhlExpressCarrier,
-  fedex: () => fedexCarrier,
-  ups: () => upsCarrier,
-  usps: () => uspsCarrier,
-};
-
-for (const id of listCarrierConfigIds()) {
-  handCoded[id] ??= () => createConfigCarrier(id);
-}
+import { buildCarrierSessionOptions } from "../carrier-runtime.ts";
+import { getBrowserSidecarEndpoint } from "../browser-sidecar.ts";
 
 interface PooledSession {
   session: TrackingSession;
@@ -35,14 +20,6 @@ function booleanEnv(name: string, fallback: boolean): boolean {
   return /^(1|true|yes)$/i.test(value);
 }
 
-function browserChannel(carrierId: string): "chrome" | "msedge" | undefined {
-  const key = `BROWSER_CHANNEL_${carrierId.toUpperCase().replaceAll("-", "_")}`;
-  const value = process.env[key] ?? process.env.BROWSER_CHANNEL;
-  if (value === "chrome" || value === "msedge") return value;
-  if (value === "bundled" || value === "chromium" || value === "") return undefined;
-  return carrierId === "ups" || carrierId === "fedex" ? "chrome" : undefined;
-}
-
 export class SessionPool {
   private sessions = new Map<string, PooledSession>();
   private locks = new Map<string, Promise<unknown>>();
@@ -55,33 +32,32 @@ export class SessionPool {
     }
     if (existing) await existing.session.close();
 
-    const factory = handCoded[carrierId];
+    const factory = getCarrierFactory(carrierId);
     if (!factory) throw new Error(`unsupported carrier: ${carrierId}`);
-    const session = new TrackingSession(factory(), {
-      channel: browserChannel(carrierId),
-      headless: process.env.HEADLESS !== "false",
-      debug: process.env.DEBUG_SCRAPES === "1",
-      proxy: proxyForCarrier(carrierId),
-      proxyMode:
-        process.env[`PROXY_${carrierId.toUpperCase().replaceAll("-", "_")}_MODE`] === "extension" ||
-        process.env.PROXY_MODE === "extension"
-          ? "extension"
-          : "native",
-      userAgent: carrierId === "fedex" || carrierId === "dhl" ? null : undefined,
-      disableBlocking:
-        carrierId === "fedex"
-          ? booleanEnv("FEDEX_DISABLE_BLOCKING", false)
-          : booleanEnv(`DISABLE_BLOCKING_${carrierId.toUpperCase().replaceAll("-", "_")}`, false),
-      warmTimeoutMs:
-        carrierId === "fedex"
-          ? Number(process.env.FEDEX_WARM_TIMEOUT_MS ?? 180000)
-          : undefined,
-      warmWaitUntil: carrierId === "fedex" ? "domcontentloaded" : undefined,
-      persistentProfileDir:
-        carrierId === "fedex"
-          ? process.env.FEDEX_PROFILE_DIR ?? "/tmp/trackified-fedex-profile"
-          : undefined,
-    });
+    const browserCdpEndpoint =
+      carrierId === "fedex" ? await getBrowserSidecarEndpoint(carrierId) : undefined;
+    const useProxy = carrierId !== "fedex" || booleanEnv("FEDEX_USE_PROXY", false);
+    const proxy = useProxy ? proxyForCarrier(carrierId, { session: carrierId }) : undefined;
+    const session = new TrackingSession(
+      factory(),
+      buildCarrierSessionOptions(carrierId, {
+        headless:
+          carrierId === "purolator"
+            ? booleanEnv("PUROLATOR_HEADLESS", false)
+            : process.env.HEADLESS !== "false",
+        debug: process.env.DEBUG_SCRAPES === "1",
+        proxy,
+        cdpEndpoint: browserCdpEndpoint,
+        persistentProfileDir:
+          carrierId === "fedex"
+            ? process.env.FEDEX_PROFILE_DIR ?? "/tmp/trackified-fedex-profile"
+            : carrierId === "royal-mail"
+              ? process.env.ROYAL_MAIL_PROFILE_DIR ?? "/tmp/trackified-royal-mail-profile"
+              : carrierId === "postnord-se" || carrierId === "postnord-dk"
+                ? process.env.POSTNORD_PROFILE_DIR ?? "/tmp/trackified-postnord-profile"
+                : undefined,
+      }),
+    );
     this.sessions.set(carrierId, { session, createdAt: Date.now(), uses: 1 });
     return session;
   }

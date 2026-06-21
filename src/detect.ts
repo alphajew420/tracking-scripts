@@ -1,4 +1,4 @@
-import { listCarrierCatalog } from "./config/adapter.ts";
+import { listPublicCarrierCatalog } from "./carriers/registry.ts";
 
 export interface CarrierCandidate {
   carrier: string;
@@ -33,6 +33,24 @@ const DETECTORS: Detector[] = [
     pattern: /^(\d{12}|\d{15}|\d{20}|\d{22})$/,
   },
   {
+    carrier: "tforce-freight",
+    confidence: 0.74,
+    reason: "TForce Freight 9-digit PRO format",
+    pattern: /^\d{9}$/,
+  },
+  {
+    carrier: "tforce-final-mile",
+    confidence: 0.78,
+    reason: "TForce Final Mile TF/DX or 2-letter last-mile format",
+    pattern: /^(TF\d{8,13}|DX[A-Z]{2,}[A-Z0-9]{6,20}|[A-Z]{2}\d{8,13})$/i,
+  },
+  {
+    carrier: "purolator",
+    confidence: 0.89,
+    reason: "Purolator 12-digit PIN format",
+    pattern: /^6\d{11}$/,
+  },
+  {
     carrier: "dhl",
     confidence: 0.82,
     reason: "DHL parcel numeric or 3S format",
@@ -43,6 +61,12 @@ const DETECTORS: Detector[] = [
     confidence: 0.82,
     reason: "DHL Express 10-digit format",
     pattern: /^\d{10}$/,
+  },
+  {
+    carrier: "dhl-ecommerce",
+    confidence: 0.9,
+    reason: "DHL eCommerce GM/LX/RX or DHL-origin S10 format",
+    pattern: /^(GM\d{16,22}|LX[A-Z0-9]{10,24}|RX[A-Z0-9]{10,24}|[A-Z]{2}\d{9}DE)$/i,
   },
   {
     carrier: "royal-mail",
@@ -57,10 +81,88 @@ const DETECTORS: Detector[] = [
     pattern: /^[A-Z]{2}\d{9}CA$/i,
   },
   {
+    carrier: "an-post",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in IE",
+    pattern: /^[A-Z]{2}\d{9}IE$/i,
+  },
+  {
+    carrier: "austrian-post",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in AT",
+    pattern: /^[A-Z]{2}\d{9}AT$/i,
+  },
+  {
+    carrier: "swiss-post",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in CH",
+    pattern: /^[A-Z]{2}\d{9}CH$/i,
+  },
+  {
+    carrier: "singapore-post",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in SG",
+    pattern: /^[A-Z]{2}\d{9}SG$/i,
+  },
+  {
+    carrier: "taiwan-post",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in TW",
+    pattern: /^[A-Z]{2}\d{9}TW$/i,
+  },
+  {
+    carrier: "postnord-se",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in SE",
+    pattern: /^[A-Z]{2}\d{9}SE$/i,
+  },
+  {
+    carrier: "postnord-dk",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in DK",
+    pattern: /^[A-Z]{2}\d{9}DK$/i,
+  },
+  {
+    carrier: "posten-norge",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in NO",
+    pattern: /^[A-Z]{2}\d{9}NO$/i,
+  },
+  {
+    carrier: "posti",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in FI",
+    pattern: /^[A-Z]{2}\d{9}FI$/i,
+  },
+  {
+    carrier: "poczta-polska",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in PL",
+    pattern: /^[A-Z]{2}\d{9}PL$/i,
+  },
+  {
+    carrier: "ctt-portugal",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in PT",
+    pattern: /^[A-Z]{2}\d{9}PT$/i,
+  },
+  {
+    carrier: "nz-post",
+    confidence: 0.94,
+    reason: "UPU S10 number ending in NZ",
+    pattern: /^[A-Z]{2}\d{9}NZ$/i,
+  },
+  {
     carrier: "la-poste",
     confidence: 0.94,
     reason: "UPU S10 number ending in FR",
     pattern: /^[A-Z]{2}\d{9}FR$/i,
+  },
+  {
+    carrier: "chronopost",
+    confidence: 0.76,
+    reason: "Chronopost/France S10 or alphanumeric tracking-number format",
+    pattern: /^([A-Z]{2}\d{9}FR|[A-Z0-9]{10,18})$/i,
   },
   {
     carrier: "deutsche-post",
@@ -127,7 +229,7 @@ export function detectCarrier(num: string): CarrierCandidate[] {
     (candidate) => candidate.confidence >= 0.85,
   );
   if (!hasStrongMatch) {
-    for (const carrier of listCarrierCatalog()) {
+    for (const carrier of listPublicCarrierCatalog()) {
       if (!carrier.trackingNumberPattern) continue;
       const pattern = new RegExp(carrier.trackingNumberPattern, "i");
       if (!pattern.test(normalized) || candidates.has(carrier.id)) continue;

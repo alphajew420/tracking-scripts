@@ -1,6 +1,6 @@
 # tracking-scripts
 
-Carrier tracking library + CLI + bandwidth probes for **UPS, FedEx, DHL, DHL Express, USPS**, and config-driven carrier adapters. All carrier lookups are browser-driven scrapers behind one `TrackingSession` interface.
+Carrier tracking library + API + bandwidth probes for **UPS, FedEx, DHL, DHL Express, USPS**, and config-driven carrier adapters. All carrier lookups are browser-driven scrapers behind one `TrackingSession` interface.
 
 Extracted from the Shippified codebase so the carrier logic can be vendored, audited, or shipped standalone.
 
@@ -13,20 +13,18 @@ npm install
 
 System Chrome (`channel: "chrome"`) is required for UPS scraper (reCAPTCHA flags bundled Chromium) — install Chrome separately or set the `--chrome` flag.
 
-## CLI
+## API testing
 
 ```bash
-npm run track -- usps 9400111899223816042167
-npm run track -- ups 1Z999AA10123456784
-npm run track -- fedex 123456789012
-npm run track -- dhl 00340434292135100186
-npm run track -- dhl-express 1234567890
-npm run track -- detect 1Z999AA10123456784
+curl -X POST http://localhost:8787/v1/trackings \
+  -H "Authorization: Bearer test_or_live_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{"tracking_number":"9400111899223816042167","carrier":"usps"}'
 
-# misc flags
---json     # full ScrapeResult as JSON
---debug    # verbose session logging
---chrome   # force system Chrome (auto-on for scraper UPS)
+curl -X POST http://localhost:8787/v1/trackings/bulk \
+  -H "Authorization: Bearer test_or_live_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{"trackings":[{"tracking_number":"1Z999AA10123456784","carrier":"ups"}]}'
 ```
 
 ## Library
@@ -47,7 +45,7 @@ A single warm `TrackingSession` can run many queries. Re-warming only happens on
 src/
   types.ts         Status, Event, Track, ScrapeResult
   session.ts       TrackingSession + ScraperCarrier interface
-  cli.ts           `npm run track` entry
+  cli.ts           legacy CLI helper, not exposed by package scripts
   index.ts         public exports
   server.ts        REST API skeleton
   detect.ts        tracking-number carrier detection

@@ -1,0 +1,31 @@
+{
+  "id": "tforce-freight",
+  "displayName": "TForce Freight",
+  "mode": "scraper",
+  "warmUrl": "https://www.tforcefreight.com/ltl/apps/Tracking?proNumbers={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.tforcefreight.com/ltl/apps/Tracking?proNumbers={n}",
+  "parseHtml": {
+    "events": ".trackingResultCard #tblProHistory tbody tr, .trackingResultCard table tbody tr, .trackingResultCard .shipmentStatus, .trackingResultCard .trackingSummaryContainerDiv",
+    "date": "td:nth-child(1), time, .date, .event-date",
+    "location": "td:nth-child(3), .location, .terminal",
+    "description": "td:nth-child(2), .shipmentStatus, .status, .description, .event-description"
+  },
+  "failurePatterns": [
+    "No tracking information",
+    "No shipment",
+    "not found",
+    "unable to locate"
+  ],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|shipment delivered" },
+    { "status": "exception", "pattern": "exception|delay|unable|refused|returned|damaged|shortage" },
+    { "status": "warning", "pattern": "appointment|scheduled|hold" },
+    { "status": "pickup", "pattern": "picked up|pickup|origin scan|accepted" },
+    { "status": "in_transit", "pattern": "in transit|departed|arrived|terminal|out for delivery|loaded|moving" }
+  ],
+  "trackingNumberPattern": "^\\d{9}$",
+  "regions": ["US", "CA"],
+  "tier": 2
+}

@@ -8,9 +8,9 @@ const API_URL = "https://webapis.ups.com/track/api/Track/GetStatus";
 
 const STATUS_KEYWORDS: Array<[Status, RegExp]> = [
   ["delivered", /delivered/i],
-  ["pickup", /pickup|access point|hold for pickup/i],
-  ["exception", /exception|undeliverable|returned/i],
-  ["in_transit", /in transit|out for delivery|departed|arrived|origin scan|loaded|sorted/i],
+  ["pickup", /pickup|access point|hold for pickup|drop-off|shipper created a label/i],
+  ["exception", /exception|undeliverable|returned|delay|corrected the postal code|address/i],
+  ["in_transit", /in transit|out for delivery|departed|arrived|origin scan|loaded|sorted|processing at ups facility|processing/i],
 ];
 function classify(desc: string): Status {
   for (const [s, re] of STATUS_KEYWORDS) if (re.test(desc)) return s;

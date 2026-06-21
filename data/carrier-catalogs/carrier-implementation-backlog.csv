@@ -1,0 +1,52 @@
+rank,priority_tier,carrier_name,canonical_slug,suggested_implementation_mode,future_api_if_ever_applicable,score,countries,aftership_slugs,seventeen_track_keys,catalog_source_count,coverage_gap,notes
+1,P0,Amazon Logistics,amazon-logistics,dedicated_scraper,false,100,DE|ES|FR|GB|IN|IT|JP|US,amazon|amazon-es|amazon-fba-swiship|amazon-fba-swiship-de|amazon-fba-swiship-in|amazon-mcf|amazon-uk-api,100214|100308|100309|100312|100417|100750|101001|101081|101392,12,true,High-volume marketplace delivery gap; likely requires browser session handling and regional tracking-page variants.
+2,P0,DHL eCommerce,dhl-ecommerce,dedicated_scraper,true,98,DE|GB|HK|SG|TR|US,dhl-ecommerce-gc|dhl-global-mail|dhl-global-mail-asia|dhlparcel-uk,100608|100765|7047|7048,7,true,Complements existing DHL/DHL Express coverage; major cross-border ecommerce network with multiple catalog identities.
+3,P0,PostNL,postnl,config_adapter,false,96,NL,postnl|postnl-international,14041|14044,4,true,Large EU postal/export gap and common China-to-EU handoff carrier; likely adapter-friendly if public HTML remains stable.
+4,P0,Correos de Espana,correos-de-espana,config_adapter,false,94,ES,correosexpress|spain-correos-es,100048,2,true,National postal carrier for Spain; important EU parity gap.
+5,P0,Poste Italiane,poste-italiane,config_adapter,false,93,IT,poste-italiane,9071,1,true,National postal carrier for Italy; broad domestic and international handoff volume.
+6,P0,Bpost,bpost,config_adapter,false,92,BE,bpost|bpost-international,2061|2063,2,true,Belgium postal and international ecommerce carrier; common EU cross-border gap.
+7,P0,Swiss Post,swiss-post,config_adapter,false,91,CH,swiss-post,19251,1,true,National postal carrier for Switzerland; high-value EU-adjacent market.
+8,P0,Austrian Post,austrian-post,config_adapter,false,90,AT,austrian-post|austrian-post-registered,1161,3,true,National postal carrier for Austria; fills DACH coverage gap after Deutsche Post.
+9,P1,Purolator,purolator,config_adapter,false,89,CA|US,purolator|purolator-international,100042|100999|101000|101353,4,true,Major Canadian parcel carrier; complements existing Canada Post support.
+10,P1,Intelcom,intelcom,dedicated_scraper,false,88,CA,,100555,1,true,High Canadian ecommerce last-mile volume; likely dynamic tracking site.
+11,P1,TForce,tforce,config_adapter,false,87,CA|US,tforce-finalmile|tforce-freight,100061|100399,3,true,North American parcel/freight gap; include final-mile and freight catalog variants.
+12,P1,Blue Dart,blue-dart,dedicated_scraper,true,86,IN,,100055,1,true,Major Indian express carrier and DHL affiliate; high competitor-parity value.
+13,P1,Delhivery,delhivery,dedicated_scraper,true,85,IN,delhivery-webhook,100060,1,true,Major India ecommerce logistics provider; expect dynamic app/API-backed tracking.
+14,P1,Ekart,ekart,dedicated_scraper,false,84,IN,ekart,100056,1,true,Flipkart logistics network; important India marketplace coverage gap.
+15,P1,XpressBees,xpressbees,dedicated_scraper,true,83,IN,xpressbees,100101,1,true,Large India ecommerce carrier; likely needs dedicated browser/API-flow scraper.
+16,P1,Pos Malaysia,pos-malaysia,config_adapter,false,82,MY,,13051,1,true,National postal carrier for Malaysia; fills Southeast Asia postal gap.
+17,P1,Ninja Van,ninja-van,dedicated_scraper,true,81,ID|MY|PH|SG|TH|VN,ninjavan|ninjavan-id|ninjavan-my|ninjavan-thai,100597,5,true,Major Southeast Asia ecommerce last-mile network with regional catalog variants.
+18,P1,J&T Express,j-t-express,dedicated_scraper,true,80,AE|BR|CN|CO|EG|ID|MX|MY|PH|SA|SG|TH|VN,jtexpress|jtexpress-br-api|jtexpress-id-api|jtexpress-ph|jtexpress-vn|simplypost,100074|100079|100229|100240|100271|100388|100402|100456|100619|100797|100856|101372|190442,19,true,Fast-growing global ecommerce carrier; prioritize ID/MY/PH/TH before smaller country variants.
+19,P1,Flash Express,flash-express,dedicated_scraper,false,79,LA|MY|PH|TH,flashexpress|flashexpress-ph-api,100235|100480|100481|100482,5,true,High-volume Southeast Asia parcel network; likely dynamic regional tracking flows.
+20,P1,Kerry Express,kerry-express,dedicated_scraper,false,78,HK|TH|TW|VN,kerry-express-tw-api|kerry-logistics|kerryttc-vn|tgx,100236|100338|100634,7,true,Major Southeast Asia and Hong Kong parcel carrier; regional implementations may differ.
+21,P1,Pos Indonesia,pos-indonesia,config_adapter,false,77,ID,pos-indonesia,9031,2,true,National postal carrier for Indonesia; important SEA postal coverage gap.
+22,P1,JNE Express,jne-express,dedicated_scraper,true,76,ID,jne|jne-api,100086,3,true,Large Indonesia ecommerce carrier; likely API-backed web tracking.
+23,P1,ZTO Express,zto-express,dedicated_scraper,true,75,CN,zto-domestic|zto-express,190455,3,true,Top China parcel carrier; high export/ecommerce relevance beyond existing China Post/SF/YunExpress/4PX.
+24,P1,YTO Express,yto-express,dedicated_scraper,false,74,CN|KZ|PH,yto,101330|190157|192030,3,true,Top China parcel carrier; competitor parity gap for domestic/export Chinese marketplaces.
+25,P1,STO Express,sto-express,dedicated_scraper,false,73,CN,sto,190324,1,true,Top China parcel carrier; validate catalog matching because short name can collide with unrelated carriers.
+26,P1,JD Logistics,jd-logistics,dedicated_scraper,true,72,CN,,191121,1,true,Major China marketplace logistics network; likely requires dedicated dynamic scraper.
+27,P2,Chronopost,chronopost,config_adapter,false,71,FR|MA,chronopost-france|chronopost-portugal,100137|100273|199993,5,true,Major French express carrier; complements existing La Poste.
+28,P2,Colissimo,colissimo,config_adapter,false,70,FR,colissimo|la-poste-colissimo,6051,3,true,Important French parcel product; may share infrastructure with La Poste but should be tracked explicitly.
+29,P2,Mondial Relay,mondial-relay,config_adapter,false,69,BE|ES|FR,mondialrelay|mondialrelay-es|mondialrelay-fr,100304,3,true,Large European out-of-home parcel network; good adapter candidate if public tracking HTML is stable.
+30,P2,Colis Prive,colis-prive,config_adapter,false,68,FR,colis-prive,100027,2,true,French ecommerce last-mile carrier; regional parity gap.
+31,P2,Parcelforce,parcelforce,config_adapter,false,67,GB,parcel-force,11033,2,true,UK parcel carrier adjacent to Royal Mail; important for heavier parcels.
+32,P2,Hermesworld,hermesworld,config_adapter,false,66,DE|GB,hermes|hermes-2mann-handling|hermes-de,100018|100031|100091|101083,7,true,Legacy Hermes identity still appears in catalogs and labels; map carefully against existing Evri coverage.
+33,P2,InPost,inpost,config_adapter,false,65,ES|GB|IT|PL|PT,inpost-it|inpost-paczkomaty|inpost-uk|inpost-webhook,100043|100462|100469|100594|100598,9,true,Large parcel-locker network across Europe; start with PL/UK/IT variants.
+34,P2,Packeta,packeta,config_adapter,false,64,CZ|HU|PL|SK,packeta,100132,1,true,Central/Eastern Europe ecommerce pickup network; likely single adapter can cover several countries.
+35,P2,Poczta Polska,poczta-polska,config_adapter,false,63,PL,poczta-polska,,1,true,National postal carrier for Poland.
+36,P2,BRT Bartolini,brt-bartolini,config_adapter,false,62,IT,brt-it|brt-it-parcelid|brt-it-sender-ref,100026|199997,5,true,Major Italian parcel carrier; include DPD/BRT catalog variants in dedupe review.
+37,P2,SEUR,seur,config_adapter,false,61,ES|PT,international-seur|portugal-seur|spanish-seur,100438,4,true,Major Iberian parcel carrier and DPDgroup member.
+38,P2,MRW,mrw,config_adapter,false,60,ES,mrw-spain,100175,1,true,Major Spanish courier; complements Correos/SEUR coverage.
+39,P2,Correios Brazil,correios-brazil,config_adapter,false,59,BR,,2151,1,true,National postal carrier for Brazil; major LATAM coverage gap.
+40,P2,MailAmericas,mailamericas,config_adapter,false,58,BR|CL|MU|MX|US,mailamericas,13134,1,true,Cross-border ecommerce consolidator frequently seen in LATAM flows.
+41,P2,Landmark Global,landmark-global,config_adapter,false,57,BE|CA|GB|US,landmark-global,100021,1,true,Cross-border ecommerce carrier; useful for North America/EU handoffs.
+42,P2,Asendia,asendia,config_adapter,false,56,DE|FR|GB|HK|US,asendia|asendia-de|asendia-hk|asendia-uk|asendia-usa,100016|100029|101265,6,true,Major international mail/ecommerce consolidator; multiple regional catalog rows.
+43,P2,Saudi Post,saudi-post,config_adapter,false,55,CN|SA,,19071|191295,2,true,National postal carrier for Saudi Arabia; MENA coverage gap.
+44,P2,SMSA Express,smsa-express,config_adapter,false,54,SA,smsa-express,100034,2,true,Major Saudi courier; good follow-up after Saudi Post.
+45,P2,Qatar Post,qatar-post,config_adapter,false,53,QA,,17011,1,true,National postal carrier for Qatar.
+46,P3,Gati,gati,config_adapter,false,52,IN,gati-kwe,100717,2,true,Indian express/freight carrier; lower priority than ecommerce-first India carriers.
+47,P3,An Post,an-post,config_adapter,false,51,IE,an-post,9051,1,true,National postal carrier for Ireland.
+48,P3,PostNord,postnord,config_adapter,false,50,DK|FI|NO|SE,danmark-post|postnord|sweden-posten,100573|100574|19241|4011,6,true,Nordic postal/logistics gap; implement if present in catalog and public tracking is stable.
+49,P3,Bring,bring,config_adapter,false,49,DK|NO|SE,bring|posten-norge,100423,2,true,Nordic parcel carrier; useful after PostNord.
+50,P3,Omniva,omniva,config_adapter,false,48,EE|LT|LV,omniva,5041,1,true,Baltic postal/logistics carrier.
+51,P3,Nova Poshta,nova-poshta,config_adapter,false,47,PL|UA,nova-poshta,100035|100162|101176,3,true,Major Ukrainian parcel carrier.

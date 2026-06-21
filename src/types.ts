@@ -41,7 +41,7 @@ export interface Track {
   raw?: Record<string, unknown>;
 }
 
-export type Carrier = "dhl" | "dhl-express" | "ups" | "fedex" | "usps";
+export type CarrierId = string;
 
 export interface ScrapeResult {
   ok: boolean;

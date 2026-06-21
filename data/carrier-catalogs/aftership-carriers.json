@@ -1,0 +1,6612 @@
+{
+  "generated_at": "2026-06-20T09:37:59.301Z",
+  "source_url": "https://track.aftership.com/couriers/download",
+  "count": 1321,
+  "carriers": [
+    {
+      "source": "aftership",
+      "slug": "2ebox",
+      "name": "2ebox"
+    },
+    {
+      "source": "aftership",
+      "slug": "2go",
+      "name": "2GO"
+    },
+    {
+      "source": "aftership",
+      "slug": "360lion",
+      "name": "360 Lion Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "3jmslogistics",
+      "name": "3JMS Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "3pe-express",
+      "name": "3PE Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "4-72",
+      "name": "4-72 Entregando"
+    },
+    {
+      "source": "aftership",
+      "slug": "4px",
+      "name": "4PX"
+    },
+    {
+      "source": "aftership",
+      "slug": "99minutos",
+      "name": "99minutos"
+    },
+    {
+      "source": "aftership",
+      "slug": "aduiepyle",
+      "name": "A Duie Pyle"
+    },
+    {
+      "source": "aftership",
+      "slug": "a1post",
+      "name": "A1Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "a2b-ba",
+      "name": "A2B Express Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "aaa-cooper",
+      "name": "AAA Cooper"
+    },
+    {
+      "source": "aftership",
+      "slug": "abf",
+      "name": "ABF Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "aclogistics-mx-webhook",
+      "name": "AC Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "acilogistix",
+      "name": "ACI Logistix"
+    },
+    {
+      "source": "aftership",
+      "slug": "acommerce",
+      "name": "aCommerce"
+    },
+    {
+      "source": "aftership",
+      "slug": "acscourier",
+      "name": "ACS Courier"
+    },
+    {
+      "source": "aftership",
+      "slug": "acsworldwide",
+      "name": "ACS Worldwide Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "activos24-api",
+      "name": "Activos24"
+    },
+    {
+      "source": "aftership",
+      "slug": "aderonline",
+      "name": "Ader"
+    },
+    {
+      "source": "aftership",
+      "slug": "adicional",
+      "name": "Adicional Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "ads",
+      "name": "ADS Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "adsone",
+      "name": "ADSOne"
+    },
+    {
+      "source": "aftership",
+      "slug": "aeronet",
+      "name": "Aeronet"
+    },
+    {
+      "source": "aftership",
+      "slug": "aeronet-api",
+      "name": "Aeronet"
+    },
+    {
+      "source": "aftership",
+      "slug": "aex",
+      "name": "AEX Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "afllog-ftp",
+      "name": "AFL LOGISTICS"
+    },
+    {
+      "source": "aftership",
+      "slug": "agediss",
+      "name": "Agediss"
+    },
+    {
+      "source": "aftership",
+      "slug": "agediss-sftp",
+      "name": "Agediss"
+    },
+    {
+      "source": "aftership",
+      "slug": "agility",
+      "name": "Agility"
+    },
+    {
+      "source": "aftership",
+      "slug": "agx-api",
+      "name": "AGX"
+    },
+    {
+      "source": "aftership",
+      "slug": "arihantcourier",
+      "name": "AICS"
+    },
+    {
+      "source": "aftership",
+      "slug": "air21",
+      "name": "AIR21"
+    },
+    {
+      "source": "aftership",
+      "slug": "airmee-webhook",
+      "name": "Airmee"
+    },
+    {
+      "source": "aftership",
+      "slug": "airpak-express",
+      "name": "Airpak Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "airspeed",
+      "name": "Airspeed International Corporation"
+    },
+    {
+      "source": "aftership",
+      "slug": "aitworldwide-sftp",
+      "name": "AIT"
+    },
+    {
+      "source": "aftership",
+      "slug": "aitworldwide-api",
+      "name": "AIT"
+    },
+    {
+      "source": "aftership",
+      "slug": "ait-homedelivery-de",
+      "name": "AIT Home Delivery"
+    },
+    {
+      "source": "aftership",
+      "slug": "alliedexpress",
+      "name": "Allied Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "alljoy",
+      "name": "ALLJOY SUPPLY CHAIN CO."
+    },
+    {
+      "source": "aftership",
+      "slug": "alphafreight-webhook",
+      "name": "Alpha Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "alphafast",
+      "name": "alphaFAST"
+    },
+    {
+      "source": "aftership",
+      "slug": "always-express",
+      "name": "Always Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "amazon-es",
+      "name": "Amazon"
+    },
+    {
+      "source": "aftership",
+      "slug": "amazon-mcf",
+      "name": "Amazon MCF"
+    },
+    {
+      "source": "aftership",
+      "slug": "amazon-uk-api",
+      "name": "Amazon Shipping"
+    },
+    {
+      "source": "aftership",
+      "slug": "amazon",
+      "name": "Amazon Shipping + Amazon MCF"
+    },
+    {
+      "source": "aftership",
+      "slug": "awest",
+      "name": "American West"
+    },
+    {
+      "source": "aftership",
+      "slug": "ameriship-api",
+      "name": "Ameriship"
+    },
+    {
+      "source": "aftership",
+      "slug": "amsegroup",
+      "name": "AMS Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "an-post",
+      "name": "An Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "anicamboxexpress",
+      "name": "Anicam Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "anjun",
+      "name": "Anjun"
+    },
+    {
+      "source": "aftership",
+      "slug": "anserx",
+      "name": "ANSERX"
+    },
+    {
+      "source": "aftership",
+      "slug": "anteraja",
+      "name": "Anteraja"
+    },
+    {
+      "source": "aftership",
+      "slug": "ao-deutschland",
+      "name": "AO Deutschland Ltd."
+    },
+    {
+      "source": "aftership",
+      "slug": "ao-courier",
+      "name": "AO Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "aoyue",
+      "name": "Aoyue"
+    },
+    {
+      "source": "aftership",
+      "slug": "apc-overnight",
+      "name": "APC Overnight"
+    },
+    {
+      "source": "aftership",
+      "slug": "apc-overnight-connum",
+      "name": "APC Overnight Consignment Number"
+    },
+    {
+      "source": "aftership",
+      "slug": "apc",
+      "name": "APC Postal Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "apg",
+      "name": "APG eCommerce Solutions Ltd."
+    },
+    {
+      "source": "aftership",
+      "slug": "apg-global",
+      "name": "APG Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "apple-express-webhook",
+      "name": "Apple Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "aquiline",
+      "name": "Aquiline"
+    },
+    {
+      "source": "aftership",
+      "slug": "aramex",
+      "name": "Aramex"
+    },
+    {
+      "source": "aftership",
+      "slug": "fastway-au-api",
+      "name": "Aramex Australia"
+    },
+    {
+      "source": "aftership",
+      "slug": "fastway-au",
+      "name": "Aramex Australia"
+    },
+    {
+      "source": "aftership",
+      "slug": "araskargo",
+      "name": "Aras Cargo"
+    },
+    {
+      "source": "aftership",
+      "slug": "arco-spedizioni",
+      "name": "Arco Spedizioni SP"
+    },
+    {
+      "source": "aftership",
+      "slug": "ark-logistics",
+      "name": "ARK Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "arrow-api",
+      "name": "Arrow"
+    },
+    {
+      "source": "aftership",
+      "slug": "arrowxl",
+      "name": "Arrow XL"
+    },
+    {
+      "source": "aftership",
+      "slug": "ase",
+      "name": "ASE KARGO"
+    },
+    {
+      "source": "aftership",
+      "slug": "asendia-de",
+      "name": "Asendia"
+    },
+    {
+      "source": "aftership",
+      "slug": "asendia-hk",
+      "name": "Asendia APAC"
+    },
+    {
+      "source": "aftership",
+      "slug": "asendia",
+      "name": "Asendia Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "asendia-uk",
+      "name": "Asendia UK"
+    },
+    {
+      "source": "aftership",
+      "slug": "asendia-usa",
+      "name": "Asendia USA"
+    },
+    {
+      "source": "aftership",
+      "slug": "asigna",
+      "name": "ASIGNA"
+    },
+    {
+      "source": "aftership",
+      "slug": "associated-couriers",
+      "name": "Associated Couriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "asyadexpress",
+      "name": "Asyad Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "ata",
+      "name": "ATA"
+    },
+    {
+      "source": "aftership",
+      "slug": "atshealthcare",
+      "name": "ATS Healthcare"
+    },
+    {
+      "source": "aftership",
+      "slug": "atshealthcare-reference",
+      "name": "ATS Healthcare"
+    },
+    {
+      "source": "aftership",
+      "slug": "auexpress",
+      "name": "Au Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "australia-post",
+      "name": "Australia Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "austrian-post",
+      "name": "Austrian Post (Express)"
+    },
+    {
+      "source": "aftership",
+      "slug": "austrian-post-registered",
+      "name": "Austrian Post (Registered)"
+    },
+    {
+      "source": "aftership",
+      "slug": "averitt",
+      "name": "Averitt Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "bh-worldwide",
+      "name": "B&H Worldwide"
+    },
+    {
+      "source": "aftership",
+      "slug": "b2ceurope",
+      "name": "B2C Europe"
+    },
+    {
+      "source": "aftership",
+      "slug": "barqexp",
+      "name": "Barq"
+    },
+    {
+      "source": "aftership",
+      "slug": "barsan",
+      "name": "Barsan Global Lojistik"
+    },
+    {
+      "source": "aftership",
+      "slug": "basic-shipping",
+      "name": "Basic Shipping"
+    },
+    {
+      "source": "aftership",
+      "slug": "bdmnet",
+      "name": "BDMnet"
+    },
+    {
+      "source": "aftership",
+      "slug": "belpost",
+      "name": "Belpost"
+    },
+    {
+      "source": "aftership",
+      "slug": "ibeone",
+      "name": "Beone Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "bert-fr",
+      "name": "Bert Transport"
+    },
+    {
+      "source": "aftership",
+      "slug": "800bestex",
+      "name": "Best Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "besttransport-sftp",
+      "name": "Best Transport"
+    },
+    {
+      "source": "aftership",
+      "slug": "bestwayparcel",
+      "name": "Best Way Parcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "bestfulfillpacket",
+      "name": "Bestfulfillpacket"
+    },
+    {
+      "source": "aftership",
+      "slug": "bettertrucks",
+      "name": "Better Trucks"
+    },
+    {
+      "source": "aftership",
+      "slug": "bigsmart",
+      "name": "Big Smart"
+    },
+    {
+      "source": "aftership",
+      "slug": "birdsystem",
+      "name": "BirdSystem"
+    },
+    {
+      "source": "aftership",
+      "slug": "bjshomedelivery",
+      "name": "BJS Distribution"
+    },
+    {
+      "source": "aftership",
+      "slug": "blinklastmile",
+      "name": "Blink"
+    },
+    {
+      "source": "aftership",
+      "slug": "bluex",
+      "name": "Blue Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "bluestar",
+      "name": "Blue Star"
+    },
+    {
+      "source": "aftership",
+      "slug": "bluecare",
+      "name": "Bluecare Express Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "bluedart",
+      "name": "Bluedart"
+    },
+    {
+      "source": "aftership",
+      "slug": "bneed",
+      "name": "Bneed"
+    },
+    {
+      "source": "aftership",
+      "slug": "bollore-logistics",
+      "name": "Bollore Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "bombinoexp",
+      "name": "Bombino Express Pvt Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "bomi",
+      "name": "Bomi Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "bond",
+      "name": "Bond"
+    },
+    {
+      "source": "aftership",
+      "slug": "bondscouriers",
+      "name": "Bonds Couriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "borderexpress",
+      "name": "Border Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "boxc",
+      "name": "BoxC"
+    },
+    {
+      "source": "aftership",
+      "slug": "boxcheck-webhook",
+      "name": "Boxcheck"
+    },
+    {
+      "source": "aftership",
+      "slug": "boxcheck-api",
+      "name": "Boxcheck"
+    },
+    {
+      "source": "aftership",
+      "slug": "bpost",
+      "name": "Bpost"
+    },
+    {
+      "source": "aftership",
+      "slug": "bpost-international",
+      "name": "Bpost international"
+    },
+    {
+      "source": "aftership",
+      "slug": "braspress-web",
+      "name": "BrasPress"
+    },
+    {
+      "source": "aftership",
+      "slug": "brazil-correios-api",
+      "name": "Brazil Correios"
+    },
+    {
+      "source": "aftership",
+      "slug": "brazil-correios",
+      "name": "Brazil Correios"
+    },
+    {
+      "source": "aftership",
+      "slug": "bring",
+      "name": "Bring"
+    },
+    {
+      "source": "aftership",
+      "slug": "bringer",
+      "name": "Bringer Parcel Services"
+    },
+    {
+      "source": "aftership",
+      "slug": "brouwer-transport",
+      "name": "Brouwer Transport en Logistiek B.V."
+    },
+    {
+      "source": "aftership",
+      "slug": "brt-it",
+      "name": "BRT Bartolini"
+    },
+    {
+      "source": "aftership",
+      "slug": "brt-it-parcelid",
+      "name": "BRT Bartolini(Parcel ID)"
+    },
+    {
+      "source": "aftership",
+      "slug": "brt-it-sender-ref",
+      "name": "BRT Bartolini(Sender Reference)"
+    },
+    {
+      "source": "aftership",
+      "slug": "btxglobal-ftp",
+      "name": "BTX GLOBAL LOGISTICS"
+    },
+    {
+      "source": "aftership",
+      "slug": "budbee-webhook",
+      "name": "Budbee"
+    },
+    {
+      "source": "aftership",
+      "slug": "buffalo",
+      "name": "BUFFALO"
+    },
+    {
+      "source": "aftership",
+      "slug": "bgpost",
+      "name": "Bulgarian Posts"
+    },
+    {
+      "source": "aftership",
+      "slug": "burd",
+      "name": "Burd Delivery Aps"
+    },
+    {
+      "source": "aftership",
+      "slug": "cchezvous-sftp",
+      "name": "C Chez Vous"
+    },
+    {
+      "source": "aftership",
+      "slug": "cchezvous",
+      "name": "C Chez Vous"
+    },
+    {
+      "source": "aftership",
+      "slug": "chrobinson-webhook",
+      "name": "C.H. Robinson Worldwide"
+    },
+    {
+      "source": "aftership",
+      "slug": "cacesa",
+      "name": "Cacesa"
+    },
+    {
+      "source": "aftership",
+      "slug": "cae-delivers",
+      "name": "CAE Delivers"
+    },
+    {
+      "source": "aftership",
+      "slug": "cago",
+      "name": "Cago"
+    },
+    {
+      "source": "aftership",
+      "slug": "cainiao",
+      "name": "Cainiao"
+    },
+    {
+      "source": "aftership",
+      "slug": "cambodia-post",
+      "name": "Cambodia Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "canada-post",
+      "name": "Canada Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "canpar",
+      "name": "Canpar Courier"
+    },
+    {
+      "source": "aftership",
+      "slug": "cpex",
+      "name": "Captain Express International"
+    },
+    {
+      "source": "aftership",
+      "slug": "cargopartner-api",
+      "name": "Cargo Partner"
+    },
+    {
+      "source": "aftership",
+      "slug": "carrefour",
+      "name": "Carrefour"
+    },
+    {
+      "source": "aftership",
+      "slug": "carriers",
+      "name": "Carriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "carry-flap",
+      "name": "Carry-Flap Co."
+    },
+    {
+      "source": "aftership",
+      "slug": "castleparcels",
+      "name": "Castle Parcels"
+    },
+    {
+      "source": "aftership",
+      "slug": "castlers",
+      "name": "Castlers Software Company Limited"
+    },
+    {
+      "source": "aftership",
+      "slug": "cathedis-api",
+      "name": "Cathedis"
+    },
+    {
+      "source": "aftership",
+      "slug": "cbl-logistica",
+      "name": "CBL Logistica"
+    },
+    {
+      "source": "aftership",
+      "slug": "cdek",
+      "name": "CDEK"
+    },
+    {
+      "source": "aftership",
+      "slug": "cdek-tr",
+      "name": "CDEK TR"
+    },
+    {
+      "source": "aftership",
+      "slug": "cdldelivers-api",
+      "name": "CDL Last Mile"
+    },
+    {
+      "source": "aftership",
+      "slug": "cdldelivers",
+      "name": "CDL Last Mile"
+    },
+    {
+      "source": "aftership",
+      "slug": "celeritas-ftp",
+      "name": "Celeritas Transporte"
+    },
+    {
+      "source": "aftership",
+      "slug": "celeritas",
+      "name": "Celeritas Transporte"
+    },
+    {
+      "source": "aftership",
+      "slug": "cello-square",
+      "name": "Cello Square"
+    },
+    {
+      "source": "aftership",
+      "slug": "ceva",
+      "name": "CEVA LOGISTICS"
+    },
+    {
+      "source": "aftership",
+      "slug": "ceva-tracking",
+      "name": "CEVA Package"
+    },
+    {
+      "source": "aftership",
+      "slug": "cfl-logistics",
+      "name": "CFL Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "cgs-express",
+      "name": "CGS Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "champagne-logistics",
+      "name": "Champagne Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "champion-logistics",
+      "name": "Champion Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "chazki",
+      "name": "Chazki"
+    },
+    {
+      "source": "aftership",
+      "slug": "china-ems",
+      "name": "China EMS (ePacket)"
+    },
+    {
+      "source": "aftership",
+      "slug": "china-post",
+      "name": "China Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "chitchats",
+      "name": "Chit Chats"
+    },
+    {
+      "source": "aftership",
+      "slug": "choirexpress",
+      "name": "Choir Express Indonesia"
+    },
+    {
+      "source": "aftership",
+      "slug": "chronodiali-webhook",
+      "name": "chronodiali"
+    },
+    {
+      "source": "aftership",
+      "slug": "chronopost-france",
+      "name": "Chronopost France"
+    },
+    {
+      "source": "aftership",
+      "slug": "chronopost-portugal",
+      "name": "Chronopost Portugal(DPD)"
+    },
+    {
+      "source": "aftership",
+      "slug": "ec-firstclass",
+      "name": "Chukou1"
+    },
+    {
+      "source": "aftership",
+      "slug": "ciblex-ftp",
+      "name": "Ciblex"
+    },
+    {
+      "source": "aftership",
+      "slug": "cimc-webhook",
+      "name": "CIMC"
+    },
+    {
+      "source": "aftership",
+      "slug": "cirrotrack",
+      "name": "CIRRO Track"
+    },
+    {
+      "source": "aftership",
+      "slug": "city56-webhook",
+      "name": "City Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "citylinkexpress",
+      "name": "City-Link Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "cj-malaysia-international",
+      "name": "CJ Century (International)"
+    },
+    {
+      "source": "aftership",
+      "slug": "cj-gls",
+      "name": "CJ GLS"
+    },
+    {
+      "source": "aftership",
+      "slug": "cj-korea-thai",
+      "name": "CJ Korea Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "cjlogistics",
+      "name": "CJ Logistics International"
+    },
+    {
+      "source": "aftership",
+      "slug": "cj-hk-international",
+      "name": "CJ Logistics International(Hong Kong)"
+    },
+    {
+      "source": "aftership",
+      "slug": "cjpacket",
+      "name": "CJ Packet"
+    },
+    {
+      "source": "aftership",
+      "slug": "cj-philippines",
+      "name": "CJ Transnational Philippines"
+    },
+    {
+      "source": "aftership",
+      "slug": "cle-logistics",
+      "name": "CL E-Logistics Solutions Limited"
+    },
+    {
+      "source": "aftership",
+      "slug": "clevy-links",
+      "name": "Clevy Links"
+    },
+    {
+      "source": "aftership",
+      "slug": "cloudwish-asia",
+      "name": "Cloudwish Asia"
+    },
+    {
+      "source": "aftership",
+      "slug": "cn-express",
+      "name": "CN Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "cnexps",
+      "name": "CNE Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "cnwangtong",
+      "name": "cnwangtong"
+    },
+    {
+      "source": "aftership",
+      "slug": "colis-prive",
+      "name": "Colis Privé"
+    },
+    {
+      "source": "aftership",
+      "slug": "colissimo",
+      "name": "Colissimo"
+    },
+    {
+      "source": "aftership",
+      "slug": "coll-8-sftp",
+      "name": "Coll-8"
+    },
+    {
+      "source": "aftership",
+      "slug": "collectplus",
+      "name": "Collect+"
+    },
+    {
+      "source": "aftership",
+      "slug": "collectco",
+      "name": "CollectCo"
+    },
+    {
+      "source": "aftership",
+      "slug": "comboynegroup-webhook",
+      "name": "Comboyne Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "comet-tech",
+      "name": "CometTech"
+    },
+    {
+      "source": "aftership",
+      "slug": "com1express",
+      "name": "ComOne Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "continental",
+      "name": "Continental"
+    },
+    {
+      "source": "aftership",
+      "slug": "coordinadora",
+      "name": "Coordinadora"
+    },
+    {
+      "source": "aftership",
+      "slug": "copa-courier",
+      "name": "Copa Airlines Courier"
+    },
+    {
+      "source": "aftership",
+      "slug": "cope",
+      "name": "Cope Sensitive Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "coretrails",
+      "name": "Coretrails"
+    },
+    {
+      "source": "aftership",
+      "slug": "correoar-webhook",
+      "name": "Correo Argentino"
+    },
+    {
+      "source": "aftership",
+      "slug": "correo-uy",
+      "name": "Correo Uruguayo"
+    },
+    {
+      "source": "aftership",
+      "slug": "spain-correos-es",
+      "name": "Correos de España"
+    },
+    {
+      "source": "aftership",
+      "slug": "correos-de-mexico",
+      "name": "Correos de Mexico"
+    },
+    {
+      "source": "aftership",
+      "slug": "correosexpress",
+      "name": "Correos Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "franco",
+      "name": "Corriere Franco"
+    },
+    {
+      "source": "aftership",
+      "slug": "costmeticsnow",
+      "name": "Cosmetics Now"
+    },
+    {
+      "source": "aftership",
+      "slug": "courant-plus-api",
+      "name": "Courant Plus"
+    },
+    {
+      "source": "aftership",
+      "slug": "courant-plus",
+      "name": "Courant Plus"
+    },
+    {
+      "source": "aftership",
+      "slug": "courierexpress-sftp",
+      "name": "Courier Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "courierit",
+      "name": "Courier IT"
+    },
+    {
+      "source": "aftership",
+      "slug": "cnwglobal-api",
+      "name": "Courier Network Inc"
+    },
+    {
+      "source": "aftership",
+      "slug": "courier-plus",
+      "name": "Courier Plus"
+    },
+    {
+      "source": "aftership",
+      "slug": "couriers-please",
+      "name": "Couriers Please"
+    },
+    {
+      "source": "aftership",
+      "slug": "cpacket",
+      "name": "cPacket"
+    },
+    {
+      "source": "aftership",
+      "slug": "crlexpress",
+      "name": "CRL Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "croshot",
+      "name": "Croshot"
+    },
+    {
+      "source": "aftership",
+      "slug": "crossflight",
+      "name": "Crossflight Limited"
+    },
+    {
+      "source": "aftership",
+      "slug": "ctc-express",
+      "name": "CTC Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "tourline",
+      "name": "CTT Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "cubyn",
+      "name": "Cubyn"
+    },
+    {
+      "source": "aftership",
+      "slug": "cuckooexpress",
+      "name": "Cuckoo Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "cyprus-post",
+      "name": "Cyprus Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "ceskaposta-api",
+      "name": "Czech Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "ceskaposta",
+      "name": "Czech Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "dexpress-webhook",
+      "name": "D Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "daeshin",
+      "name": "Daeshin"
+    },
+    {
+      "source": "aftership",
+      "slug": "daiglobaltrack",
+      "name": "DAI Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "daiichi",
+      "name": "Daiichi Freight System Inc"
+    },
+    {
+      "source": "aftership",
+      "slug": "danniao",
+      "name": "Danniao"
+    },
+    {
+      "source": "aftership",
+      "slug": "danske-fragt",
+      "name": "Danske Fragtmænd"
+    },
+    {
+      "source": "aftership",
+      "slug": "dao365-api",
+      "name": "DAO365"
+    },
+    {
+      "source": "aftership",
+      "slug": "dao365",
+      "name": "DAO365"
+    },
+    {
+      "source": "aftership",
+      "slug": "dashlink-webhook",
+      "name": "DashLink"
+    },
+    {
+      "source": "aftership",
+      "slug": "dashlink",
+      "name": "DashLink"
+    },
+    {
+      "source": "aftership",
+      "slug": "dawnwing",
+      "name": "Dawn Wing"
+    },
+    {
+      "source": "aftership",
+      "slug": "dayross",
+      "name": "Day & Ross"
+    },
+    {
+      "source": "aftership",
+      "slug": "dylt",
+      "name": "Daylight Transport"
+    },
+    {
+      "source": "aftership",
+      "slug": "dayton-freight",
+      "name": "Dayton Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "dbschenker-se",
+      "name": "DB Schenker"
+    },
+    {
+      "source": "aftership",
+      "slug": "dbschenker-b2b",
+      "name": "DB Schenker B2B"
+    },
+    {
+      "source": "aftership",
+      "slug": "dbschenker-iceland-ftp",
+      "name": "DB Schenker Iceland"
+    },
+    {
+      "source": "aftership",
+      "slug": "dbschenker-sv",
+      "name": "DB Schenker Sweden"
+    },
+    {
+      "source": "aftership",
+      "slug": "ddexpress",
+      "name": "DD Express Courier"
+    },
+    {
+      "source": "aftership",
+      "slug": "dealer-send",
+      "name": "DealerSend"
+    },
+    {
+      "source": "aftership",
+      "slug": "delhivery",
+      "name": "Delhivery"
+    },
+    {
+      "source": "aftership",
+      "slug": "delhivery-webhook",
+      "name": "Delhivery"
+    },
+    {
+      "source": "aftership",
+      "slug": "deliveryourparcel-za",
+      "name": "Deliver Your Parcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "smartkargo",
+      "name": "DeliverDirect"
+    },
+    {
+      "source": "aftership",
+      "slug": "delivere",
+      "name": "deliverE"
+    },
+    {
+      "source": "aftership",
+      "slug": "deliveright-webhook",
+      "name": "Deliveright"
+    },
+    {
+      "source": "aftership",
+      "slug": "deliverr-sftp",
+      "name": "Deliverr"
+    },
+    {
+      "source": "aftership",
+      "slug": "deliverydetect",
+      "name": "Delivery Detect"
+    },
+    {
+      "source": "aftership",
+      "slug": "deliveryontime",
+      "name": "DELIVERYONTIME LOGISTICS PVT LTD"
+    },
+    {
+      "source": "aftership",
+      "slug": "delnext",
+      "name": "Delnext"
+    },
+    {
+      "source": "aftership",
+      "slug": "deltec-courier",
+      "name": "Deltec Courier"
+    },
+    {
+      "source": "aftership",
+      "slug": "godependable",
+      "name": "Dependable Supply Chain Services"
+    },
+    {
+      "source": "aftership",
+      "slug": "designertransport-webhook",
+      "name": "Designer Transport"
+    },
+    {
+      "source": "aftership",
+      "slug": "destiny",
+      "name": "Destiny Transportation"
+    },
+    {
+      "source": "aftership",
+      "slug": "detrack-webhook",
+      "name": "Detrack"
+    },
+    {
+      "source": "aftership",
+      "slug": "detrack",
+      "name": "Detrack"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-germany-api",
+      "name": "Deutsche Post DHL"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-germany",
+      "name": "Deutsche Post DHL"
+    },
+    {
+      "source": "aftership",
+      "slug": "deutsch-post-api",
+      "name": "Deutsche Post Mail"
+    },
+    {
+      "source": "aftership",
+      "slug": "deutsch-post",
+      "name": "Deutsche Post Mail"
+    },
+    {
+      "source": "aftership",
+      "slug": "dex-i",
+      "name": "DEX-I"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-chile-sftp",
+      "name": "dhl"
+    },
+    {
+      "source": "aftership",
+      "slug": "mydhl-api",
+      "name": "DHL"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-reference-api",
+      "name": "DHL (Reference number)"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-active-tracing",
+      "name": "DHL Active Tracing"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-benelux",
+      "name": "DHL Benelux"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-global-mail",
+      "name": "DHL eCommerce"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-global-mail-asia",
+      "name": "DHL eCommerce Asia"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhlparcel-uk-api",
+      "name": "DHL eCommerce UK"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhlparcel-uk",
+      "name": "DHL eCommerce UK"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl",
+      "name": "DHL Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-pieceid",
+      "name": "DHL Express (Piece ID)"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-freight",
+      "name": "DHL Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-global-forwarding-api",
+      "name": "DHL Global Forwarding API"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-co-api",
+      "name": "DHL GLOBAL FORWARDING COLOMBIA"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-ecommerce-gc-api",
+      "name": "DHL Global Forwarding eCommerce"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-ecommerce-gc",
+      "name": "DHL Global Forwarding eCommerce"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-hk",
+      "name": "DHL Hong Kong"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-nl",
+      "name": "DHL Netherlands"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhlparcel-nl",
+      "name": "DHL Parcel NL"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhlparcel-es",
+      "name": "DHL Parcel Spain"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-poland",
+      "name": "DHL Poland Domestic"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-es",
+      "name": "DHL Spain Domestic"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-supplychain-apac",
+      "name": "DHL Supply Chain APAC"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-supply-chain-au-sftp",
+      "name": "DHL Supply Chain Australia"
+    },
+    {
+      "source": "aftership",
+      "slug": "dhl-supply-chain-au",
+      "name": "DHL Supply Chain Australia"
+    },
+    {
+      "source": "aftership",
+      "slug": "dialogo-logistica",
+      "name": "Dialogo Logistica"
+    },
+    {
+      "source": "aftership",
+      "slug": "diamondcouriers",
+      "name": "Diamond Eurogistics Limited"
+    },
+    {
+      "source": "aftership",
+      "slug": "didadi",
+      "name": "DIDADI Logistics tech"
+    },
+    {
+      "source": "aftership",
+      "slug": "dimerco",
+      "name": "Dimerco Express Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "dirmensajeria",
+      "name": "DIR"
+    },
+    {
+      "source": "aftership",
+      "slug": "directcouriers",
+      "name": "Direct Couriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "directcouriers-ftp",
+      "name": "Direct Couriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "directfreight-au-ref",
+      "name": "Direct Freight Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "directfreight-au",
+      "name": "Direct Freight Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "directlog",
+      "name": "Directlog"
+    },
+    {
+      "source": "aftership",
+      "slug": "direx",
+      "name": "Direx"
+    },
+    {
+      "source": "aftership",
+      "slug": "discountpost",
+      "name": "Discount Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "dksh",
+      "name": "DKSH"
+    },
+    {
+      "source": "aftership",
+      "slug": "dmfgroup",
+      "name": "DMF"
+    },
+    {
+      "source": "aftership",
+      "slug": "dms-matrix",
+      "name": "DMSExpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "dnj-express",
+      "name": "DNJ Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "domino",
+      "name": "DOMINO"
+    },
+    {
+      "source": "aftership",
+      "slug": "doora",
+      "name": "Doora Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "doordash-webhook",
+      "name": "DoorDash"
+    },
+    {
+      "source": "aftership",
+      "slug": "dp-world-api",
+      "name": "DP World"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-api",
+      "name": "DPD"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd",
+      "name": "DPD"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-at",
+      "name": "DPD Austria"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-at-sftp",
+      "name": "DPD Austria"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-fr-sftp",
+      "name": "DPD France"
+    },
+    {
+      "source": "aftership",
+      "slug": "exapaq",
+      "name": "DPD France (formerly exapaq)"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-de",
+      "name": "DPD Germany"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-hk",
+      "name": "DPD HK"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-hungary-ftp",
+      "name": "DPD Hungary"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-hungary-web",
+      "name": "DPD Hungary"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-hungary",
+      "name": "DPD Hungary"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-ireland",
+      "name": "DPD Ireland"
+    },
+    {
+      "source": "aftership",
+      "slug": "interlink-express-reference",
+      "name": "DPD Local reference"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-nl",
+      "name": "DPD Netherlands"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-poland",
+      "name": "DPD Poland"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-prt",
+      "name": "DPD Portugal"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-ro",
+      "name": "DPD Romania"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-sk-sftp",
+      "name": "DPD Slovakia"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-ch-sftp",
+      "name": "DPD Switzerland"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpd-uk",
+      "name": "DPD UK"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpe-express",
+      "name": "DPE Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpe-za",
+      "name": "DPE South Africa"
+    },
+    {
+      "source": "aftership",
+      "slug": "dpex",
+      "name": "DPEX"
+    },
+    {
+      "source": "aftership",
+      "slug": "szdpex",
+      "name": "DPEX China"
+    },
+    {
+      "source": "aftership",
+      "slug": "dragonstarcurier",
+      "name": "Dragon Star Curier"
+    },
+    {
+      "source": "aftership",
+      "slug": "dragonfly-au",
+      "name": "Dragonfly Australia"
+    },
+    {
+      "source": "aftership",
+      "slug": "dragonfly-ca",
+      "name": "Dragonfly Canada"
+    },
+    {
+      "source": "aftership",
+      "slug": "dragonfly-nl",
+      "name": "Dragonfly Netherlands"
+    },
+    {
+      "source": "aftership",
+      "slug": "dsv-za-sftp",
+      "name": "DSV"
+    },
+    {
+      "source": "aftership",
+      "slug": "dsv",
+      "name": "DSV"
+    },
+    {
+      "source": "aftership",
+      "slug": "dsv-slovakia-sftp",
+      "name": "DSV"
+    },
+    {
+      "source": "aftership",
+      "slug": "dsv-reference",
+      "name": "DSV Futurewave"
+    },
+    {
+      "source": "aftership",
+      "slug": "dsv-are-webhook",
+      "name": "DSV UAE"
+    },
+    {
+      "source": "aftership",
+      "slug": "dtd",
+      "name": "DTD Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "dtdc-au",
+      "name": "DTDC Australia"
+    },
+    {
+      "source": "aftership",
+      "slug": "dtdc-express",
+      "name": "DTDC Express Global PTE LTD"
+    },
+    {
+      "source": "aftership",
+      "slug": "dtdc",
+      "name": "DTDC India"
+    },
+    {
+      "source": "aftership",
+      "slug": "dtw-ftp",
+      "name": "DTW"
+    },
+    {
+      "source": "aftership",
+      "slug": "dutchx-webhook",
+      "name": "DutchX"
+    },
+    {
+      "source": "aftership",
+      "slug": "dx-sftp",
+      "name": "DX"
+    },
+    {
+      "source": "aftership",
+      "slug": "dx-b2b-connum",
+      "name": "DX (B2B)"
+    },
+    {
+      "source": "aftership",
+      "slug": "dynamic-logistics",
+      "name": "Dynamic Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "eastwestcourier-ftp",
+      "name": "East West Courier Pte Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "easy-express",
+      "name": "Easy Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "easy-mail",
+      "name": "Easy Mail"
+    },
+    {
+      "source": "aftership",
+      "slug": "easyparcel",
+      "name": "Easyparcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "easyroutes",
+      "name": "EasyRoutes"
+    },
+    {
+      "source": "aftership",
+      "slug": "ecexpress",
+      "name": "ECexpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "echo",
+      "name": "Echo"
+    },
+    {
+      "source": "aftership",
+      "slug": "ecms",
+      "name": "ECMS International Logistics Co."
+    },
+    {
+      "source": "aftership",
+      "slug": "ecofreight",
+      "name": "Eco Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "ecom-express",
+      "name": "Ecom Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "ecoscooting",
+      "name": "ECOSCOOTING"
+    },
+    {
+      "source": "aftership",
+      "slug": "ecparcel",
+      "name": "ecParcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "efs",
+      "name": "EFS (E-commerce Fulfillment Service)"
+    },
+    {
+      "source": "aftership",
+      "slug": "egl-world",
+      "name": "EGL World"
+    },
+    {
+      "source": "aftership",
+      "slug": "ekart",
+      "name": "Ekart"
+    },
+    {
+      "source": "aftership",
+      "slug": "ekol-api",
+      "name": "Ekol Lojistik"
+    },
+    {
+      "source": "aftership",
+      "slug": "elite-co",
+      "name": "Elite Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "elta-courier",
+      "name": "ELTA Hellenic Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "tomydoor",
+      "name": "EM Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "emega",
+      "name": "eMEGA"
+    },
+    {
+      "source": "aftership",
+      "slug": "emile",
+      "name": "Emile"
+    },
+    {
+      "source": "aftership",
+      "slug": "emiratescx-webhook",
+      "name": "Emirates Courier Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "emirates-post",
+      "name": "Emirates Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "emiro",
+      "name": "Emiro"
+    },
+    {
+      "source": "aftership",
+      "slug": "empsexpress",
+      "name": "EMPS Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "ems",
+      "name": "EMS"
+    },
+    {
+      "source": "aftership",
+      "slug": "endeavour-delivery",
+      "name": "Endeavour Delivery"
+    },
+    {
+      "source": "aftership",
+      "slug": "energologistic",
+      "name": "Energo Logistic"
+    },
+    {
+      "source": "aftership",
+      "slug": "envialia",
+      "name": "Envialia"
+    },
+    {
+      "source": "aftership",
+      "slug": "envialia-reference",
+      "name": "Envialia Reference"
+    },
+    {
+      "source": "aftership",
+      "slug": "envoi",
+      "name": "Envoi"
+    },
+    {
+      "source": "aftership",
+      "slug": "eparcel-kr",
+      "name": "eParcel Korea"
+    },
+    {
+      "source": "aftership",
+      "slug": "epostglobal",
+      "name": "ePost Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "equick-cn",
+      "name": "Equick China"
+    },
+    {
+      "source": "aftership",
+      "slug": "eshipper",
+      "name": "eShipper"
+    },
+    {
+      "source": "aftership",
+      "slug": "eshipping",
+      "name": "Eshipping"
+    },
+    {
+      "source": "aftership",
+      "slug": "zes-express",
+      "name": "Eshun international Logistic"
+    },
+    {
+      "source": "aftership",
+      "slug": "espoirer",
+      "name": "espoirer"
+    },
+    {
+      "source": "aftership",
+      "slug": "essers-api",
+      "name": "Essers"
+    },
+    {
+      "source": "aftership",
+      "slug": "estafeta",
+      "name": "Estafeta"
+    },
+    {
+      "source": "aftership",
+      "slug": "estes",
+      "name": "Estes"
+    },
+    {
+      "source": "aftership",
+      "slug": "efwnow-api",
+      "name": "Estes Forwarding Worldwide"
+    },
+    {
+      "source": "aftership",
+      "slug": "etomars",
+      "name": "Etomars"
+    },
+    {
+      "source": "aftership",
+      "slug": "etonas",
+      "name": "Etonas"
+    },
+    {
+      "source": "aftership",
+      "slug": "etotal",
+      "name": "eTotal Solution Limited"
+    },
+    {
+      "source": "aftership",
+      "slug": "etower",
+      "name": "eTower"
+    },
+    {
+      "source": "aftership",
+      "slug": "eu-fleet-solutions",
+      "name": "EU Fleet Solutions"
+    },
+    {
+      "source": "aftership",
+      "slug": "edf-ftp",
+      "name": "Eurodifarm"
+    },
+    {
+      "source": "aftership",
+      "slug": "eurodis",
+      "name": "Eurodis"
+    },
+    {
+      "source": "aftership",
+      "slug": "europaket-api",
+      "name": "Europacket+"
+    },
+    {
+      "source": "aftership",
+      "slug": "myhermes-uk-webhook",
+      "name": "EVRi"
+    },
+    {
+      "source": "aftership",
+      "slug": "myhermes-uk",
+      "name": "EVRi"
+    },
+    {
+      "source": "aftership",
+      "slug": "ewe",
+      "name": "EWE Global Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "exelot-ftp",
+      "name": "Exelot Ltd."
+    },
+    {
+      "source": "aftership",
+      "slug": "expressone-sv",
+      "name": "EXPRESSONE"
+    },
+    {
+      "source": "aftership",
+      "slug": "expressone",
+      "name": "EXPRESSONE"
+    },
+    {
+      "source": "aftership",
+      "slug": "fairsenden-api",
+      "name": "fairsenden"
+    },
+    {
+      "source": "aftership",
+      "slug": "fan",
+      "name": "FAN COURIER EXPRESS"
+    },
+    {
+      "source": "aftership",
+      "slug": "far-international",
+      "name": "FAR international"
+    },
+    {
+      "source": "aftership",
+      "slug": "fargood",
+      "name": "FarGood"
+    },
+    {
+      "source": "aftership",
+      "slug": "fnf-za",
+      "name": "Fast & Furious"
+    },
+    {
+      "source": "aftership",
+      "slug": "fastdespatch",
+      "name": "Fast Despatch Logistics Limited"
+    },
+    {
+      "source": "aftership",
+      "slug": "fastbox",
+      "name": "Fastbox"
+    },
+    {
+      "source": "aftership",
+      "slug": "fastrak-th",
+      "name": "Fastrak Services"
+    },
+    {
+      "source": "aftership",
+      "slug": "fastship",
+      "name": "Fastship Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "fasttrack",
+      "name": "Fasttrack"
+    },
+    {
+      "source": "aftership",
+      "slug": "aramex-au-api",
+      "name": "Fastway Australia"
+    },
+    {
+      "source": "aftership",
+      "slug": "fastway-ireland",
+      "name": "Fastway Ireland"
+    },
+    {
+      "source": "aftership",
+      "slug": "fastway-nz",
+      "name": "Fastway New Zealand"
+    },
+    {
+      "source": "aftership",
+      "slug": "fastway-za",
+      "name": "Fastway South Africa"
+    },
+    {
+      "source": "aftership",
+      "slug": "faxecargo",
+      "name": "Faxe Cargo"
+    },
+    {
+      "source": "aftership",
+      "slug": "fdsexpress",
+      "name": "FDSEXPRESS"
+    },
+    {
+      "source": "aftership",
+      "slug": "fedex-china",
+      "name": "Fedex"
+    },
+    {
+      "source": "aftership",
+      "slug": "fedex-fims",
+      "name": "FedEx International MailService®"
+    },
+    {
+      "source": "aftership",
+      "slug": "fedex",
+      "name": "FedEx®"
+    },
+    {
+      "source": "aftership",
+      "slug": "fedex-crossborder",
+      "name": "FedEx® Cross Border"
+    },
+    {
+      "source": "aftership",
+      "slug": "fedex-freight",
+      "name": "FedEx® Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "opek",
+      "name": "FedEx® Poland Domestic"
+    },
+    {
+      "source": "aftership",
+      "slug": "fercam",
+      "name": "FERCAM Logistics & Transport"
+    },
+    {
+      "source": "aftership",
+      "slug": "fiege",
+      "name": "Fiege Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "fiege-nl",
+      "name": "Fiege Netherlands"
+    },
+    {
+      "source": "aftership",
+      "slug": "finmile",
+      "name": "Fin Mile"
+    },
+    {
+      "source": "aftership",
+      "slug": "first-flight",
+      "name": "First Flight Couriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "first-logistics-api",
+      "name": "First Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "firstlogistics",
+      "name": "First Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "firstmile",
+      "name": "FirstMile"
+    },
+    {
+      "source": "aftership",
+      "slug": "fitzmark-api",
+      "name": "FitzMark"
+    },
+    {
+      "source": "aftership",
+      "slug": "flashexpress",
+      "name": "Flash Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "flashexpress-ph-api",
+      "name": "Flash Express PH"
+    },
+    {
+      "source": "aftership",
+      "slug": "fleetopticsinc",
+      "name": "FleetOptics"
+    },
+    {
+      "source": "aftership",
+      "slug": "flightlg",
+      "name": "Flight Logistics Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "flipxp",
+      "name": "FlipXpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "fliway-api",
+      "name": "Fliway"
+    },
+    {
+      "source": "aftership",
+      "slug": "floship",
+      "name": "Floship"
+    },
+    {
+      "source": "aftership",
+      "slug": "flytexpress",
+      "name": "Flyt Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "fmx",
+      "name": "FMX"
+    },
+    {
+      "source": "aftership",
+      "slug": "fnacdarty-sftp",
+      "name": "FNAC DARTY"
+    },
+    {
+      "source": "aftership",
+      "slug": "fonsen",
+      "name": "Fonsen Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "forrun",
+      "name": "forrun Pvt Ltd (Arpatech Venture)"
+    },
+    {
+      "source": "aftership",
+      "slug": "forwardair",
+      "name": "Forward Air"
+    },
+    {
+      "source": "aftership",
+      "slug": "fragilepak-sftp",
+      "name": "FragilePAK"
+    },
+    {
+      "source": "aftership",
+      "slug": "freightquote",
+      "name": "Freightquote by C.H. Robinson"
+    },
+    {
+      "source": "aftership",
+      "slug": "freterapido",
+      "name": "Frete Rápido"
+    },
+    {
+      "source": "aftership",
+      "slug": "frontdoorcorp",
+      "name": "FRONTdoor Collective"
+    },
+    {
+      "source": "aftership",
+      "slug": "frontier-api",
+      "name": "Frontierscs"
+    },
+    {
+      "source": "aftership",
+      "slug": "fujexp",
+      "name": "FUJIE EXPRESS"
+    },
+    {
+      "source": "aftership",
+      "slug": "fulfilla",
+      "name": "Fulfilla"
+    },
+    {
+      "source": "aftership",
+      "slug": "fulfillmen",
+      "name": "Fulfillmen"
+    },
+    {
+      "source": "aftership",
+      "slug": "furdeco",
+      "name": "Furdeco"
+    },
+    {
+      "source": "aftership",
+      "slug": "gwlogis-api",
+      "name": "G.I.G"
+    },
+    {
+      "source": "aftership",
+      "slug": "gac-webhook",
+      "name": "GAC"
+    },
+    {
+      "source": "aftership",
+      "slug": "gangbao",
+      "name": "GANGBAO Supplychain"
+    },
+    {
+      "source": "aftership",
+      "slug": "gati-kwe",
+      "name": "Gati-KWE"
+    },
+    {
+      "source": "aftership",
+      "slug": "gba",
+      "name": "GBA Services Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "gcx",
+      "name": "GC Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "gdex",
+      "name": "GDEX"
+    },
+    {
+      "source": "aftership",
+      "slug": "gw-world",
+      "name": "Gebrüder Weiss"
+    },
+    {
+      "source": "aftership",
+      "slug": "geis",
+      "name": "Geis CZ"
+    },
+    {
+      "source": "aftership",
+      "slug": "gel-express",
+      "name": "Gel Express Logistik"
+    },
+    {
+      "source": "aftership",
+      "slug": "gemworldwide",
+      "name": "GEM Worldwide"
+    },
+    {
+      "source": "aftership",
+      "slug": "taxydromiki",
+      "name": "Geniki Taxydromiki"
+    },
+    {
+      "source": "aftership",
+      "slug": "geodis-calberson-fr",
+      "name": "GEODIS - Distribution & Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "geodis-sg-api",
+      "name": "GEODIS - Distribution & Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "geodis-sftp",
+      "name": "GEODIS - Distribution & Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "geodis-calberson-fr-api",
+      "name": "GEODIS - Distribution & Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "geodis-api",
+      "name": "GEODIS - Distribution & Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "geodis-usa-api",
+      "name": "Geodis MyParcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "gpost",
+      "name": "Georgian Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "geswl",
+      "name": "GESWL Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "ghn",
+      "name": "Giao hàng nhanh"
+    },
+    {
+      "source": "aftership",
+      "slug": "gio-ecourier",
+      "name": "GIO Express Inc"
+    },
+    {
+      "source": "aftership",
+      "slug": "goglobalpost",
+      "name": "Global Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "globaltranz",
+      "name": "GlobalTranz"
+    },
+    {
+      "source": "aftership",
+      "slug": "globavend",
+      "name": "Globavend"
+    },
+    {
+      "source": "aftership",
+      "slug": "globegistics",
+      "name": "Globegistics Inc."
+    },
+    {
+      "source": "aftership",
+      "slug": "glovo",
+      "name": "Glovo"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls",
+      "name": "GLS"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-croatia",
+      "name": "GLS Croatia"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-cz",
+      "name": "GLS Czech Republic"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-fr-ftp",
+      "name": "GLS France"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-slovakia",
+      "name": "GLS General Logistics Systems Slovakia s.r.o."
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-hun-api",
+      "name": "GLS Hungary"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-hun",
+      "name": "GLS Hungary"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-italy",
+      "name": "GLS Italy"
+    },
+    {
+      "source": "aftership",
+      "slug": "dicom",
+      "name": "GLS Logistic Systems Canada Ltd./Dicom"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-netherlands-api",
+      "name": "GLS Netherlands"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-netherlands-webhook",
+      "name": "GLS Netherlands"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-netherlands-sftp",
+      "name": "GLS Netherlands"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-netherlands",
+      "name": "GLS Netherlands"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-romania",
+      "name": "GLS Romania"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-slovenia",
+      "name": "GLS Slovenia"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-spain",
+      "name": "GLS Spain"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-us-freight",
+      "name": "GLS US Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "gls-us",
+      "name": "GLS USA"
+    },
+    {
+      "source": "aftership",
+      "slug": "gso-api",
+      "name": "GLS USA"
+    },
+    {
+      "source": "aftership",
+      "slug": "general-overnight-ftp",
+      "name": "Go Express and logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "general-overnight",
+      "name": "Go Express and logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "gols",
+      "name": "GO Logistics & Storage"
+    },
+    {
+      "source": "aftership",
+      "slug": "gopeople",
+      "name": "Go People"
+    },
+    {
+      "source": "aftership",
+      "slug": "gorush",
+      "name": "Go Rush"
+    },
+    {
+      "source": "aftership",
+      "slug": "gobolt",
+      "name": "GoBolt"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcll",
+      "name": "GOFO"
+    },
+    {
+      "source": "aftership",
+      "slug": "gofo-express",
+      "name": "GOFO"
+    },
+    {
+      "source": "aftership",
+      "slug": "gofoexpress-fr",
+      "name": "GOFO France"
+    },
+    {
+      "source": "aftership",
+      "slug": "gofoexpress-it",
+      "name": "GOFO Italy"
+    },
+    {
+      "source": "aftership",
+      "slug": "gofoexpress-nl",
+      "name": "GOFO Netherlands"
+    },
+    {
+      "source": "aftership",
+      "slug": "xpost",
+      "name": "GoGo Xpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "gojavas",
+      "name": "GoJavas"
+    },
+    {
+      "source": "aftership",
+      "slug": "gojek-webhook",
+      "name": "Gojek"
+    },
+    {
+      "source": "aftership",
+      "slug": "gps",
+      "name": "GPS"
+    },
+    {
+      "source": "aftership",
+      "slug": "grandslamexpress",
+      "name": "Grand Slam Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "greyhound",
+      "name": "Greyhound"
+    },
+    {
+      "source": "aftership",
+      "slug": "mazet",
+      "name": "Groupe Mazet"
+    },
+    {
+      "source": "aftership",
+      "slug": "grupoampm",
+      "name": "Grupo ampm"
+    },
+    {
+      "source": "aftership",
+      "slug": "andreani",
+      "name": "Grupo logistico Andreani"
+    },
+    {
+      "source": "aftership",
+      "slug": "gsi-express",
+      "name": "GSI EXPRESS"
+    },
+    {
+      "source": "aftership",
+      "slug": "gtagsm",
+      "name": "GTA GSM"
+    },
+    {
+      "source": "aftership",
+      "slug": "hdb",
+      "name": "Haidaibao"
+    },
+    {
+      "source": "aftership",
+      "slug": "hdb-box",
+      "name": "Haidaibao (BOX)"
+    },
+    {
+      "source": "aftership",
+      "slug": "hct-logistics",
+      "name": "HCT LOGISTICS CO.LTD."
+    },
+    {
+      "source": "aftership",
+      "slug": "hellenic-post",
+      "name": "Hellenic (Greece) Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "hellmann",
+      "name": "Hellmann Worldwide Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "helthjem",
+      "name": "Helthjem"
+    },
+    {
+      "source": "aftership",
+      "slug": "heppner-fr",
+      "name": "Heppner France"
+    },
+    {
+      "source": "aftership",
+      "slug": "heppner",
+      "name": "Heppner Internationale Spedition GmbH & Co."
+    },
+    {
+      "source": "aftership",
+      "slug": "hepsijet",
+      "name": "hepsiJET"
+    },
+    {
+      "source": "aftership",
+      "slug": "hermes-2mann-handling",
+      "name": "Hermes Einrichtungs Service GmbH & Co. KG"
+    },
+    {
+      "source": "aftership",
+      "slug": "hermes-de",
+      "name": "Hermes Germany"
+    },
+    {
+      "source": "aftership",
+      "slug": "hermes",
+      "name": "Hermesworld"
+    },
+    {
+      "source": "aftership",
+      "slug": "heroexpress",
+      "name": "Hero Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "hfd",
+      "name": "HFD"
+    },
+    {
+      "source": "aftership",
+      "slug": "het-api",
+      "name": "High Energy Transport"
+    },
+    {
+      "source": "aftership",
+      "slug": "hipshipper",
+      "name": "Hipshipper"
+    },
+    {
+      "source": "aftership",
+      "slug": "hkd",
+      "name": "HKD International Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "home-delivery-solutions",
+      "name": "Home Delivery Solutions Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "homelogistics",
+      "name": "Home Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "hong-kong-post",
+      "name": "Hong Kong Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "houndexpress",
+      "name": "Hound Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "hrparcel",
+      "name": "HR Parcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "hrvatska-posta",
+      "name": "Hrvatska Pošta"
+    },
+    {
+      "source": "aftership",
+      "slug": "hsdexpress",
+      "name": "HSDEXPRESS"
+    },
+    {
+      "source": "aftership",
+      "slug": "hsm-global",
+      "name": "HSM Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "htdkgroup-webhook",
+      "name": "HTDK (Shanghai)"
+    },
+    {
+      "source": "aftership",
+      "slug": "hh-exp",
+      "name": "Hua Han Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "yycom",
+      "name": "HUAHANG EXPRESS"
+    },
+    {
+      "source": "aftership",
+      "slug": "huantong",
+      "name": "HuanTong"
+    },
+    {
+      "source": "aftership",
+      "slug": "hunter-express",
+      "name": "Hunter Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "huodull",
+      "name": "Huodull"
+    },
+    {
+      "source": "aftership",
+      "slug": "hx-express",
+      "name": "HX Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "i-dika",
+      "name": "i-dika"
+    },
+    {
+      "source": "aftership",
+      "slug": "i-parcel",
+      "name": "i-parcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "myib-sftp",
+      "name": "IB"
+    },
+    {
+      "source": "aftership",
+      "slug": "postur-is",
+      "name": "Iceland Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "icscourier",
+      "name": "ICS COURIER"
+    },
+    {
+      "source": "aftership",
+      "slug": "icumulus",
+      "name": "iCumulus"
+    },
+    {
+      "source": "aftership",
+      "slug": "idexpress",
+      "name": "IDEX"
+    },
+    {
+      "source": "aftership",
+      "slug": "idexpress-id",
+      "name": "iDexpress Indonesia"
+    },
+    {
+      "source": "aftership",
+      "slug": "ilyanglogis",
+      "name": "Ilyang logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "imile",
+      "name": "iMile"
+    },
+    {
+      "source": "aftership",
+      "slug": "imile-api",
+      "name": "iMile"
+    },
+    {
+      "source": "aftership",
+      "slug": "iml",
+      "name": "IML"
+    },
+    {
+      "source": "aftership",
+      "slug": "imxmail",
+      "name": "IMX Mail"
+    },
+    {
+      "source": "aftership",
+      "slug": "india-post",
+      "name": "India Post Domestic"
+    },
+    {
+      "source": "aftership",
+      "slug": "india-post-int",
+      "name": "India Post International"
+    },
+    {
+      "source": "aftership",
+      "slug": "indopaket",
+      "name": "INDOPAKET"
+    },
+    {
+      "source": "aftership",
+      "slug": "inexpost",
+      "name": "Inexpost"
+    },
+    {
+      "source": "aftership",
+      "slug": "nox-nachtexpress",
+      "name": "Innight Express Germany GmbH (nox NachtExpress)"
+    },
+    {
+      "source": "aftership",
+      "slug": "nox-nachtexpress-ftp",
+      "name": "Innight Express Germany GmbH (nox NachtExpress)"
+    },
+    {
+      "source": "aftership",
+      "slug": "descartes",
+      "name": "Innovel"
+    },
+    {
+      "source": "aftership",
+      "slug": "inntralog-sftp",
+      "name": "Inntralog GmbH"
+    },
+    {
+      "source": "aftership",
+      "slug": "inpost-uk",
+      "name": "InPost"
+    },
+    {
+      "source": "aftership",
+      "slug": "inpost-webhook",
+      "name": "InPost Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "inpost-it",
+      "name": "Inpost Italy"
+    },
+    {
+      "source": "aftership",
+      "slug": "inpost-paczkomaty",
+      "name": "InPost Paczkomaty"
+    },
+    {
+      "source": "aftership",
+      "slug": "integra2-ftp",
+      "name": "Integra2"
+    },
+    {
+      "source": "aftership",
+      "slug": "intel-valley",
+      "name": "Intel-Valley Supply chain (ShenZhen) Co. Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "intelipost",
+      "name": "Intelipost (TMS for LATAM)"
+    },
+    {
+      "source": "aftership",
+      "slug": "international-seur",
+      "name": "International Seur"
+    },
+    {
+      "source": "aftership",
+      "slug": "intexpress",
+      "name": "Internet Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "interparcel-au",
+      "name": "Interparcel Australia"
+    },
+    {
+      "source": "aftership",
+      "slug": "interparcel-nz",
+      "name": "Interparcel New Zealand"
+    },
+    {
+      "source": "aftership",
+      "slug": "interparcel-uk",
+      "name": "Interparcel UK"
+    },
+    {
+      "source": "aftership",
+      "slug": "intex-de",
+      "name": "INTEX Paketdienst GmbH"
+    },
+    {
+      "source": "aftership",
+      "slug": "iordirect",
+      "name": "IOR Direct Solutions"
+    },
+    {
+      "source": "aftership",
+      "slug": "israel-post",
+      "name": "Israel Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "israel-post-domestic",
+      "name": "Israel Post Domestic"
+    },
+    {
+      "source": "aftership",
+      "slug": "italy-sda",
+      "name": "Italy SDA"
+    },
+    {
+      "source": "aftership",
+      "slug": "ithinklogistics",
+      "name": "iThink Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "ivoy-webhook",
+      "name": "Ivoy"
+    },
+    {
+      "source": "aftership",
+      "slug": "j-net",
+      "name": "J-Net"
+    },
+    {
+      "source": "aftership",
+      "slug": "jtcargo",
+      "name": "J&T CARGO"
+    },
+    {
+      "source": "aftership",
+      "slug": "jtexpress-br-api",
+      "name": "J&T Express Brazil"
+    },
+    {
+      "source": "aftership",
+      "slug": "jtexpress-id-api",
+      "name": "J&T Express Indonesia"
+    },
+    {
+      "source": "aftership",
+      "slug": "jtexpress",
+      "name": "J&T EXPRESS MALAYSIA"
+    },
+    {
+      "source": "aftership",
+      "slug": "jtexpress-ph",
+      "name": "J&T Express Philippines"
+    },
+    {
+      "source": "aftership",
+      "slug": "jtexpress-sg",
+      "name": "J&T Express Singapore"
+    },
+    {
+      "source": "aftership",
+      "slug": "simplypost",
+      "name": "J&T Express Singapore"
+    },
+    {
+      "source": "aftership",
+      "slug": "jtexpress-vn",
+      "name": "J&T Express Vietnam"
+    },
+    {
+      "source": "aftership",
+      "slug": "jadlog",
+      "name": "Jadlog"
+    },
+    {
+      "source": "aftership",
+      "slug": "jam-express",
+      "name": "Jam Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "jamef-web",
+      "name": "JAMEF"
+    },
+    {
+      "source": "aftership",
+      "slug": "janco",
+      "name": "Janco Ecommerce"
+    },
+    {
+      "source": "aftership",
+      "slug": "janio",
+      "name": "Janio Asia"
+    },
+    {
+      "source": "aftership",
+      "slug": "japan-post",
+      "name": "Japan Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "jas-webhook",
+      "name": "JAS"
+    },
+    {
+      "source": "aftership",
+      "slug": "javit",
+      "name": "Javit"
+    },
+    {
+      "source": "aftership",
+      "slug": "jawar",
+      "name": "Jawar"
+    },
+    {
+      "source": "aftership",
+      "slug": "jayonexpress",
+      "name": "Jayon Express (JEX)"
+    },
+    {
+      "source": "aftership",
+      "slug": "jcex",
+      "name": "JCEX"
+    },
+    {
+      "source": "aftership",
+      "slug": "jd-worldwide",
+      "name": "JD Worldwide"
+    },
+    {
+      "source": "aftership",
+      "slug": "jersey-post",
+      "name": "Jersey Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "jerseypost-atlas",
+      "name": "Jersey Post Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "jet-ship",
+      "name": "Jet-Ship Worldwide"
+    },
+    {
+      "source": "aftership",
+      "slug": "ltianexp",
+      "name": "JiaYou Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "jinsung",
+      "name": "JINSUNG TRADING"
+    },
+    {
+      "source": "aftership",
+      "slug": "jitsu",
+      "name": "Jitsu"
+    },
+    {
+      "source": "aftership",
+      "slug": "jitsu-ftp",
+      "name": "Jitsu"
+    },
+    {
+      "source": "aftership",
+      "slug": "jne-webhook",
+      "name": "JNE"
+    },
+    {
+      "source": "aftership",
+      "slug": "jne",
+      "name": "JNE"
+    },
+    {
+      "source": "aftership",
+      "slug": "jne-api",
+      "name": "JNE (API)"
+    },
+    {
+      "source": "aftership",
+      "slug": "jocom",
+      "name": "Jocom"
+    },
+    {
+      "source": "aftership",
+      "slug": "joom-logistics",
+      "name": "Joom Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "joyingbox",
+      "name": "Joying Box"
+    },
+    {
+      "source": "aftership",
+      "slug": "bh-posta",
+      "name": "JP BH Pošta"
+    },
+    {
+      "source": "aftership",
+      "slug": "js-express",
+      "name": "JS EXPRESS"
+    },
+    {
+      "source": "aftership",
+      "slug": "jumppoint-api",
+      "name": "Jumppoint"
+    },
+    {
+      "source": "aftership",
+      "slug": "jumppoint",
+      "name": "Jumppoint"
+    },
+    {
+      "source": "aftership",
+      "slug": "radaro-webhook",
+      "name": "Jungle Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "jx",
+      "name": "JX"
+    },
+    {
+      "source": "aftership",
+      "slug": "k1-express",
+      "name": "K1 Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "kangaroo-my",
+      "name": "Kangaroo Worldwide Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "kargomkolay",
+      "name": "KargomKolay (CargoMini)"
+    },
+    {
+      "source": "aftership",
+      "slug": "kedaex",
+      "name": "KedaEX"
+    },
+    {
+      "source": "aftership",
+      "slug": "kerry-ecommerce",
+      "name": "Kerry eCommerce"
+    },
+    {
+      "source": "aftership",
+      "slug": "kerryttc-vn",
+      "name": "Kerry Express (Vietnam) Co Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "tgx",
+      "name": "Kerry Express Hong Kong"
+    },
+    {
+      "source": "aftership",
+      "slug": "kerry-express-tw-api",
+      "name": "Kerry Express TaiWan"
+    },
+    {
+      "source": "aftership",
+      "slug": "kerry-logistics",
+      "name": "Kerry Express Thailand"
+    },
+    {
+      "source": "aftership",
+      "slug": "kerrytj",
+      "name": "Kerry TJ Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "kng",
+      "name": "Keuhne + Nagel Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "abxexpress-my",
+      "name": "KEX Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "kgmhub",
+      "name": "KGM Hub"
+    },
+    {
+      "source": "aftership",
+      "slug": "logisystems-sftp",
+      "name": "Kiitäjät"
+    },
+    {
+      "source": "aftership",
+      "slug": "kinisi",
+      "name": "Kinisi Transport Pty Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "kiwi-express-webhook",
+      "name": "Kiwi Express Couriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "klg-sftp",
+      "name": "KLG Europe Venlo BV"
+    },
+    {
+      "source": "aftership",
+      "slug": "komon-express",
+      "name": "Komon Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "kpost",
+      "name": "Korea Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "korea-post",
+      "name": "Korea Post EMS"
+    },
+    {
+      "source": "aftership",
+      "slug": "kronos",
+      "name": "Kronos Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "ky-express",
+      "name": "Kua Yue Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "kurasi",
+      "name": "KURASI"
+    },
+    {
+      "source": "aftership",
+      "slug": "kwe-global",
+      "name": "KWE Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "kdexp",
+      "name": "Kyungdong Parcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "la-poste-colissimo",
+      "name": "La Poste"
+    },
+    {
+      "source": "aftership",
+      "slug": "lagermax-sftp",
+      "name": "Lagermax"
+    },
+    {
+      "source": "aftership",
+      "slug": "lalamove-api",
+      "name": "Lalamove"
+    },
+    {
+      "source": "aftership",
+      "slug": "lalamove",
+      "name": "Lalamove"
+    },
+    {
+      "source": "aftership",
+      "slug": "land-logistics",
+      "name": "Land Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "landmark-global",
+      "name": "Landmark Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "lao-post",
+      "name": "Lao Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "lasership",
+      "name": "LaserShip"
+    },
+    {
+      "source": "aftership",
+      "slug": "latvijas-pasts",
+      "name": "Latvijas Pasts"
+    },
+    {
+      "source": "aftership",
+      "slug": "lbcexpress-api",
+      "name": "LBC EXPRESS INC."
+    },
+    {
+      "source": "aftership",
+      "slug": "lctbr-api",
+      "name": "LCT do Brasil"
+    },
+    {
+      "source": "aftership",
+      "slug": "leader",
+      "name": "Leader"
+    },
+    {
+      "source": "aftership",
+      "slug": "legion-express",
+      "name": "Legion Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "leman",
+      "name": "Leman"
+    },
+    {
+      "source": "aftership",
+      "slug": "lexship",
+      "name": "LexShip"
+    },
+    {
+      "source": "aftership",
+      "slug": "liccardi-express",
+      "name": "LICCARDI EXPRESS COURIER"
+    },
+    {
+      "source": "aftership",
+      "slug": "liefergrun",
+      "name": "LIEFERGRUN"
+    },
+    {
+      "source": "aftership",
+      "slug": "liefery",
+      "name": "liefery"
+    },
+    {
+      "source": "aftership",
+      "slug": "lietuvos-pastas",
+      "name": "Lietuvos Paštas"
+    },
+    {
+      "source": "aftership",
+      "slug": "lightconescm",
+      "name": "Lightcone SCM"
+    },
+    {
+      "source": "aftership",
+      "slug": "line",
+      "name": "Line Clear Express & Logistics Sdn Bhd"
+    },
+    {
+      "source": "aftership",
+      "slug": "lion-parcel",
+      "name": "Lion Parcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "lmparcel",
+      "name": "LM Parcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "loggi-api",
+      "name": "Loggi"
+    },
+    {
+      "source": "aftership",
+      "slug": "logisters",
+      "name": "Logisters"
+    },
+    {
+      "source": "aftership",
+      "slug": "lwe-hk",
+      "name": "Logistic Worldwide Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "logistify-api",
+      "name": "Logistify"
+    },
+    {
+      "source": "aftership",
+      "slug": "logoix",
+      "name": "LogoiX"
+    },
+    {
+      "source": "aftership",
+      "slug": "logysto",
+      "name": "Logysto"
+    },
+    {
+      "source": "aftership",
+      "slug": "lonestar",
+      "name": "Lone Star Overnight"
+    },
+    {
+      "source": "aftership",
+      "slug": "loomis-express",
+      "name": "Loomis Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "lotte",
+      "name": "Lotte Global Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "ltl",
+      "name": "LTL"
+    },
+    {
+      "source": "aftership",
+      "slug": "luwjistik",
+      "name": "Luwjistik"
+    },
+    {
+      "source": "aftership",
+      "slug": "m-xpress",
+      "name": "M Xpress Sdn Bhd"
+    },
+    {
+      "source": "aftership",
+      "slug": "mx-cargo",
+      "name": "M&X cargo"
+    },
+    {
+      "source": "aftership",
+      "slug": "m3logistics",
+      "name": "M3 Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "maergo",
+      "name": "Maergo"
+    },
+    {
+      "source": "aftership",
+      "slug": "pilot-freight",
+      "name": "Maersk Ground Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "magyar-posta-api",
+      "name": "Magyar Posta"
+    },
+    {
+      "source": "aftership",
+      "slug": "mail-box-etc",
+      "name": "Mail Boxes Etc."
+    },
+    {
+      "source": "aftership",
+      "slug": "mailamericas",
+      "name": "MailAmericas"
+    },
+    {
+      "source": "aftership",
+      "slug": "mailplus",
+      "name": "MailPlus"
+    },
+    {
+      "source": "aftership",
+      "slug": "mailplus-jp",
+      "name": "MailPlus (Japan)"
+    },
+    {
+      "source": "aftership",
+      "slug": "mainfreight-api",
+      "name": "Mainfreight"
+    },
+    {
+      "source": "aftership",
+      "slug": "mainstream-sftp",
+      "name": "Mainstream NZ"
+    },
+    {
+      "source": "aftership",
+      "slug": "mainway",
+      "name": "Mainway"
+    },
+    {
+      "source": "aftership",
+      "slug": "malaysia-post-posdaftar",
+      "name": "Malaysia Post - Registered"
+    },
+    {
+      "source": "aftership",
+      "slug": "malaysia-post",
+      "name": "Malaysia Post EMS / Pos Laju"
+    },
+    {
+      "source": "aftership",
+      "slug": "malca-amit",
+      "name": "Malca-Amit"
+    },
+    {
+      "source": "aftership",
+      "slug": "marken",
+      "name": "Marken"
+    },
+    {
+      "source": "aftership",
+      "slug": "matdespatch",
+      "name": "Matdespatch"
+    },
+    {
+      "source": "aftership",
+      "slug": "matkahuolto",
+      "name": "Matkahuolto"
+    },
+    {
+      "source": "aftership",
+      "slug": "maxoptra",
+      "name": "Max Optra"
+    },
+    {
+      "source": "aftership",
+      "slug": "maxzee",
+      "name": "Maxzee"
+    },
+    {
+      "source": "aftership",
+      "slug": "mbs-teliae-webhook",
+      "name": "MBS Teliae"
+    },
+    {
+      "source": "aftership",
+      "slug": "collivery",
+      "name": "MDS Collivery Pty (Ltd)"
+    },
+    {
+      "source": "aftership",
+      "slug": "medafrica",
+      "name": "Med Africa Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "medline",
+      "name": "Medline"
+    },
+    {
+      "source": "aftership",
+      "slug": "meest",
+      "name": "Meest"
+    },
+    {
+      "source": "aftership",
+      "slug": "mensajerosurbanos-api",
+      "name": "Mensajeros Urbanos"
+    },
+    {
+      "source": "aftership",
+      "slug": "metabrasil-webhook",
+      "name": "META"
+    },
+    {
+      "source": "aftership",
+      "slug": "metroscg",
+      "name": "METRO SUPPLY CHAIN"
+    },
+    {
+      "source": "aftership",
+      "slug": "mwd",
+      "name": "Metropolitan Warehouse & Delivery"
+    },
+    {
+      "source": "aftership",
+      "slug": "mwd-api",
+      "name": "Metropolitan Warehouse & Delivery"
+    },
+    {
+      "source": "aftership",
+      "slug": "aeroflash",
+      "name": "Mexico AeroFlash"
+    },
+    {
+      "source": "aftership",
+      "slug": "mexico-redpack",
+      "name": "Mexico Redpack"
+    },
+    {
+      "source": "aftership",
+      "slug": "mexico-senda-express",
+      "name": "Mexico Senda Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "meyerlogistics",
+      "name": "Meyer Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "mgcargo",
+      "name": "MG Cargo"
+    },
+    {
+      "source": "aftership",
+      "slug": "mhi",
+      "name": "Mhi"
+    },
+    {
+      "source": "aftership",
+      "slug": "mikropakket",
+      "name": "Mikropakket"
+    },
+    {
+      "source": "aftership",
+      "slug": "mikropakket-be",
+      "name": "Mikropakket Belgium"
+    },
+    {
+      "source": "aftership",
+      "slug": "milkman",
+      "name": "Milkman"
+    },
+    {
+      "source": "aftership",
+      "slug": "mnx",
+      "name": "MNX"
+    },
+    {
+      "source": "aftership",
+      "slug": "mobelservices",
+      "name": "Mobel Services"
+    },
+    {
+      "source": "aftership",
+      "slug": "mobi-br",
+      "name": "Mobi Logistica"
+    },
+    {
+      "source": "aftership",
+      "slug": "mobiletyreshop-webhook",
+      "name": "Mobile Tyre Shop"
+    },
+    {
+      "source": "aftership",
+      "slug": "mondialrelay",
+      "name": "Mondial Relay"
+    },
+    {
+      "source": "aftership",
+      "slug": "mondialrelay-fr",
+      "name": "Mondial Relay France"
+    },
+    {
+      "source": "aftership",
+      "slug": "mondialrelay-es",
+      "name": "Mondial Relay Spain(Punto Pack)"
+    },
+    {
+      "source": "aftership",
+      "slug": "moovin",
+      "name": "Moovin"
+    },
+    {
+      "source": "aftership",
+      "slug": "moran-api",
+      "name": "Moran Transportation Corporation"
+    },
+    {
+      "source": "aftership",
+      "slug": "morelink",
+      "name": "Morelink"
+    },
+    {
+      "source": "aftership",
+      "slug": "morning-express",
+      "name": "Morning Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "morninglobal",
+      "name": "Morning Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "mothership-api",
+      "name": "Mothership"
+    },
+    {
+      "source": "aftership",
+      "slug": "mrw-spain",
+      "name": "MRW"
+    },
+    {
+      "source": "aftership",
+      "slug": "multientregapanama",
+      "name": "Multientrega"
+    },
+    {
+      "source": "aftership",
+      "slug": "mydynalogic",
+      "name": "My DynaLogic"
+    },
+    {
+      "source": "aftership",
+      "slug": "mysendle-api",
+      "name": "mySendle"
+    },
+    {
+      "source": "aftership",
+      "slug": "nmtransfer",
+      "name": "N&M Transfer Co."
+    },
+    {
+      "source": "aftership",
+      "slug": "nacex",
+      "name": "NACEX"
+    },
+    {
+      "source": "aftership",
+      "slug": "nacex-spain",
+      "name": "NACEX Spain"
+    },
+    {
+      "source": "aftership",
+      "slug": "nanjingwoyuan",
+      "name": "Nanjing Woyuan"
+    },
+    {
+      "source": "aftership",
+      "slug": "national-sameday",
+      "name": "National Sameday"
+    },
+    {
+      "source": "aftership",
+      "slug": "nationex-ftp",
+      "name": "Nationex"
+    },
+    {
+      "source": "aftership",
+      "slug": "nationex",
+      "name": "Nationex"
+    },
+    {
+      "source": "aftership",
+      "slug": "nationwide-my",
+      "name": "Nationwide Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "navlungo",
+      "name": "Navlungo"
+    },
+    {
+      "source": "aftership",
+      "slug": "netlogixgroup",
+      "name": "Netlogix"
+    },
+    {
+      "source": "aftership",
+      "slug": "newzealand-couriers",
+      "name": "New Zealand Couriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "neweggexpress",
+      "name": "Newegg Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "newgisticsapi",
+      "name": "Newgistics API"
+    },
+    {
+      "source": "aftership",
+      "slug": "nhans-solutions",
+      "name": "Nhans Solutions"
+    },
+    {
+      "source": "aftership",
+      "slug": "ntlogistics-vn",
+      "name": "Nhat Tin Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "nightline",
+      "name": "Nightline"
+    },
+    {
+      "source": "aftership",
+      "slug": "nim-express",
+      "name": "Nim Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "nimbuspost",
+      "name": "NimbusPost"
+    },
+    {
+      "source": "aftership",
+      "slug": "ninjavan-id",
+      "name": "Ninja Van Indonesia"
+    },
+    {
+      "source": "aftership",
+      "slug": "ninjavan-my",
+      "name": "Ninja Van Malaysia"
+    },
+    {
+      "source": "aftership",
+      "slug": "ninjavan",
+      "name": "Ninja Van Singapore"
+    },
+    {
+      "source": "aftership",
+      "slug": "ninjavan-thai",
+      "name": "Ninja Van Thailand"
+    },
+    {
+      "source": "aftership",
+      "slug": "ninjavan-vn",
+      "name": "Ninjavan Vietnam"
+    },
+    {
+      "source": "aftership",
+      "slug": "nipost",
+      "name": "NiPost"
+    },
+    {
+      "source": "aftership",
+      "slug": "nippon-express",
+      "name": "Nippon Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "nippon-express-ftp",
+      "name": "Nippon Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "norsk-global",
+      "name": "Norsk Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "northline",
+      "name": "Northline"
+    },
+    {
+      "source": "aftership",
+      "slug": "nova-poshta",
+      "name": "Nova Poshta"
+    },
+    {
+      "source": "aftership",
+      "slug": "nox-night-time-express",
+      "name": "NOX NightTimeExpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "ntilogistics-ftp",
+      "name": "NTI Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "ntl",
+      "name": "NTL logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "nytlogistics",
+      "name": "NYT SUPPLY CHAIN LOGISTICS Co."
+    },
+    {
+      "source": "aftership",
+      "slug": "new-zealand-post",
+      "name": "NZ Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "oakh",
+      "name": "Oakh Harbour Freight Lines"
+    },
+    {
+      "source": "aftership",
+      "slug": "obibox",
+      "name": "Obibox"
+    },
+    {
+      "source": "aftership",
+      "slug": "oca-ar",
+      "name": "OCA Argentina"
+    },
+    {
+      "source": "aftership",
+      "slug": "ocasa-ftp",
+      "name": "Ocasa"
+    },
+    {
+      "source": "aftership",
+      "slug": "ocs",
+      "name": "OCS ANA Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "ocs-worldwide",
+      "name": "OCS WORLDWIDE"
+    },
+    {
+      "source": "aftership",
+      "slug": "okayparcel",
+      "name": "OkayParcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "old-dominion",
+      "name": "Old Dominion Freight Line"
+    },
+    {
+      "source": "aftership",
+      "slug": "old-dominion-api",
+      "name": "Old Dominion Freight Line"
+    },
+    {
+      "source": "aftership",
+      "slug": "shopolive",
+      "name": "Olive"
+    },
+    {
+      "source": "aftership",
+      "slug": "omniparcel",
+      "name": "Omni Parcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "omnirps-webhook",
+      "name": "Omni Returns"
+    },
+    {
+      "source": "aftership",
+      "slug": "omniva-api",
+      "name": "Omniva"
+    },
+    {
+      "source": "aftership",
+      "slug": "omniva",
+      "name": "Omniva"
+    },
+    {
+      "source": "aftership",
+      "slug": "onway-webhook",
+      "name": "On Way"
+    },
+    {
+      "source": "aftership",
+      "slug": "oneclick",
+      "name": "One click delivery services"
+    },
+    {
+      "source": "aftership",
+      "slug": "oneworldexpress",
+      "name": "One World Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "ontime",
+      "name": "Ontime"
+    },
+    {
+      "source": "aftership",
+      "slug": "ontrac-api",
+      "name": "OnTrac"
+    },
+    {
+      "source": "aftership",
+      "slug": "ontrac-sftp",
+      "name": "OnTrac"
+    },
+    {
+      "source": "aftership",
+      "slug": "ontrac",
+      "name": "OnTrac"
+    },
+    {
+      "source": "aftership",
+      "slug": "optimacourier",
+      "name": "Optima Courier"
+    },
+    {
+      "source": "aftership",
+      "slug": "orangeconnex",
+      "name": "Orange Connex"
+    },
+    {
+      "source": "aftership",
+      "slug": "orangeconnex-ftp",
+      "name": "Orange Connex"
+    },
+    {
+      "source": "aftership",
+      "slug": "orangedsinc",
+      "name": "OrangeDS (Orange Distribution Solutions Inc)"
+    },
+    {
+      "source": "aftership",
+      "slug": "orangedsinc-ftp",
+      "name": "OrangeDS (Orange Distribution Solutions Inc)"
+    },
+    {
+      "source": "aftership",
+      "slug": "orbico-group-ftp",
+      "name": "Orbico Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "orlenpaczka",
+      "name": "ORLEN Paczka"
+    },
+    {
+      "source": "aftership",
+      "slug": "osm-worldwide-api",
+      "name": "OSM Worldwide"
+    },
+    {
+      "source": "aftership",
+      "slug": "osm-worldwide",
+      "name": "OSM Worldwide"
+    },
+    {
+      "source": "aftership",
+      "slug": "osm-worldwide-sftp",
+      "name": "OSM Worldwide"
+    },
+    {
+      "source": "aftership",
+      "slug": "otschile",
+      "name": "OTS"
+    },
+    {
+      "source": "aftership",
+      "slug": "overseas-hr",
+      "name": "Overseas Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "ozeparts-shipping",
+      "name": "Ozeparts Shipping"
+    },
+    {
+      "source": "aftership",
+      "slug": "p2p",
+      "name": "p2p"
+    },
+    {
+      "source": "aftership",
+      "slug": "p2p-delivery-api",
+      "name": "P2P Delivery Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "paack-webhook",
+      "name": "Paack"
+    },
+    {
+      "source": "aftership",
+      "slug": "paack",
+      "name": "Paack"
+    },
+    {
+      "source": "aftership",
+      "slug": "pack-man",
+      "name": "Pack-Man"
+    },
+    {
+      "source": "aftership",
+      "slug": "packaly",
+      "name": "Packaly"
+    },
+    {
+      "source": "aftership",
+      "slug": "packeta",
+      "name": "Packeta"
+    },
+    {
+      "source": "aftership",
+      "slug": "packfleet",
+      "name": "PACKFLEET"
+    },
+    {
+      "source": "aftership",
+      "slug": "packlink",
+      "name": "Packlink"
+    },
+    {
+      "source": "aftership",
+      "slug": "packs",
+      "name": "Packs"
+    },
+    {
+      "source": "aftership",
+      "slug": "paikeda",
+      "name": "Paikeda"
+    },
+    {
+      "source": "aftership",
+      "slug": "pakajo",
+      "name": "Pakajo World"
+    },
+    {
+      "source": "aftership",
+      "slug": "palexpress",
+      "name": "PAL Express Limited"
+    },
+    {
+      "source": "aftership",
+      "slug": "palletways",
+      "name": "Palletways"
+    },
+    {
+      "source": "aftership",
+      "slug": "pan-asia",
+      "name": "Pan-Asia International"
+    },
+    {
+      "source": "aftership",
+      "slug": "pandago-ph-api",
+      "name": "Pandago"
+    },
+    {
+      "source": "aftership",
+      "slug": "pandago-api",
+      "name": "Pandago"
+    },
+    {
+      "source": "aftership",
+      "slug": "pandion",
+      "name": "Pandion"
+    },
+    {
+      "source": "aftership",
+      "slug": "pandulogistics",
+      "name": "Pandu Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "panther",
+      "name": "Panther"
+    },
+    {
+      "source": "aftership",
+      "slug": "paper-express",
+      "name": "Paper Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "paquetexpress",
+      "name": "Paquetexpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcalogistics-webhook",
+      "name": "Parca Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcel-force",
+      "name": "Parcel Force"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcelone",
+      "name": "PARCEL ONE"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcelright",
+      "name": "Parcel Right"
+    },
+    {
+      "source": "aftership",
+      "slug": "parceltopost",
+      "name": "Parcel To Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcel2go",
+      "name": "Parcel2Go"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcelinklogistics",
+      "name": "Parcelink Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "parceljet",
+      "name": "Parceljet"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcelled-in",
+      "name": "Parcelled.in"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcelpal-webhook",
+      "name": "ParcelPal"
+    },
+    {
+      "source": "aftership",
+      "slug": "hubbed",
+      "name": "PARCELPOINT"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcelpoint",
+      "name": "ParcelPoint Pty Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcelstars",
+      "name": "Parcelstars"
+    },
+    {
+      "source": "aftership",
+      "slug": "parcelstars-webhook",
+      "name": "Parcelstars"
+    },
+    {
+      "source": "aftership",
+      "slug": "parknparcel",
+      "name": "Park N Parcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "parxl",
+      "name": "PaRXL"
+    },
+    {
+      "source": "aftership",
+      "slug": "passportshipping",
+      "name": "Passport Shipping"
+    },
+    {
+      "source": "aftership",
+      "slug": "patheon-api",
+      "name": "Patheon Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "patheon",
+      "name": "Patheon Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "payo",
+      "name": "Payo"
+    },
+    {
+      "source": "aftership",
+      "slug": "ppbyb",
+      "name": "PayPal Package"
+    },
+    {
+      "source": "aftership",
+      "slug": "peri-logistics",
+      "name": "Peri Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "pfcexpress",
+      "name": "PFC Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "pflogistics",
+      "name": "PFL"
+    },
+    {
+      "source": "aftership",
+      "slug": "pflogistics-ftp",
+      "name": "PFL"
+    },
+    {
+      "source": "aftership",
+      "slug": "pgeon-api",
+      "name": "Pgeon"
+    },
+    {
+      "source": "aftership",
+      "slug": "phm-teliae-webhook",
+      "name": "PHM Teliae"
+    },
+    {
+      "source": "aftership",
+      "slug": "pickupp-mys",
+      "name": "PICK UPP"
+    },
+    {
+      "source": "aftership",
+      "slug": "pickupp-sgp",
+      "name": "PICK UPP (Singapore)"
+    },
+    {
+      "source": "aftership",
+      "slug": "pickrr",
+      "name": "Pickrr"
+    },
+    {
+      "source": "aftership",
+      "slug": "pickup",
+      "name": "Pickupp"
+    },
+    {
+      "source": "aftership",
+      "slug": "pidge",
+      "name": "Pidge"
+    },
+    {
+      "source": "aftership",
+      "slug": "piggyship",
+      "name": "PIGGYSHIP"
+    },
+    {
+      "source": "aftership",
+      "slug": "pil-logistics",
+      "name": "PIL Logistics (China) Co."
+    },
+    {
+      "source": "aftership",
+      "slug": "pinag",
+      "name": "PIN AG"
+    },
+    {
+      "source": "aftership",
+      "slug": "pitney-bowes",
+      "name": "Pitney Bowes"
+    },
+    {
+      "source": "aftership",
+      "slug": "pittohio",
+      "name": "PITT OHIO"
+    },
+    {
+      "source": "aftership",
+      "slug": "planzer",
+      "name": "Planzer Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "poczta-polska",
+      "name": "Poczta Polska"
+    },
+    {
+      "source": "aftership",
+      "slug": "polarspeed",
+      "name": "PolarSpeed Inc"
+    },
+    {
+      "source": "aftership",
+      "slug": "portugal-ctt",
+      "name": "Portugal CTT"
+    },
+    {
+      "source": "aftership",
+      "slug": "portugal-seur",
+      "name": "Portugal Seur"
+    },
+    {
+      "source": "aftership",
+      "slug": "pos-indonesia",
+      "name": "Pos Indonesia Domestic"
+    },
+    {
+      "source": "aftership",
+      "slug": "postandpost",
+      "name": "Post & Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "post-luxembourg",
+      "name": "Post Luxembourg"
+    },
+    {
+      "source": "aftership",
+      "slug": "post-slovenia",
+      "name": "Post of Slovenia"
+    },
+    {
+      "source": "aftership",
+      "slug": "postone",
+      "name": "Post ONE"
+    },
+    {
+      "source": "aftership",
+      "slug": "poste-sm",
+      "name": "Post San Marino"
+    },
+    {
+      "source": "aftership",
+      "slug": "post-serbia",
+      "name": "Post Serbia"
+    },
+    {
+      "source": "aftership",
+      "slug": "post56",
+      "name": "Post56"
+    },
+    {
+      "source": "aftership",
+      "slug": "postaplus",
+      "name": "Posta Plus"
+    },
+    {
+      "source": "aftership",
+      "slug": "posta-romana",
+      "name": "Poșta Română"
+    },
+    {
+      "source": "aftership",
+      "slug": "poste-italiane",
+      "name": "Poste Italiane"
+    },
+    {
+      "source": "aftership",
+      "slug": "posten-norge",
+      "name": "Posten Norge / Bring"
+    },
+    {
+      "source": "aftership",
+      "slug": "posti",
+      "name": "Posti"
+    },
+    {
+      "source": "aftership",
+      "slug": "postnl-api",
+      "name": "PostNL Domestic"
+    },
+    {
+      "source": "aftership",
+      "slug": "postnl",
+      "name": "PostNL Domestic"
+    },
+    {
+      "source": "aftership",
+      "slug": "postnl-international",
+      "name": "PostNL International"
+    },
+    {
+      "source": "aftership",
+      "slug": "danmark-post",
+      "name": "PostNord Denmark"
+    },
+    {
+      "source": "aftership",
+      "slug": "postnord",
+      "name": "PostNord Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "sweden-posten",
+      "name": "PostNord Sweden"
+    },
+    {
+      "source": "aftership",
+      "slug": "postplus",
+      "name": "PostPlus"
+    },
+    {
+      "source": "aftership",
+      "slug": "precision-deliveries",
+      "name": "Precision Deliveries"
+    },
+    {
+      "source": "aftership",
+      "slug": "taqbin-taiwan",
+      "name": "PRESIDENT TRANSNET CORP"
+    },
+    {
+      "source": "aftership",
+      "slug": "pressiode",
+      "name": "Pressio"
+    },
+    {
+      "source": "aftership",
+      "slug": "procarrier",
+      "name": "Pro Carrier"
+    },
+    {
+      "source": "aftership",
+      "slug": "productcaregroup-sftp",
+      "name": "Product Care Services Limited"
+    },
+    {
+      "source": "aftership",
+      "slug": "professional-couriers",
+      "name": "Professional Couriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "ppl",
+      "name": "Professional Parcel Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "ppl-api",
+      "name": "Professional Parcel Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "promeddelivery",
+      "name": "ProMed Delivery"
+    },
+    {
+      "source": "aftership",
+      "slug": "mglobal",
+      "name": "PT MGLOBAL LOGISTICS INDONESIA"
+    },
+    {
+      "source": "aftership",
+      "slug": "pts",
+      "name": "PTS"
+    },
+    {
+      "source": "aftership",
+      "slug": "ptt-posta",
+      "name": "PTT Posta"
+    },
+    {
+      "source": "aftership",
+      "slug": "purolator-api",
+      "name": "Purolator"
+    },
+    {
+      "source": "aftership",
+      "slug": "purolator",
+      "name": "Purolator"
+    },
+    {
+      "source": "aftership",
+      "slug": "purolator-international",
+      "name": "Purolator International"
+    },
+    {
+      "source": "aftership",
+      "slug": "qls-ftp",
+      "name": "QLS"
+    },
+    {
+      "source": "aftership",
+      "slug": "qtrack",
+      "name": "QTrack"
+    },
+    {
+      "source": "aftership",
+      "slug": "quantium",
+      "name": "Quantium"
+    },
+    {
+      "source": "aftership",
+      "slug": "qintl-api",
+      "name": "Quickstat Courier LLC"
+    },
+    {
+      "source": "aftership",
+      "slug": "airterra",
+      "name": "Quiet Platforms"
+    },
+    {
+      "source": "aftership",
+      "slug": "quiqup",
+      "name": "Quiqup"
+    },
+    {
+      "source": "aftership",
+      "slug": "qwintry",
+      "name": "Qwintry Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "raben-group",
+      "name": "Raben Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "raben-group-sftp",
+      "name": "Raben Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "raeslogistics-sftp",
+      "name": "Raes Pharmaceutical Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "raf",
+      "name": "RAF Philippines"
+    },
+    {
+      "source": "aftership",
+      "slug": "raiderex",
+      "name": "RaidereX"
+    },
+    {
+      "source": "aftership",
+      "slug": "ramgroup-za",
+      "name": "RAM"
+    },
+    {
+      "source": "aftership",
+      "slug": "rangel-api",
+      "name": "Rangel"
+    },
+    {
+      "source": "aftership",
+      "slug": "ransa-webhook",
+      "name": "Ransa"
+    },
+    {
+      "source": "aftership",
+      "slug": "redjepakketje",
+      "name": "Red je Pakketje"
+    },
+    {
+      "source": "aftership",
+      "slug": "redur-es",
+      "name": "Redur Spain"
+    },
+    {
+      "source": "aftership",
+      "slug": "relaiscolis-api",
+      "name": "Relais Colis"
+    },
+    {
+      "source": "aftership",
+      "slug": "relaiscolis",
+      "name": "Relais Colis"
+    },
+    {
+      "source": "aftership",
+      "slug": "relay",
+      "name": "Relay"
+    },
+    {
+      "source": "aftership",
+      "slug": "rendr-webhook",
+      "name": "Rendr"
+    },
+    {
+      "source": "aftership",
+      "slug": "ets-express",
+      "name": "RETS express"
+    },
+    {
+      "source": "aftership",
+      "slug": "returnmates-webhook",
+      "name": "Returnmates"
+    },
+    {
+      "source": "aftership",
+      "slug": "runforint",
+      "name": "RFL Runforint Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "rhenus-ch",
+      "name": "Rhenus"
+    },
+    {
+      "source": "aftership",
+      "slug": "rhenus-italy",
+      "name": "Rhenus Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "rhenus-uk-api",
+      "name": "Rhenus Logistics UK"
+    },
+    {
+      "source": "aftership",
+      "slug": "rhenus-uk",
+      "name": "Rhenus Logistics UK"
+    },
+    {
+      "source": "aftership",
+      "slug": "richmom",
+      "name": "Rich Mom"
+    },
+    {
+      "source": "aftership",
+      "slug": "rincos",
+      "name": "Rincos"
+    },
+    {
+      "source": "aftership",
+      "slug": "air-canada-global",
+      "name": "Rivo"
+    },
+    {
+      "source": "aftership",
+      "slug": "rixonhk-api",
+      "name": "Rixon Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "rl-carriers",
+      "name": "RL Carriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "roadie",
+      "name": "Roadie"
+    },
+    {
+      "source": "aftership",
+      "slug": "roadrunner-freight",
+      "name": "Roadrunner Transport Service"
+    },
+    {
+      "source": "aftership",
+      "slug": "rocketparcel",
+      "name": "Rocket Parcel International"
+    },
+    {
+      "source": "aftership",
+      "slug": "rodonaves",
+      "name": "Rodonaves"
+    },
+    {
+      "source": "aftership",
+      "slug": "rohlig",
+      "name": "Rohlig"
+    },
+    {
+      "source": "aftership",
+      "slug": "routific-webhook",
+      "name": "Routific"
+    },
+    {
+      "source": "aftership",
+      "slug": "royalshipments",
+      "name": "RoyalShipments"
+    },
+    {
+      "source": "aftership",
+      "slug": "rpd2man",
+      "name": "RPD2man Deliveries"
+    },
+    {
+      "source": "aftership",
+      "slug": "rpm",
+      "name": "RPM"
+    },
+    {
+      "source": "aftership",
+      "slug": "rpxlogistics",
+      "name": "RPX Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "rpxonline",
+      "name": "RPX Online"
+    },
+    {
+      "source": "aftership",
+      "slug": "ruston",
+      "name": "Ruston"
+    },
+    {
+      "source": "aftership",
+      "slug": "rxo-api",
+      "name": "RXO"
+    },
+    {
+      "source": "aftership",
+      "slug": "rzyexpress",
+      "name": "RZY Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "safexpress",
+      "name": "Safexpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "sagawa",
+      "name": "Sagawa"
+    },
+    {
+      "source": "aftership",
+      "slug": "saia-freight",
+      "name": "Saia LTL Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "sailpost",
+      "name": "SAILPOST SPA"
+    },
+    {
+      "source": "aftership",
+      "slug": "sameday",
+      "name": "Sameday"
+    },
+    {
+      "source": "aftership",
+      "slug": "sanidis-ftp",
+      "name": "Sanidis"
+    },
+    {
+      "source": "aftership",
+      "slug": "sap-express",
+      "name": "SAP EXPRESS"
+    },
+    {
+      "source": "aftership",
+      "slug": "seabourne-api",
+      "name": "Seabourne Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "seino",
+      "name": "Seino"
+    },
+    {
+      "source": "aftership",
+      "slug": "seino-super-express",
+      "name": "Seino Super Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "sekologistics",
+      "name": "SEKO Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "sending",
+      "name": "Sending Transporte Urgente y Comunicacion"
+    },
+    {
+      "source": "aftership",
+      "slug": "sendit",
+      "name": "Sendit"
+    },
+    {
+      "source": "aftership",
+      "slug": "sendle",
+      "name": "Sendle"
+    },
+    {
+      "source": "aftership",
+      "slug": "sendparcel",
+      "name": "Sendparcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "sendy",
+      "name": "Sendy Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "showl",
+      "name": "SENHONG INTERNATIONAL LOGISTICS"
+    },
+    {
+      "source": "aftership",
+      "slug": "nowlog-api",
+      "name": "Sequoialog"
+    },
+    {
+      "source": "aftership",
+      "slug": "servientrega",
+      "name": "Servientrega"
+    },
+    {
+      "source": "aftership",
+      "slug": "servip-webhook",
+      "name": "SerVIP"
+    },
+    {
+      "source": "aftership",
+      "slug": "setel",
+      "name": "Setel Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "sf-express",
+      "name": "SF Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "sf-express-api",
+      "name": "SF Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "sf-express-cn",
+      "name": "SF Express China"
+    },
+    {
+      "source": "aftership",
+      "slug": "sfb2c",
+      "name": "SF International"
+    },
+    {
+      "source": "aftership",
+      "slug": "sfc",
+      "name": "SFC"
+    },
+    {
+      "source": "aftership",
+      "slug": "sfcservice",
+      "name": "SFC-SendfromChina"
+    },
+    {
+      "source": "aftership",
+      "slug": "sfydexpress",
+      "name": "SFYD Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "sglink",
+      "name": "SG LINK"
+    },
+    {
+      "source": "aftership",
+      "slug": "shadowfax",
+      "name": "Shadowfax"
+    },
+    {
+      "source": "aftership",
+      "slug": "dajin",
+      "name": "Shanghai Aqrum Chemical Logistics Co.Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "ydex",
+      "name": "Shenzhen 1st International Logistics(Group)Co"
+    },
+    {
+      "source": "aftership",
+      "slug": "hotsin-cargo",
+      "name": "SHENZHEN HOTSIN CARGO INT'L FORWARDING CO."
+    },
+    {
+      "source": "aftership",
+      "slug": "kwt",
+      "name": "Shenzhen Jinghuada Logistics Co."
+    },
+    {
+      "source": "aftership",
+      "slug": "sherpa",
+      "name": "Sherpa"
+    },
+    {
+      "source": "aftership",
+      "slug": "ship-it-asia",
+      "name": "Ship It Asia"
+    },
+    {
+      "source": "aftership",
+      "slug": "shipa",
+      "name": "SHIPA"
+    },
+    {
+      "source": "aftership",
+      "slug": "shipbob",
+      "name": "ShipBob"
+    },
+    {
+      "source": "aftership",
+      "slug": "shipentegra",
+      "name": "ShipEntegra"
+    },
+    {
+      "source": "aftership",
+      "slug": "shipgate",
+      "name": "ShipGate"
+    },
+    {
+      "source": "aftership",
+      "slug": "shipglobal-us",
+      "name": "ShipGlobal"
+    },
+    {
+      "source": "aftership",
+      "slug": "shiphawk-api",
+      "name": "Shiphawk"
+    },
+    {
+      "source": "aftership",
+      "slug": "shippie",
+      "name": "Shippie"
+    },
+    {
+      "source": "aftership",
+      "slug": "shippify",
+      "name": "Shippify"
+    },
+    {
+      "source": "aftership",
+      "slug": "shippit",
+      "name": "Shippit"
+    },
+    {
+      "source": "aftership",
+      "slug": "shiprocket",
+      "name": "Shiprocket X"
+    },
+    {
+      "source": "aftership",
+      "slug": "shipter",
+      "name": "SHIPTER"
+    },
+    {
+      "source": "aftership",
+      "slug": "shipx",
+      "name": "ShipX"
+    },
+    {
+      "source": "aftership",
+      "slug": "shipxpres",
+      "name": "SHIPXPRESS"
+    },
+    {
+      "source": "aftership",
+      "slug": "spx",
+      "name": "Shopee Express (Indonesia)"
+    },
+    {
+      "source": "aftership",
+      "slug": "spx-my",
+      "name": "Shopee Express (Malaysia)"
+    },
+    {
+      "source": "aftership",
+      "slug": "spx-ph",
+      "name": "Shopee Express (Philippines)"
+    },
+    {
+      "source": "aftership",
+      "slug": "spx-sg",
+      "name": "Shopee Express (Singapore)"
+    },
+    {
+      "source": "aftership",
+      "slug": "spx-th",
+      "name": "Shopee Express (Thailand)"
+    },
+    {
+      "source": "aftership",
+      "slug": "spx-vn",
+      "name": "Shopee Express (Vietnam)"
+    },
+    {
+      "source": "aftership",
+      "slug": "shopline",
+      "name": "shopline"
+    },
+    {
+      "source": "aftership",
+      "slug": "shreeanjanicourier",
+      "name": "Shree Anjani Courier"
+    },
+    {
+      "source": "aftership",
+      "slug": "shree-maruti",
+      "name": "Shree Maruti Integrated Logistics Limited"
+    },
+    {
+      "source": "aftership",
+      "slug": "shreenandancourier",
+      "name": "SHREE NANDAN COURIER"
+    },
+    {
+      "source": "aftership",
+      "slug": "shreetirupati",
+      "name": "SHREE TIRUPATI COURIER SERVICES PVT. LTD."
+    },
+    {
+      "source": "aftership",
+      "slug": "shunbang-express",
+      "name": "ShunBang Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "shyplite",
+      "name": "Shypmax"
+    },
+    {
+      "source": "aftership",
+      "slug": "signialogistics-sftp",
+      "name": "SIGNIA LOGISTICS S.A.C."
+    },
+    {
+      "source": "aftership",
+      "slug": "signia-ftp",
+      "name": "SIGNIA LOGISTICS S.A.C."
+    },
+    {
+      "source": "aftership",
+      "slug": "simpletire-webhook",
+      "name": "SimpleTire"
+    },
+    {
+      "source": "aftership",
+      "slug": "simsglobal",
+      "name": "Sims Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "singlobal-express",
+      "name": "Sin Global Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "singapore-post",
+      "name": "Singapore Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "singapore-speedpost",
+      "name": "Singapore Speedpost"
+    },
+    {
+      "source": "aftership",
+      "slug": "sino-scm",
+      "name": "Sino SCM"
+    },
+    {
+      "source": "aftership",
+      "slug": "sinotrans",
+      "name": "Sinotrans"
+    },
+    {
+      "source": "aftership",
+      "slug": "siodemka",
+      "name": "Siodemka"
+    },
+    {
+      "source": "aftership",
+      "slug": "skladusa",
+      "name": "SkladUSA"
+    },
+    {
+      "source": "aftership",
+      "slug": "skyking",
+      "name": "Sky King"
+    },
+    {
+      "source": "aftership",
+      "slug": "skybox",
+      "name": "SKYBOX"
+    },
+    {
+      "source": "aftership",
+      "slug": "skyexpress-international",
+      "name": "SkyExpress Internationals"
+    },
+    {
+      "source": "aftership",
+      "slug": "skynet",
+      "name": "SkyNet Malaysia"
+    },
+    {
+      "source": "aftership",
+      "slug": "skynet-za",
+      "name": "Skynet World Wide Express South Africa"
+    },
+    {
+      "source": "aftership",
+      "slug": "skynetworldwide",
+      "name": "SkyNet Worldwide Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "skynetworldwide-in",
+      "name": "SkyNet Worldwide Express India"
+    },
+    {
+      "source": "aftership",
+      "slug": "sky-postal",
+      "name": "SkyPostal"
+    },
+    {
+      "source": "aftership",
+      "slug": "sk-posta",
+      "name": "Slovenská pošta"
+    },
+    {
+      "source": "aftership",
+      "slug": "smartcat",
+      "name": "SMARTCAT"
+    },
+    {
+      "source": "aftership",
+      "slug": "smooth",
+      "name": "Smooth Couriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "smsa-express",
+      "name": "SMSA Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "sntglobal-api",
+      "name": "Snt Global Etrax"
+    },
+    {
+      "source": "aftership",
+      "slug": "solistica-api",
+      "name": "solistica"
+    },
+    {
+      "source": "aftership",
+      "slug": "thenile-webhook",
+      "name": "SortHub"
+    },
+    {
+      "source": "aftership",
+      "slug": "thenile",
+      "name": "SortHub"
+    },
+    {
+      "source": "aftership",
+      "slug": "sapo",
+      "name": "South African Post Office"
+    },
+    {
+      "source": "aftership",
+      "slug": "sefl",
+      "name": "Southeastern Freight Lines"
+    },
+    {
+      "source": "aftership",
+      "slug": "smtl",
+      "name": "Southwestern Motor Transport. Inc"
+    },
+    {
+      "source": "aftership",
+      "slug": "spanish-seur",
+      "name": "Spanish Seur"
+    },
+    {
+      "source": "aftership",
+      "slug": "specialisedfreight-za",
+      "name": "Specialised Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "spectran",
+      "name": "Spectran"
+    },
+    {
+      "source": "aftership",
+      "slug": "spedisci",
+      "name": "Spedisci.online"
+    },
+    {
+      "source": "aftership",
+      "slug": "speedee",
+      "name": "Spee-Dee Delivery"
+    },
+    {
+      "source": "aftership",
+      "slug": "speedcouriers-gr",
+      "name": "Speed Couriers"
+    },
+    {
+      "source": "aftership",
+      "slug": "slg",
+      "name": "Speed Logistics Global Limited"
+    },
+    {
+      "source": "aftership",
+      "slug": "speedex",
+      "name": "SPEEDEX"
+    },
+    {
+      "source": "aftership",
+      "slug": "speedx",
+      "name": "SpeedX"
+    },
+    {
+      "source": "aftership",
+      "slug": "speedy",
+      "name": "Speedy"
+    },
+    {
+      "source": "aftership",
+      "slug": "spflylogistica-webhook",
+      "name": "SPFly Logística"
+    },
+    {
+      "source": "aftership",
+      "slug": "kdl-sftp",
+      "name": "SPH KDL"
+    },
+    {
+      "source": "aftership",
+      "slug": "spoton",
+      "name": "SPOTON Logistics Pvt Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "speedaf",
+      "name": "Sppedaf Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "spreetail-api",
+      "name": "Spreetail"
+    },
+    {
+      "source": "aftership",
+      "slug": "spreetail",
+      "name": "Spreetail"
+    },
+    {
+      "source": "aftership",
+      "slug": "spring-gds",
+      "name": "Spring GDS"
+    },
+    {
+      "source": "aftership",
+      "slug": "sprint-pack",
+      "name": "SPRINT PACK"
+    },
+    {
+      "source": "aftership",
+      "slug": "srekorea",
+      "name": "SRE Korea"
+    },
+    {
+      "source": "aftership",
+      "slug": "srt-transport",
+      "name": "SRT Transport"
+    },
+    {
+      "source": "aftership",
+      "slug": "stallionexpress",
+      "name": "Stallion Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "star-track-courier",
+      "name": "Star Track Courier"
+    },
+    {
+      "source": "aftership",
+      "slug": "star-track-express",
+      "name": "Star Track Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "starken",
+      "name": "STARKEN"
+    },
+    {
+      "source": "aftership",
+      "slug": "starlinks",
+      "name": "Starlinks Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "star-track",
+      "name": "StarTrack"
+    },
+    {
+      "source": "aftership",
+      "slug": "statovernight",
+      "name": "Stat Overnight"
+    },
+    {
+      "source": "aftership",
+      "slug": "stepforwardfs",
+      "name": "STEP FORWARD FREIGHT SERVICE CO LTD"
+    },
+    {
+      "source": "aftership",
+      "slug": "sto",
+      "name": "STO Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "stone3pl",
+      "name": "STONE3PL"
+    },
+    {
+      "source": "aftership",
+      "slug": "stop-start-api",
+      "name": "Stop Start Transport Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "stream",
+      "name": "StreamTech"
+    },
+    {
+      "source": "aftership",
+      "slug": "sypost",
+      "name": "Sunyou Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "superpackline",
+      "name": "Super Pac Line"
+    },
+    {
+      "source": "aftership",
+      "slug": "sutton",
+      "name": "Sutton Transport"
+    },
+    {
+      "source": "aftership",
+      "slug": "sway-webhook",
+      "name": "Sway"
+    },
+    {
+      "source": "aftership",
+      "slug": "swe",
+      "name": "swe"
+    },
+    {
+      "source": "aftership",
+      "slug": "swiftx",
+      "name": "SwiftX"
+    },
+    {
+      "source": "aftership",
+      "slug": "swiship",
+      "name": "Swiship"
+    },
+    {
+      "source": "aftership",
+      "slug": "amazon-fba-swiship-de",
+      "name": "Swiship DE"
+    },
+    {
+      "source": "aftership",
+      "slug": "amazon-fba-swiship-in",
+      "name": "Swiship IN"
+    },
+    {
+      "source": "aftership",
+      "slug": "swiship-jp",
+      "name": "Swiship JP"
+    },
+    {
+      "source": "aftership",
+      "slug": "amazon-fba-swiship",
+      "name": "Swiship UK"
+    },
+    {
+      "source": "aftership",
+      "slug": "swiss-post",
+      "name": "Swiss Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "swiss-universal-express",
+      "name": "Swiss Universal Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "szendex",
+      "name": "SZENDEX"
+    },
+    {
+      "source": "aftership",
+      "slug": "t-cat",
+      "name": "T-cat"
+    },
+    {
+      "source": "aftership",
+      "slug": "global-express",
+      "name": "Tai Wan Global Business"
+    },
+    {
+      "source": "aftership",
+      "slug": "taiwan-post",
+      "name": "Taiwan Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "tamergroup-webhook",
+      "name": "Tamer Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "taqbin-hk",
+      "name": "TAQBIN Hong Kong"
+    },
+    {
+      "source": "aftership",
+      "slug": "tasco-my-webhook",
+      "name": "TASCO BERHAD"
+    },
+    {
+      "source": "aftership",
+      "slug": "tazmanian-freight",
+      "name": "Tazmanian Freight Systems"
+    },
+    {
+      "source": "aftership",
+      "slug": "tck-express",
+      "name": "TCK Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "tcs",
+      "name": "TCS"
+    },
+    {
+      "source": "aftership",
+      "slug": "thedeliverygroup",
+      "name": "TDG – The Delivery Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "tdn-api",
+      "name": "TDN"
+    },
+    {
+      "source": "aftership",
+      "slug": "tdn",
+      "name": "TDN"
+    },
+    {
+      "source": "aftership",
+      "slug": "teamexpressllc",
+      "name": "Team Express Service LLC"
+    },
+    {
+      "source": "aftership",
+      "slug": "team-global-express-webhook",
+      "name": "Team Global Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "toll-priority",
+      "name": "Team Global Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "toll-nz",
+      "name": "Team Global Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "sic-teliway",
+      "name": "Teliway SIC Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "tfm",
+      "name": "TFM Xpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "tforce-finalmile",
+      "name": "TForce Final Mile"
+    },
+    {
+      "source": "aftership",
+      "slug": "tforce-freight",
+      "name": "Tforce-freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "thabit-logistics",
+      "name": "Thabit Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "thailand-post",
+      "name": "Thailand Thai Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "thecourierguy",
+      "name": "The Courier Guy"
+    },
+    {
+      "source": "aftership",
+      "slug": "customco-api",
+      "name": "The Custom Companies"
+    },
+    {
+      "source": "aftership",
+      "slug": "pallet-network",
+      "name": "The Pallet Network"
+    },
+    {
+      "source": "aftership",
+      "slug": "thijs-nl",
+      "name": "Thijs Logistiek"
+    },
+    {
+      "source": "aftership",
+      "slug": "thunderexpress",
+      "name": "Thunder Express Australia"
+    },
+    {
+      "source": "aftership",
+      "slug": "tigfreight",
+      "name": "TIG Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "tiki",
+      "name": "Tiki"
+    },
+    {
+      "source": "aftership",
+      "slug": "tipsa",
+      "name": "TIPSA"
+    },
+    {
+      "source": "aftership",
+      "slug": "tipsa-ref",
+      "name": "Tipsa Reference"
+    },
+    {
+      "source": "aftership",
+      "slug": "tnt",
+      "name": "TNT"
+    },
+    {
+      "source": "aftership",
+      "slug": "tnt-au",
+      "name": "TNT Australia"
+    },
+    {
+      "source": "aftership",
+      "slug": "tntbrasil-web",
+      "name": "TNT Brasil"
+    },
+    {
+      "source": "aftership",
+      "slug": "tnt-fr-reference-international-api",
+      "name": "TNT France"
+    },
+    {
+      "source": "aftership",
+      "slug": "tnt-fr",
+      "name": "TNT France"
+    },
+    {
+      "source": "aftership",
+      "slug": "tnt-fr-reference",
+      "name": "TNT France Reference"
+    },
+    {
+      "source": "aftership",
+      "slug": "tnt-it",
+      "name": "TNT Italy"
+    },
+    {
+      "source": "aftership",
+      "slug": "tnt-reference",
+      "name": "TNT Reference"
+    },
+    {
+      "source": "aftership",
+      "slug": "tnt-uk",
+      "name": "TNT UK"
+    },
+    {
+      "source": "aftership",
+      "slug": "tnt-uk-reference",
+      "name": "TNT UK Reference"
+    },
+    {
+      "source": "aftership",
+      "slug": "tnt-click",
+      "name": "TNT-Click Italy"
+    },
+    {
+      "source": "aftership",
+      "slug": "tolos",
+      "name": "Tolos"
+    },
+    {
+      "source": "aftership",
+      "slug": "tarrive",
+      "name": "TONDA GLOBAL"
+    },
+    {
+      "source": "aftership",
+      "slug": "tooexpress",
+      "name": "Too Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "esdex",
+      "name": "Top Ideal Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "tophatterexpress",
+      "name": "Tophatter Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "toptrans",
+      "name": "TOPTRANS"
+    },
+    {
+      "source": "aftership",
+      "slug": "topyou",
+      "name": "TopYou"
+    },
+    {
+      "source": "aftership",
+      "slug": "torrestir",
+      "name": "Torrestir"
+    },
+    {
+      "source": "aftership",
+      "slug": "toshi-webhook",
+      "name": "Toshi"
+    },
+    {
+      "source": "aftership",
+      "slug": "total-express",
+      "name": "Total Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "totalmedia-api",
+      "name": "Total Media"
+    },
+    {
+      "source": "aftership",
+      "slug": "tourline-reference",
+      "name": "Tourline Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "thaiparcels",
+      "name": "TP Logistic"
+    },
+    {
+      "source": "aftership",
+      "slug": "track-pod-webhook",
+      "name": "Track POD"
+    },
+    {
+      "source": "aftership",
+      "slug": "track-pod-api",
+      "name": "Track POD"
+    },
+    {
+      "source": "aftership",
+      "slug": "trackon",
+      "name": "Trackon Couriers Pvt. Ltd"
+    },
+    {
+      "source": "aftership",
+      "slug": "qxpress",
+      "name": "TracX Logis"
+    },
+    {
+      "source": "aftership",
+      "slug": "trans-kargo",
+      "name": "Trans Kargo Internasional"
+    },
+    {
+      "source": "aftership",
+      "slug": "trans-o-flex-sftp",
+      "name": "trans-o-flex Express GmbH & Co. KGaA"
+    },
+    {
+      "source": "aftership",
+      "slug": "trans2u",
+      "name": "Trans2u"
+    },
+    {
+      "source": "aftership",
+      "slug": "transligue-web",
+      "name": "transligue"
+    },
+    {
+      "source": "aftership",
+      "slug": "transmission-nl",
+      "name": "TransMission"
+    },
+    {
+      "source": "aftership",
+      "slug": "transpak",
+      "name": "Transpak Inc."
+    },
+    {
+      "source": "aftership",
+      "slug": "tanet",
+      "name": "Transport Ambientales"
+    },
+    {
+      "source": "aftership",
+      "slug": "transvirtual",
+      "name": "TransVirtual"
+    },
+    {
+      "source": "aftership",
+      "slug": "trumpcard",
+      "name": "TRUMPCARD LLC"
+    },
+    {
+      "source": "aftership",
+      "slug": "trunkrs",
+      "name": "Trunkrs"
+    },
+    {
+      "source": "aftership",
+      "slug": "trusk",
+      "name": "Trusk France"
+    },
+    {
+      "source": "aftership",
+      "slug": "tuffnells",
+      "name": "Tuffnells Parcels Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "tuffnells-reference",
+      "name": "Tuffnells Parcels Express- Reference"
+    },
+    {
+      "source": "aftership",
+      "slug": "tusklogistics",
+      "name": "Tusk Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "tvsscs-webhook",
+      "name": "TVS Supply Chain Solutions"
+    },
+    {
+      "source": "aftership",
+      "slug": "typ",
+      "name": "TYP"
+    },
+    {
+      "source": "aftership",
+      "slug": "u-envios",
+      "name": "U-ENVIOS"
+    },
+    {
+      "source": "aftership",
+      "slug": "uber-webhook",
+      "name": "Uber"
+    },
+    {
+      "source": "aftership",
+      "slug": "ubi-logistics",
+      "name": "UBI Smart Parcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "uc56",
+      "name": "ucexpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "uk-mail",
+      "name": "UK Mail"
+    },
+    {
+      "source": "aftership",
+      "slug": "ukrposhta",
+      "name": "UkrPoshta"
+    },
+    {
+      "source": "aftership",
+      "slug": "ucfs-api",
+      "name": "UNITED CALIFORNIA FREIGHT SOLUTIONS"
+    },
+    {
+      "source": "aftership",
+      "slug": "uds",
+      "name": "United Delivery Service"
+    },
+    {
+      "source": "aftership",
+      "slug": "uniuni-webhook",
+      "name": "Uniuni"
+    },
+    {
+      "source": "aftership",
+      "slug": "uniuni",
+      "name": "Uniuni"
+    },
+    {
+      "source": "aftership",
+      "slug": "uparcel",
+      "name": "uParcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "ups",
+      "name": "UPS"
+    },
+    {
+      "source": "aftership",
+      "slug": "ups-freight",
+      "name": "UPS Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "ups-mi",
+      "name": "UPS Mail Innovations"
+    },
+    {
+      "source": "aftership",
+      "slug": "ups-reference",
+      "name": "UPS Reference"
+    },
+    {
+      "source": "aftership",
+      "slug": "ups-road-freight-webhook",
+      "name": "UPS Road Freight"
+    },
+    {
+      "source": "aftership",
+      "slug": "urb-it",
+      "name": "Urb-it"
+    },
+    {
+      "source": "aftership",
+      "slug": "urbify",
+      "name": "Urbify"
+    },
+    {
+      "source": "aftership",
+      "slug": "urgent-cargus",
+      "name": "Urgent Cargus"
+    },
+    {
+      "source": "aftership",
+      "slug": "urvaam",
+      "name": "Urvaam"
+    },
+    {
+      "source": "aftership",
+      "slug": "usf-reddaway",
+      "name": "USF Reddaway"
+    },
+    {
+      "source": "aftership",
+      "slug": "uship",
+      "name": "uShip"
+    },
+    {
+      "source": "aftership",
+      "slug": "usps",
+      "name": "USPS"
+    },
+    {
+      "source": "aftership",
+      "slug": "value-webhook",
+      "name": "Value Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "vdtrack",
+      "name": "VDtrack"
+    },
+    {
+      "source": "aftership",
+      "slug": "veho-api",
+      "name": "Veho"
+    },
+    {
+      "source": "aftership",
+      "slug": "veho",
+      "name": "Veho"
+    },
+    {
+      "source": "aftership",
+      "slug": "venipak",
+      "name": "Venipak"
+    },
+    {
+      "source": "aftership",
+      "slug": "vertchezvous",
+      "name": "Vert Chez Vous (Labatut Group)"
+    },
+    {
+      "source": "aftership",
+      "slug": "vesyl-api",
+      "name": "Vesyl"
+    },
+    {
+      "source": "aftership",
+      "slug": "vesyl",
+      "name": "Vesyl"
+    },
+    {
+      "source": "aftership",
+      "slug": "viaeurope",
+      "name": "ViaEurope"
+    },
+    {
+      "source": "aftership",
+      "slug": "viaxpress",
+      "name": "ViaXpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "vnpost",
+      "name": "Vietnam Post"
+    },
+    {
+      "source": "aftership",
+      "slug": "viettelpost",
+      "name": "ViettelPost"
+    },
+    {
+      "source": "aftership",
+      "slug": "virtransport-sftp",
+      "name": "Vir Transport"
+    },
+    {
+      "source": "aftership",
+      "slug": "virtransport",
+      "name": "VIR Transport"
+    },
+    {
+      "source": "aftership",
+      "slug": "viwo",
+      "name": "VIWO IoT"
+    },
+    {
+      "source": "aftership",
+      "slug": "vox",
+      "name": "VOX SOLUCION EMPRESARIAL SRL"
+    },
+    {
+      "source": "aftership",
+      "slug": "vpd-sftp",
+      "name": "VPD"
+    },
+    {
+      "source": "aftership",
+      "slug": "vtfe",
+      "name": "VT Freight Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "wahana",
+      "name": "Wahana"
+    },
+    {
+      "source": "aftership",
+      "slug": "wanbexpress",
+      "name": "WanbExpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "warning-group",
+      "name": "Warning Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "weworldexpress",
+      "name": "We World Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "weaship",
+      "name": "Weaship"
+    },
+    {
+      "source": "aftership",
+      "slug": "wedo",
+      "name": "WeDo Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "weee",
+      "name": "Weee"
+    },
+    {
+      "source": "aftership",
+      "slug": "welivery",
+      "name": "Welivery"
+    },
+    {
+      "source": "aftership",
+      "slug": "wepost",
+      "name": "WePost Sdn Bhd"
+    },
+    {
+      "source": "aftership",
+      "slug": "weship",
+      "name": "WeShip"
+    },
+    {
+      "source": "aftership",
+      "slug": "westernbid",
+      "name": "Western Bid"
+    },
+    {
+      "source": "aftership",
+      "slug": "shipwestgate",
+      "name": "Westgate Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "whistl",
+      "name": "Whistl"
+    },
+    {
+      "source": "aftership",
+      "slug": "widect",
+      "name": "Widect"
+    },
+    {
+      "source": "aftership",
+      "slug": "wineshipping-webhook",
+      "name": "Wineshipping"
+    },
+    {
+      "source": "aftership",
+      "slug": "winit",
+      "name": "WINIT"
+    },
+    {
+      "source": "aftership",
+      "slug": "wise-express",
+      "name": "Wise Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "wiseloads",
+      "name": "Wiseloads"
+    },
+    {
+      "source": "aftership",
+      "slug": "wishpost",
+      "name": "WishPost"
+    },
+    {
+      "source": "aftership",
+      "slug": "wizmo",
+      "name": "Wizmo"
+    },
+    {
+      "source": "aftership",
+      "slug": "wmgdelivery",
+      "name": "WMG Group"
+    },
+    {
+      "source": "aftership",
+      "slug": "worldcourier",
+      "name": "World Courier"
+    },
+    {
+      "source": "aftership",
+      "slug": "worldnet",
+      "name": "Worldnet Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "wspexpress",
+      "name": "WSP Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "xdp-uk",
+      "name": "XDP Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "xdp-uk-reference",
+      "name": "XDP Express Reference"
+    },
+    {
+      "source": "aftership",
+      "slug": "xgs",
+      "name": "XGS"
+    },
+    {
+      "source": "aftership",
+      "slug": "xde-webhook",
+      "name": "Ximex Delivery Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "xindus",
+      "name": "Xindus"
+    },
+    {
+      "source": "aftership",
+      "slug": "xyy",
+      "name": "Xingyunyi Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "xl-express",
+      "name": "XL Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "xmszm",
+      "name": "xmszm"
+    },
+    {
+      "source": "aftership",
+      "slug": "xpedigo",
+      "name": "Xpedigo"
+    },
+    {
+      "source": "aftership",
+      "slug": "xpert-delivery",
+      "name": "Xpert Delivery"
+    },
+    {
+      "source": "aftership",
+      "slug": "xpo-logistics",
+      "name": "XPO"
+    },
+    {
+      "source": "aftership",
+      "slug": "xpo-fr-ftp",
+      "name": "XPO Last Mile France"
+    },
+    {
+      "source": "aftership",
+      "slug": "xpo-fr-api",
+      "name": "XPO Last Mile France"
+    },
+    {
+      "source": "aftership",
+      "slug": "xpo-es",
+      "name": "XPO Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "xpressbees",
+      "name": "XpressBees"
+    },
+    {
+      "source": "aftership",
+      "slug": "xpressen-dk",
+      "name": "Xpressen"
+    },
+    {
+      "source": "aftership",
+      "slug": "yakit",
+      "name": "Yakit"
+    },
+    {
+      "source": "aftership",
+      "slug": "taqbin-jp",
+      "name": "Yamato Japan"
+    },
+    {
+      "source": "aftership",
+      "slug": "yamato-tw-api",
+      "name": "YAMATO Logistics (HK) LTD"
+    },
+    {
+      "source": "aftership",
+      "slug": "taqbin-sg",
+      "name": "Yamato Singapore"
+    },
+    {
+      "source": "aftership",
+      "slug": "yanwen",
+      "name": "Yanwen"
+    },
+    {
+      "source": "aftership",
+      "slug": "yanwen-express",
+      "name": "Yanwen Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "ydh-express",
+      "name": "YDH express"
+    },
+    {
+      "source": "aftership",
+      "slug": "yifan",
+      "name": "YiFan Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "elian-post",
+      "name": "Yilian (Elian) Supply Chain"
+    },
+    {
+      "source": "aftership",
+      "slug": "yodeldirect",
+      "name": "Yodel Direct"
+    },
+    {
+      "source": "aftership",
+      "slug": "yodel",
+      "name": "Yodel Domestic"
+    },
+    {
+      "source": "aftership",
+      "slug": "yodel-international",
+      "name": "Yodel International"
+    },
+    {
+      "source": "aftership",
+      "slug": "youparcel",
+      "name": "YouParcel"
+    },
+    {
+      "source": "aftership",
+      "slug": "yrc",
+      "name": "YRC"
+    },
+    {
+      "source": "aftership",
+      "slug": "yto",
+      "name": "YTO Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "yunant",
+      "name": "Yunant"
+    },
+    {
+      "source": "aftership",
+      "slug": "yundaex",
+      "name": "Yunda Express"
+    },
+    {
+      "source": "aftership",
+      "slug": "yunexpress",
+      "name": "YunExpress"
+    },
+    {
+      "source": "aftership",
+      "slug": "yurtici-kargo",
+      "name": "Yurtici Kargo"
+    },
+    {
+      "source": "aftership",
+      "slug": "yurtici-kargo-api",
+      "name": "Yurtici Kargo"
+    },
+    {
+      "source": "aftership",
+      "slug": "yusen",
+      "name": "Yusen Logistics"
+    },
+    {
+      "source": "aftership",
+      "slug": "yyexpress",
+      "name": "YYEXPRESS"
+    },
+    {
+      "source": "aftership",
+      "slug": "zadbano-webhook",
+      "name": "Zadbano"
+    },
+    {
+      "source": "aftership",
+      "slug": "zajil-express",
+      "name": "Zajil Express Company"
+    },
+    {
+      "source": "aftership",
+      "slug": "zeek",
+      "name": "Zeek2Door"
+    },
+    {
+      "source": "aftership",
+      "slug": "zeleris",
+      "name": "Zeleris"
+    },
+    {
+      "source": "aftership",
+      "slug": "ziingfinalmile",
+      "name": "Ziing"
+    },
+    {
+      "source": "aftership",
+      "slug": "zinc",
+      "name": "Zinc"
+    },
+    {
+      "source": "aftership",
+      "slug": "zjs-express",
+      "name": "ZJS International"
+    },
+    {
+      "source": "aftership",
+      "slug": "zoom2u-webhook",
+      "name": "Zoom2U"
+    },
+    {
+      "source": "aftership",
+      "slug": "zto-domestic",
+      "name": "ZTO Express China"
+    },
+    {
+      "source": "aftership",
+      "slug": "zto-express",
+      "name": "ZTO Express Global"
+    },
+    {
+      "source": "aftership",
+      "slug": "zuelligpharma-sftp",
+      "name": "Zuellig Pharma Korea"
+    },
+    {
+      "source": "aftership",
+      "slug": "zyou",
+      "name": "ZYEX"
+    },
+    {
+      "source": "aftership",
+      "slug": "jd-express-api",
+      "name": "京东物流"
+    },
+    {
+      "source": "aftership",
+      "slug": "jd-express",
+      "name": "京东物流"
+    },
+    {
+      "source": "aftership",
+      "slug": "jusdasr",
+      "name": "准时达跨境"
+    },
+    {
+      "source": "aftership",
+      "slug": "be",
+      "name": "北俄国际"
+    },
+    {
+      "source": "aftership",
+      "slug": "padtf",
+      "name": "平安达腾飞快递"
+    },
+    {
+      "source": "aftership",
+      "slug": "pchome-api",
+      "name": "網家速配股份有限公司"
+    },
+    {
+      "source": "aftership",
+      "slug": "6ls",
+      "name": "绿色国际速递"
+    },
+    {
+      "source": "aftership",
+      "slug": "yingnuo-logistics",
+      "name": "英诺供应链"
+    },
+    {
+      "source": "aftership",
+      "slug": "jindouyun",
+      "name": "金斗云物流"
+    },
+    {
+      "source": "aftership",
+      "slug": "sdh-scm",
+      "name": "闪电猴"
+    }
+  ]
+}

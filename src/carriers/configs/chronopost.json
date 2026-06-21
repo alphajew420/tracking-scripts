@@ -1,0 +1,32 @@
+{
+  "id": "chronopost",
+  "displayName": "Chronopost",
+  "mode": "scraper",
+  "warmUrl": "https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT={n}&langue=en",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT={n}&langue=en",
+  "parseHtml": {
+    "events": ".tracking-event, .shipment-event, .event, .timeline-item, [class*='event'], [class*='timeline'] li",
+    "date": "time, .date, .event-date, [class*='date']",
+    "location": ".location, .event-location, [class*='location'], [class*='place']",
+    "description": ".status, .description, .event-description, [class*='status'], [class*='description'], h3, h4"
+  },
+  "failurePatterns": [
+    "security verification",
+    "cloudflare",
+    "access denied",
+    "aucun colis",
+    "no parcel",
+    "not found"
+  ],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|livr|signed|remis" },
+    { "status": "exception", "pattern": "exception|incident|failed|returned|retour|unable|delay|customs|held" },
+    { "status": "pickup", "pattern": "accepted|received|collected|pickup|pris en charge|depose" },
+    { "status": "in_transit", "pattern": "in transit|transit|arrived|departed|out for delivery|achemin|tri|livraison" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}FR$|^[A-Z0-9]{10,18}$",
+  "regions": ["FR", "EU"],
+  "tier": 2
+}

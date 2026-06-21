@@ -7,6 +7,7 @@
   "queryStrategy": "in_page_fetch",
   "fetchUrl": "https://trackings.post.japanpost.jp/services/srv/search/direct?reqCodeNo1={n}&locale=en",
   "parseHtml": { "events": "tr, .tracking-event, .event", "date": "td:nth-child(1), time, .date", "location": "td:nth-child(4), .location", "description": "td:nth-child(2), .status, .description" },
+  "failurePatterns": ["Your item was not found", "Confirm your item number", "not found"],
   "statusMap": [
     { "status": "delivered", "pattern": "delivered|final delivery" },
     { "status": "exception", "pattern": "retention|returned|failed|exception" },

@@ -1,0 +1,33 @@
+{
+  "id": "poste-italiane",
+  "displayName": "Poste Italiane",
+  "mode": "scraper",
+  "warmUrl": "https://business.poste.it/professionisti-imprese/cerca/index.html#/risultati-spedizioni/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "json_endpoint",
+  "fetchUrl": "https://business.poste.it/online/dovequando/DQ-REST/ricercasemplice",
+  "request": {
+    "method": "POST",
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "content-type": "application/json"
+    },
+    "bodyTemplate": "{\"tipoRichiedente\":\"WEB\",\"codiceSpedizione\":\"{n}\",\"periodoRicerca\":1}"
+  },
+  "parseJson": {
+    "eventsPath": "listaMovimenti",
+    "datePath": "dataOra",
+    "locationPath": "luogo",
+    "descriptionPath": "statoLavorazione"
+  },
+  "failurePatterns": ["\"esitoRicerca\"\\s*:\\s*\"2\"", "\"listaMovimenti\"\\s*:\\s*\\[\\s*\\]"],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|consegnat[ao]|recapitato|successo" },
+    { "status": "exception", "pattern": "exception|incident|failed|returned|restituzione|reso|mancata consegna|non consegnat|anomalia|svincolo|dogana" },
+    { "status": "pickup", "pattern": "pickup|collection|ritiro|ritirare|ufficio postale|in giacenza|operatore" },
+    { "status": "in_transit", "pattern": "in transit|transit|presa in carico|in lavorazione|in consegna|partito|arrivato|smistamento|in data" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}IT$|^[A-Z0-9]{9,21}$",
+  "regions": ["IT"],
+  "tier": 1
+}

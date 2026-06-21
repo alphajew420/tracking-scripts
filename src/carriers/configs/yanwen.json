@@ -1,0 +1,24 @@
+{
+  "id": "yanwen",
+  "displayName": "Yanwen",
+  "mode": "scraper",
+  "warmUrl": "https://track.yw56.com.cn/en/querydel?nums={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://track.yw56.com.cn/en/querydel?nums={n}",
+  "parseHtml": {
+    "events": ".track-list li, .time-line li, tr",
+    "date": "time, .date, td:nth-child(1)",
+    "location": ".location, td:nth-child(3)",
+    "description": ".status, .description, td:nth-child(2)"
+  },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed" },
+    { "status": "exception", "pattern": "exception|delay|returned|failed" },
+    { "status": "pickup", "pattern": "pickup|accepted|received|collected" },
+    { "status": "in_transit", "pattern": "transit|arrived|departed|customs|handover" }
+  ],
+  "trackingNumberPattern": "^([A-Z]{2}\\d{9}(YP|CN)|LP\\d{12,18}|YW[A-Z0-9]{8,24})$",
+  "regions": ["CN", "GLOBAL"],
+  "tier": 3
+}

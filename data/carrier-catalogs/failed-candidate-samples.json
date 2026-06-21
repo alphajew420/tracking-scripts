@@ -1,0 +1,111 @@
+{
+  "generated_at": "2026-06-20T20:10:00Z",
+  "policy": "These samples were found online and tested through the real TrackingSession path. They are not verification samples because they returned no normalized events, no data, or carrier blocking.",
+  "results": [
+    {
+      "carrier": "an-post",
+      "samples": ["LF013240044IE", "LF013240035IE", "LF012691949IE", "LF012691935IE", "PP064751926IE", "RL684037936IE", "CU100100783IE", "RL687853624IE", "AY140715799IE", "CA028719208IE", "CA028719287IE", "RL655469333IE", "RL695972053IE", "LF012691921IE"],
+      "error": "An Post: no tracking data (\"GetItemSummaryResult\"\\s*:\\s*\\[\\s*\\])"
+    },
+    {
+      "carrier": "austrian-post",
+      "samples": ["9405509205568364394746", "RT123456789AT", "CP123456789AT", "EE123456789AT", "RA123456789AT"],
+      "error": "Austrian Post: no tracking data (\"einzelsendung\"\\s*:\\s*null)"
+    },
+    {
+      "carrier": "swiss-post",
+      "samples": ["99.00.300003.12026943", "LZ590767993US", "99.60.028620.00036309", "RL904062022CH", "UE394354277US", "UE394354263US"],
+      "error": "Swiss Post: no tracking events returned"
+    },
+    {
+      "carrier": "singapore-post",
+      "samples": ["LB338709954SG", "RB304791254SG", "RW112855662SG", "RF769762624SG", "SM000000001SG", "RA000000001SG", "RT181968700SG", "ER403513265SG", "NSV000000075069", "RW109769796SG", "LP123456789SG", "RC123456789SG", "LQ105180616SG"],
+      "error": "Singapore Post: no tracking data (not found)"
+    },
+    {
+      "carrier": "ctt-portugal",
+      "samples": ["RD123456789PT", "RT145643192PT", "AB123456789PT", "LA094212783SE", "EN359743995JP", "GP0005499672", "LP00730703835435", "RR123456789PT", "CP123456789PT"],
+      "error": "CTT Portugal: no tracking events returned"
+    },
+    {
+      "carrier": "poczta-polska",
+      "samples": ["00359007733688188839", "RR909529435PL", "CP268789114PL", "RR123456789PL"],
+      "error": "Poczta Polska: no tracking events returned"
+    },
+    {
+      "carrier": "posti",
+      "samples": ["JJFI1234567890123456", "JJFI67890123456789012", "CE123456789FI", "EE123456789FI", "FI123456789012", "RR032645064BA"],
+      "error": "Posti Finland: no tracking data (invalid)"
+    },
+    {
+      "carrier": "nz-post",
+      "samples": ["JP100000271NZ", "ND002506545NZ", "JR410215174NZ", "JR410198533NZ", "00794210334031640656", "00794210334026990636", "4670690000262101AKL001ON", "4603830001068001TAU002PP", "EE123456785NZ"],
+      "error": "NZ Post: no tracking data (No data found for this Tracking Reference)"
+    },
+    {
+      "carrier": "postnord-se",
+      "samples": ["66695159070SE"],
+      "error": "PostNord Sweden HTTP 403"
+    },
+    {
+      "carrier": "postnord-dk",
+      "samples": ["66695159070SE"],
+      "error": "PostNord Denmark HTTP 403"
+    },
+    {
+      "carrier": "chronopost",
+      "samples": ["EE01002000FR"],
+      "error": "Chronopost HTTP 403"
+    },
+    {
+      "carrier": "colissimo",
+      "samples": ["8D00432154789", "CK00879241952", "CC000000000FR", "8R31377278808", "CC731940625FR"],
+      "error": "Colissimo HTTP 403"
+    },
+    {
+      "carrier": "la-poste",
+      "samples": ["8D00432154789", "CK00879241952", "CC000000000FR", "8R31377278808", "CC731940625FR"],
+      "error": "La Poste HTTP 403"
+    },
+    {
+      "carrier": "royal-mail",
+      "samples": ["ME762746131GB", "ZW924750388GB", "JV620553954GB", "FY207817942GB", "HZ084404211GB"],
+      "error": "Royal Mail warm/API path blocked or failed from this environment"
+    },
+    {
+      "carrier": "evri",
+      "samples": ["H0483A1462422575", "1234567890123456"],
+      "error": "Evri: no tracking events returned"
+    },
+    {
+      "carrier": "yodel",
+      "samples": ["JD0002210160195973", "8AF710004557A002", "8999R04098251", "YOL1522927"],
+      "error": "Yodel: no tracking events returned"
+    },
+    {
+      "carrier": "gls",
+      "samples": ["1234567", "12345678901", "12345678901234", "GL123456789DE"],
+      "error": "GLS: no tracking events returned"
+    },
+    {
+      "carrier": "tnt",
+      "samples": ["01719000", "946907500", "876543210", "907384999", "528965842"],
+      "error": "TNT HTTP 404"
+    },
+    {
+      "carrier": "4px",
+      "samples": ["AQ014581230CN", "AQ252861054CN", "AQ001713073CN", "AQ001731284CN", "300004122647", "300003979634", "LP00166790918300", "LT284062268NL", "RB018340115SG", "NU120850052GB"],
+      "error": "4px: no tracking events returned"
+    },
+    {
+      "carrier": "yanwen",
+      "samples": ["UD609121308YP", "UK714192605YP", "UF646183332YP", "UE724895696YP", "VR487726925YP", "11804678911"],
+      "error": "yanwen: no tracking events returned"
+    },
+    {
+      "carrier": "china-post",
+      "samples": ["AS750143988CN", "CP392737367CN", "LY508001986CN", "LZ065851497CN", "LV633272334CN"],
+      "error": "china-post: no tracking events returned"
+    }
+  ]
+}

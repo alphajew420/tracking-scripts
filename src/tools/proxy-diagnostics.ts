@@ -2,24 +2,24 @@ import { chromium } from "patchright";
 import { dhlCarrier } from "../carriers/dhl.ts";
 import { dhlExpressCarrier } from "../carriers/dhl-express.ts";
 import { fedexCarrier } from "../carriers/fedex.ts";
+import { postNordDkCarrier, postNordSeCarrier } from "../carriers/postnord.ts";
+import { royalMailCarrier } from "../carriers/royal-mail.ts";
 import { upsCarrier } from "../carriers/ups.ts";
 import { uspsCarrier } from "../carriers/usps.ts";
 import { proxyForCarrier } from "../proxy.ts";
 import { TrackingSession, type Carrier } from "../session.ts";
+import { buildCarrierSessionOptions } from "../carrier-runtime.ts";
 
 const REGISTRY: Record<string, () => Carrier> = {
   dhl: () => dhlCarrier,
   "dhl-express": () => dhlExpressCarrier,
   fedex: () => fedexCarrier,
+  "postnord-dk": () => postNordDkCarrier,
+  "postnord-se": () => postNordSeCarrier,
+  "royal-mail": () => royalMailCarrier,
   ups: () => upsCarrier,
   usps: () => uspsCarrier,
 };
-
-function booleanEnv(name: string, fallback: boolean): boolean {
-  const value = process.env[name];
-  if (value == null || value === "") return fallback;
-  return /^(1|true|yes)$/i.test(value);
-}
 
 function usage(): never {
   console.error(`usage: proxy:diagnose <carrier> <tracking-number> [--attempts=N] [--country=us]
@@ -62,6 +62,24 @@ async function getProxyIp(proxy: NonNullable<ReturnType<typeof proxyForCarrier>>
   }
 }
 
+function sidecarProfileDir(carrierId: string, session: string): string | undefined {
+  if (carrierId === "fedex") return `/tmp/trackified-fedex-proxy-${session}`;
+  if (carrierId === "royal-mail") return `/tmp/trackified-royal-mail-proxy-${session}`;
+  if (carrierId === "postnord-se" || carrierId === "postnord-dk") {
+    return `/tmp/trackified-postnord-proxy-${session}`;
+  }
+  return undefined;
+}
+
+function sidecarCarrier(carrierId: string): boolean {
+  return (
+    carrierId === "fedex" ||
+    carrierId === "royal-mail" ||
+    carrierId === "postnord-se" ||
+    carrierId === "postnord-dk"
+  );
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const positional = args.filter((arg) => !arg.startsWith("--"));
@@ -75,7 +93,7 @@ async function main() {
   const country = flagValue(args, "--country", process.env.PROXY_COUNTRY ?? "us");
 
   for (let i = 1; i <= attempts; i += 1) {
-    const session = `${carrierId}-${Date.now()}-${i}`;
+    const session = `${carrierId}`;
     const proxy = proxyForCarrier(carrierId!, { country, session });
     if (!proxy) {
       console.error(`missing proxy env for ${carrierId}`);
@@ -84,7 +102,7 @@ async function main() {
 
     const safeProxy = {
       server: proxy.server,
-      username: proxy.username,
+      hasUsername: Boolean(proxy.username),
       hasPassword: Boolean(proxy.password),
     };
     console.log(`\n=== attempt ${i}/${attempts} ===`);
@@ -96,19 +114,21 @@ async function main() {
       console.log(`exit_ip_error=${err instanceof Error ? err.message : String(err)}`);
     }
 
-    const trackingSession = new TrackingSession(factory(), {
-      channel: carrierId === "ups" || carrierId === "fedex" ? "chrome" : undefined,
-      headless: process.env.HEADLESS !== "false",
-      debug: process.env.DEBUG_SCRAPES === "1",
-      proxy,
-      userAgent: carrierId === "fedex" || carrierId === "dhl" ? null : undefined,
-      disableBlocking:
-        carrierId === "fedex"
-          ? booleanEnv("FEDEX_DISABLE_BLOCKING", false)
-          : booleanEnv(`DISABLE_BLOCKING_${carrierId!.toUpperCase().replaceAll("-", "_")}`, false),
-      persistentProfileDir:
-        carrierId === "fedex" ? `/tmp/trackified-fedex-proxy-${session}` : undefined,
-    });
+    const trackingSession = new TrackingSession(
+      factory(),
+      buildCarrierSessionOptions(carrierId!, {
+        headless: process.env.HEADLESS !== "false",
+        debug: process.env.DEBUG_SCRAPES === "1",
+        proxy,
+        proxyMode:
+          process.env[`PROXY_${carrierId!.toUpperCase().replaceAll("-", "_")}_MODE`] === "native" ||
+          process.env.PROXY_MODE === "native" ||
+          !sidecarCarrier(carrierId!)
+            ? "native"
+            : "extension",
+        persistentProfileDir: sidecarProfileDir(carrierId!, session),
+      }),
+    );
     try {
       const started = Date.now();
       const result = await trackingSession.track(trackingNumber!);

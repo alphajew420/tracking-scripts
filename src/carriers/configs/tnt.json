@@ -6,7 +6,7 @@
   "awaitReady": "body",
   "queryStrategy": "in_page_fetch",
   "fetchUrl": "https://www.tnt.com/express/en_us/site/shipping-tools/tracking.html?searchType=con&cons={n}",
-  "parseHtml": { "events": ".tracking-event, .event, li", "date": "time, .date", "location": ".location", "description": ".status, .description" },
+  "parseHtml": { "events": ".tracking-event, [class*='tracking-event'], [data-testid*='event']", "date": "time, .date", "location": ".location", "description": ".status, .description, [data-testid*='status']" },
   "statusMap": [
     { "status": "delivered", "pattern": "delivered" },
     { "status": "exception", "pattern": "exception|delay|unable|returned" },

@@ -1,5 +1,6 @@
 import { Worker } from "bullmq";
 import { migrate, pool, query } from "../db.ts";
+import { createLogger } from "../logger.ts";
 import { redisConnection, type WebhookJob } from "../queue.ts";
 import { deliverWebhook, type WebhookEvent, type WebhookEventType } from "../webhooks.ts";
 
@@ -21,6 +22,7 @@ interface WebhookRow {
 }
 
 async function run() {
+  const logger = createLogger("webhook-worker");
   await migrate();
   const concurrency = Number(process.env.WEBHOOK_WORKER_CONCURRENCY ?? 10);
   const worker = new Worker<WebhookJob>(
@@ -87,10 +89,10 @@ async function run() {
 
   process.on("SIGTERM", shutdown);
   process.on("SIGINT", shutdown);
-  console.error(`[webhook-worker] running concurrency=${concurrency}`);
+  logger.info("running", { concurrency });
 }
 
 run().catch((error) => {
-  console.error(error);
+  createLogger("webhook-worker").error("fatal", { error: String(error) });
   process.exit(1);
 });

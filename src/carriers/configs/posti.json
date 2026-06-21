@@ -1,0 +1,25 @@
+{
+  "id": "posti",
+  "displayName": "Posti Finland",
+  "mode": "scraper",
+  "warmUrl": "https://www.posti.fi/en/tracking#/lahetys/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.posti.fi/en/tracking#/lahetys/{n}",
+  "parseHtml": {
+    "events": ".tracking-event, .shipment-event, .event, .timeline-item, [class*='event'], [class*='timeline'] li",
+    "date": "time, .date, .event-date, [class*='date']",
+    "location": ".location, .event-location, [class*='location'], [class*='place']",
+    "description": ".status, .description, .event-description, [class*='status'], [class*='description'], h3, h4"
+  },
+  "failurePatterns": ["not found", "no shipment", "no information", "could not find", "invalid"],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed|toimitettu|luovutettu" },
+    { "status": "exception", "pattern": "exception|delay|failed|returned|unable|customs|held|palautettu" },
+    { "status": "pickup", "pattern": "accepted|received|collected|pickup|vastaanotettu" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|out for delivery|sort|transport|saapunut" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}FI$|^[A-Z0-9]{10,24}$",
+  "regions": ["FI"],
+  "tier": 1
+}

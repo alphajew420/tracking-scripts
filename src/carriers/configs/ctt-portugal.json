@@ -1,0 +1,25 @@
+{
+  "id": "ctt-portugal",
+  "displayName": "CTT Portugal",
+  "mode": "scraper",
+  "warmUrl": "https://www.ctt.pt/feapl_2/app/open/objectSearch/objectSearch.jspx?objects={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.ctt.pt/feapl_2/app/open/objectSearch/objectSearch.jspx?objects={n}",
+  "parseHtml": {
+    "events": ".tracking-event, .shipment-event, .event, .timeline-item, [class*='event'], [class*='timeline'] li, tr",
+    "date": "time, .date, .event-date, [class*='date'], td:nth-child(1)",
+    "location": ".location, .event-location, [class*='location'], [class*='place'], td:nth-child(2)",
+    "description": ".status, .description, .event-description, [class*='status'], [class*='description'], td:nth-child(3), h3, h4"
+  },
+  "failurePatterns": ["not found", "no shipment", "no information", "could not find", "invalid", "sem informação", "não encontrado"],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed|entregue|entrega efetuada" },
+    { "status": "exception", "pattern": "exception|delay|failed|returned|unable|customs|held|devolvido|incidente" },
+    { "status": "pickup", "pattern": "accepted|received|collected|pickup|aceite|recebido" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|out for delivery|sort|transport|em distribuição" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}PT$|^[A-Z0-9]{10,24}$",
+  "regions": ["PT"],
+  "tier": 1
+}

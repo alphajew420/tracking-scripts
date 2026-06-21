@@ -1,0 +1,148 @@
+{
+  "generated_at": "2026-06-20T19:39:00Z",
+  "proxy_price_per_gb_usd": 0.25,
+  "pricing_formula": "cost_per_1000_usd = (amortized_bytes_per_tracking * 1000 / 1000000000) * proxy_price_per_gb_usd",
+  "measurement_policy": "Log economics only for providers that returned real normalized events from public samples. Measurements are current implementation costs, not theoretical minimums.",
+  "providers": [
+    {
+      "carrier": "dhl-ecommerce",
+      "status": "verified",
+      "sample": "1234567890",
+      "measurement_date": "2026-06-20",
+      "implementation_path": "Browser sidecar warm on https://webtrack.dhlglobalmail.com, then in-page app search submits to https://api.dhlecs.com/webtrack/v4/tracking without page reloads.",
+      "notes": "Manual page.evaluate(fetch) replay failed with TypeError: Failed to fetch, so current implementation uses the loaded carrier app as the sidecar request surface.",
+      "warm_plus_first_lookup_bytes": 1086317,
+      "steady_state_lookup_bytes": 2354,
+      "amortized": {
+        "n_1_bytes_per_tracking": 1088671,
+        "n_1_cost_per_1000_usd": 0.2722,
+        "n_10_bytes_per_tracking": 110986,
+        "n_10_cost_per_1000_usd": 0.0277,
+        "n_100_bytes_per_tracking": 13217,
+        "n_100_cost_per_1000_usd": 0.0033,
+        "n_1000_bytes_per_tracking": 3440,
+        "n_1000_cost_per_1000_usd": 0.0009
+      }
+    },
+    {
+      "carrier": "purolator",
+      "status": "verified",
+      "sample": "610592457812",
+      "measurement_date": "2026-06-20",
+      "implementation_path": "System Chrome sidecar warm on https://www.purolator.com, then in-page tracking form submits to https://track.purolator.com/tracking-ext/v1/search without page reloads.",
+      "notes": "Manual page.evaluate(fetch) replay failed with TypeError: Failed to fetch. Static DOM config was removed because it returned zero events.",
+      "warm_plus_first_lookup_bytes": 7000604,
+      "steady_state_lookup_bytes": 59436,
+      "amortized": {
+        "n_1_bytes_per_tracking": 7060040,
+        "n_1_cost_per_1000_usd": 1.765,
+        "n_10_bytes_per_tracking": 759496,
+        "n_10_cost_per_1000_usd": 0.1899,
+        "n_100_bytes_per_tracking": 129442,
+        "n_100_cost_per_1000_usd": 0.0324,
+        "n_1000_bytes_per_tracking": 66437,
+        "n_1000_cost_per_1000_usd": 0.0166
+      }
+    },
+    {
+      "carrier": "poste-italiane",
+      "status": "verified",
+      "sample": "200973597556",
+      "measurement_date": "2026-06-20",
+      "implementation_path": "Browser warm on https://business.poste.it, then browser-side POST to /online/dovequando/DQ-REST/ricercasemplice.",
+      "notes": "Warm page is heavy, but repeated same-session JSON lookups settle near 1.5 KB after initial app activity. Current amortization uses the average of three same-session lookups, including the first post-warm lookup.",
+      "warm_plus_first_lookup_bytes": 5769984,
+      "steady_state_lookup_bytes": 144953,
+      "amortized": {
+        "n_1_bytes_per_tracking": 5914937,
+        "n_1_cost_per_1000_usd": 1.4787,
+        "n_10_bytes_per_tracking": 722055,
+        "n_10_cost_per_1000_usd": 0.1805,
+        "n_100_bytes_per_tracking": 202766,
+        "n_100_cost_per_1000_usd": 0.0507,
+        "n_1000_bytes_per_tracking": 150838,
+        "n_1000_cost_per_1000_usd": 0.0377
+      }
+    },
+    {
+      "carrier": "yunexpress",
+      "status": "verified",
+      "sample": "YT2315921266046217",
+      "measurement_date": "2026-06-20",
+      "implementation_path": "Browser warm on https://www.yuntrack.com, then browser-side signed POST to https://services.yuntrack.com/Track/Query.",
+      "notes": "Uses the public YunTrack app signing scheme and executes the request through page.evaluate(fetch). Warm app responses are captured only when HTTP 200; failed warm races fall back to direct signed browser fetch.",
+      "warm_plus_first_lookup_bytes": 3131421,
+      "steady_state_lookup_bytes": 4907,
+      "amortized": {
+        "n_1_bytes_per_tracking": 3136328,
+        "n_1_cost_per_1000_usd": 0.7841,
+        "n_10_bytes_per_tracking": 318049,
+        "n_10_cost_per_1000_usd": 0.0795,
+        "n_100_bytes_per_tracking": 36221,
+        "n_100_cost_per_1000_usd": 0.0091,
+        "n_1000_bytes_per_tracking": 8038,
+        "n_1000_cost_per_1000_usd": 0.002
+      }
+    },
+    {
+      "carrier": "dpd-uk",
+      "status": "verified",
+      "sample": "15501234567890",
+      "measurement_date": "2026-06-20",
+      "implementation_path": "Browser warm resolves DPD parcel key, then browser-side JSON fetches to /v1/parcels/{parcelKey} and /parcelevents.",
+      "notes": "Verified for the warmed tracking number. Additional numbers require their own warm until a browser-side parcel-key resolver is found.",
+      "warm_plus_first_lookup_bytes": 3787210,
+      "steady_state_lookup_bytes": 734,
+      "amortized": {
+        "n_1_bytes_per_tracking": 3787944,
+        "n_1_cost_per_1000_usd": 0.947,
+        "n_10_bytes_per_tracking": 379455,
+        "n_10_cost_per_1000_usd": 0.0949,
+        "n_100_bytes_per_tracking": 38606,
+        "n_100_cost_per_1000_usd": 0.0097,
+        "n_1000_bytes_per_tracking": 4521,
+        "n_1000_cost_per_1000_usd": 0.0011
+      }
+    },
+    {
+      "carrier": "canada-post",
+      "status": "verified",
+      "sample": "LM217656065CA",
+      "measurement_date": "2026-06-20",
+      "implementation_path": "Browser warm on Canada Post detail page, then browser-side fetch to /track-reperage/rs/track/json/package/{n}/detail.",
+      "notes": "Warm page is heavy, but steady JSON lookup is about 5 KB and includes cross-border handoff events.",
+      "warm_plus_first_lookup_bytes": 11796266,
+      "steady_state_lookup_bytes": 5044,
+      "amortized": {
+        "n_1_bytes_per_tracking": 11801310,
+        "n_1_cost_per_1000_usd": 2.9503,
+        "n_10_bytes_per_tracking": 1184671,
+        "n_10_cost_per_1000_usd": 0.2962,
+        "n_100_bytes_per_tracking": 123007,
+        "n_100_cost_per_1000_usd": 0.0308,
+        "n_1000_bytes_per_tracking": 16840,
+        "n_1000_cost_per_1000_usd": 0.0042
+      }
+    },
+    {
+      "carrier": "speedeedelivery",
+      "status": "verified",
+      "sample": "1234567890",
+      "measurement_date": "2026-06-20",
+      "implementation_path": "Browser warm and steady browser-side fetch use compact Spee-Dee package progress HTML.",
+      "notes": "The compact progress endpoint is already very small, so warm amortization is negligible.",
+      "warm_plus_first_lookup_bytes": 7615,
+      "steady_state_lookup_bytes": 993,
+      "amortized": {
+        "n_1_bytes_per_tracking": 8608,
+        "n_1_cost_per_1000_usd": 0.0022,
+        "n_10_bytes_per_tracking": 1755,
+        "n_10_cost_per_1000_usd": 0.0004,
+        "n_100_bytes_per_tracking": 1069,
+        "n_100_cost_per_1000_usd": 0.0003,
+        "n_1000_bytes_per_tracking": 1001,
+        "n_1000_cost_per_1000_usd": 0.0003
+      }
+    }
+  ]
+}

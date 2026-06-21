@@ -1,0 +1,38 @@
+{
+  "id": "an-post",
+  "displayName": "An Post",
+  "mode": "scraper",
+  "warmUrl": "https://www.anpost.com/Post-Parcels/Track/History?item={n}",
+  "awaitReady": "body",
+  "queryStrategy": "json_endpoint",
+  "fetchUrl": "https://apim-anpost-apwebapis.anpost.com/ttservice-public-apweb/GetItemSummary",
+  "request": {
+    "method": "POST",
+    "credentials": "omit",
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "content-type": "application/json",
+      "ocp-apim-subscription-key": "01b0162771e941639046a97936f72e95"
+    },
+    "bodyTemplate": "{\"getItemSummary\":{\"trackingItems\":[\"{n}\"]}}"
+  },
+  "parseJson": {
+    "eventsPath": "getItemSummaryResponse.GetItemSummaryResult",
+    "datePath": "eventDate",
+    "locationPath": "location",
+    "descriptionPath": "statusDescription",
+    "statusPath": "status"
+  },
+  "failurePatterns": [
+    "\"GetItemSummaryResult\"\\s*:\\s*\\[\\s*\\]"
+  ],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|delivery complete|signed|seachadta|delivre" },
+    { "status": "exception", "pattern": "exception|delay|failed|returned|unable|customs|held|refused" },
+    { "status": "pickup", "pattern": "accepted|received|collected|pickup|posted|lodged" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|out for delivery|sorting|scan" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}IE$|^[A-Z0-9]{9,24}$",
+  "regions": ["IE"],
+  "tier": 1
+}

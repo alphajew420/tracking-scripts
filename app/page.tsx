@@ -17,8 +17,7 @@ import {
 } from "lucide-react";
 import { HeroTrackingTimeline } from "@/components/hero-tracking-timeline";
 import { comparisons, pricingPlans, productPages, solutionPages } from "@/lib/marketing";
-
-const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.trackified.15-204-158-166.sslip.io";
+import { apiBaseUrl } from "@/lib/site";
 
 const apiFeatures: Array<[LucideIcon, string, string]> = [
   [PackageSearch, "Shipment API", "Register, monitor, update, and retrieve package timelines through one normalized contract."],
@@ -72,7 +71,7 @@ export default function Home() {
             </p>
             <div className="actions">
               <Link href="/dashboard" className="button primary"><ArrowRight size={16} /> Open console</Link>
-              <Link href={`${apiBase}/openapi.json`} className="button">View OpenAPI</Link>
+              <Link href={`${apiBaseUrl()}/openapi.json`} className="button">View OpenAPI</Link>
             </div>
           </div>
 

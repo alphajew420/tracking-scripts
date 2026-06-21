@@ -1,0 +1,25 @@
+{
+  "id": "posten-norge",
+  "displayName": "Posten Norge",
+  "mode": "scraper",
+  "warmUrl": "https://sporing.posten.no/en/tracking/{n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://sporing.posten.no/en/tracking/{n}",
+  "parseHtml": {
+    "events": ".tracking-event, .shipment-event, .event, .timeline-item, [class*='event'], [class*='timeline'] li",
+    "date": "time, .date, .event-date, [class*='date']",
+    "location": ".location, .event-location, [class*='location'], [class*='place']",
+    "description": ".status, .description, .event-description, [class*='status'], [class*='description'], h3, h4"
+  },
+  "failurePatterns": ["not found", "no shipment", "no information", "could not find", "invalid"],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed|utlevert|levert" },
+    { "status": "exception", "pattern": "exception|delay|failed|returned|unable|customs|held|retur" },
+    { "status": "pickup", "pattern": "accepted|received|collected|pickup|innlevert|mottatt" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|out for delivery|sort|transport|ankommet" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}NO$|^[A-Z0-9]{10,24}$",
+  "regions": ["NO"],
+  "tier": 1
+}

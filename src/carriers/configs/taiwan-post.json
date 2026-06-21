@@ -1,0 +1,25 @@
+{
+  "id": "taiwan-post",
+  "displayName": "Taiwan Post",
+  "mode": "scraper",
+  "warmUrl": "https://postserv.post.gov.tw/pstmail/main_mail.html?targetTxn=EB500201&MAILNO={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://postserv.post.gov.tw/pstmail/main_mail.html?targetTxn=EB500201&MAILNO={n}",
+  "parseHtml": {
+    "events": "tr, .tracking-event, .shipment-event, .event, .timeline-item, [class*='event']",
+    "date": "td:nth-child(1), time, .date, .event-date, [class*='date']",
+    "location": "td:nth-child(2), .location, .event-location, [class*='location']",
+    "description": "td:nth-child(3), .status, .description, .event-description, [class*='status'], [class*='description']"
+  },
+  "failurePatterns": ["no data", "not found", "invalid", "查無", "無資料"],
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|signed|投遞成功|已送達" },
+    { "status": "exception", "pattern": "exception|delay|failed|returned|unable|退回|異常|海關" },
+    { "status": "pickup", "pattern": "accepted|received|collected|pickup|收寄|交寄" },
+    { "status": "in_transit", "pattern": "in transit|processed|arrived|departed|out for delivery|運輸|處理|到達|離開" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}TW$|^\\d{10,20}$",
+  "regions": ["TW"],
+  "tier": 1
+}

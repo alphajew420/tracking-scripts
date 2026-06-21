@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { CarrierSearch } from "@/components/carrier-search";
 import { MarketingChrome } from "@/components/marketing-shell";
+import { listCarrierValidationSummary } from "@/lib/carrier-validation";
 import { carriers } from "@/lib/marketing";
 
 export default function Page() {
   const live = carriers.filter((carrier) => carrier.status === "Live coverage");
+  const validation = listCarrierValidationSummary();
+  const priorityQueue = validation.values.filter((item) => item.status !== "verified").slice(0, 8);
 
   return (
     <MarketingChrome>
@@ -22,6 +25,50 @@ export default function Page() {
           <strong>{live.length}</strong>
           <p>active carrier integrations available across API, dashboard, branded pages, and webhook workflows.</p>
         </aside>
+      </section>
+
+      <section className="carrier-status-board">
+        <article className="carrier-status-card">
+          <span>Verified</span>
+          <strong>{validation.counts.verified}</strong>
+          <p>Real tracking numbers confirmed against live timelines.</p>
+        </article>
+        <article className="carrier-status-card">
+          <span>Needs retest</span>
+          <strong>{validation.counts.needs_retest}</strong>
+          <p>Wired modules that need a fresh sample before we call them stable.</p>
+        </article>
+        <article className="carrier-status-card">
+          <span>Needs real sample</span>
+          <strong>{validation.counts.needs_real_sample}</strong>
+          <p>Scaffolded carriers waiting on a live number from the field.</p>
+        </article>
+        <article className="carrier-status-card">
+          <span>Unvalidated</span>
+          <strong>{validation.counts.unvalidated}</strong>
+          <p>Registered carriers with no validation ledger entry yet.</p>
+        </article>
+      </section>
+
+      <section className="carrier-work-queue">
+        <div>
+          <p className="eyebrow">Carrier work queue</p>
+          <h2>Fix the hardest carriers first, not the easiest catalog entries.</h2>
+          <p>
+            The next gain comes from moving carriers out of retest and scaffolded states. These are the carriers that
+            still need a fresh sample, a retry, or a real-world number from a customer flow.
+          </p>
+        </div>
+        <div className="carrier-work-list">
+          {priorityQueue.map((item) => (
+            <article key={item.carrier} className={`carrier-work-item ${item.status}`}>
+              <strong>{item.carrier}</strong>
+              <span>{item.status.replaceAll("_", " ")}</span>
+              <p>{item.result}</p>
+              {item.sample ? <small>Sample: {item.sample}</small> : <small>Waiting on a real sample</small>}
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="registry-summary">

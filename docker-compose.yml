@@ -63,7 +63,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["xvfb-run", "-a", "npm", "run", "worker"]
+    command: ["npm", "run", "worker"]
     environment:
       NODE_ENV: production
       DATABASE_URL: postgres://trackified:trackified@postgres:5432/trackified
@@ -94,6 +94,8 @@ services:
       PROXY_FEDEX_PASSWORD: ${PROXY_FEDEX_PASSWORD:-}
       PROXY_FEDEX_MODE: ${PROXY_FEDEX_MODE:-extension}
       FEDEX_DISABLE_BLOCKING: ${FEDEX_DISABLE_BLOCKING:-false}
+      FEDEX_USE_PROXY: ${FEDEX_USE_PROXY:-true}
+      BROWSER_CDP_AUTOLAUNCH_FEDEX: ${BROWSER_CDP_AUTOLAUNCH_FEDEX:-true}
       FEDEX_PROFILE_DIR: ${FEDEX_PROFILE_DIR:-/tmp/trackified-fedex-profile}
       FEDEX_WARM_TIMEOUT_MS: ${FEDEX_WARM_TIMEOUT_MS:-180000}
       FEDEX_READY_TIMEOUT_MS: ${FEDEX_READY_TIMEOUT_MS:-45000}

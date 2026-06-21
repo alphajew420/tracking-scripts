@@ -1,0 +1,414 @@
+{
+  "generated_at": "2026-06-20T20:01:33Z",
+  "policy": "A carrier module is not considered done until it returns normalized events from a public or customer-provided real tracking number. Format examples, no-data responses, and empty timelines only prove plumbing.",
+  "results": [
+    {
+      "carrier": "dhl-ecommerce",
+      "status": "verified",
+      "sample": "1234567890",
+      "sample_source": "https://webtrack.dhlglobalmail.com/",
+      "result": "Returned 8 normalized events, delivered=true, service level, weight, and USPS handoff metadata.",
+      "efficiency_path": "Minimal browser warm plus captured browser-side POST https://api.dhlecs.com/webtrack/v4/tracking response."
+    },
+    {
+      "carrier": "dhl",
+      "status": "implemented_needs_retest",
+      "sample": null,
+      "sample_source": null,
+      "result": "Hand-coded DHL Worldwide scraper exists and uses browser-side fetch to DHL's tracking JSON surface, but it has not been revalidated in the standardized carrier ledger with a current real-event public sample.",
+      "efficiency_path": "Warm DHL tracking page, then browser-side fetch to /int-verfolgen/data/search."
+    },
+    {
+      "carrier": "dhl-express",
+      "status": "implemented_needs_retest",
+      "sample": null,
+      "sample_source": null,
+      "result": "Hand-coded DHL Express scraper exists with warm response capture and browser-side utapi fetch, but it has not been revalidated in the standardized carrier ledger with a current real-event public sample.",
+      "efficiency_path": "Warm DHL global tracking page, capture /utapi response when available, otherwise browser-side fetch to /utapi."
+    },
+    {
+      "carrier": "fedex",
+      "status": "implemented_needs_retest",
+      "sample": null,
+      "sample_source": null,
+      "result": "Hand-coded FedEx scraper exists and previously required browser-side token capture/sidecar behavior, but it needs a fresh real-event validation sample before being counted as verified.",
+      "efficiency_path": "Warm FedEx tracking page, capture OAuth/token and app tracking response, then browser-side fetch to track/v2/shipments."
+    },
+    {
+      "carrier": "ups",
+      "status": "verified",
+      "sample": "1Z999AA10123456784",
+      "sample_source": "https://www.ups.com/track",
+      "result": "Returned 17 normalized events, delivered=true, recipient=TAYLOR, from UPS browser-side GetStatus flow.",
+      "efficiency_path": "Warm UPS tracking page, use XSRF cookie, then browser-side POST to UPS GetStatus. No Node-side request is used."
+    },
+    {
+      "carrier": "usps",
+      "status": "implemented_needs_retest",
+      "sample": null,
+      "sample_source": null,
+      "result": "Hand-coded USPS scraper exists and uses browser-side fetch plus DOMParser, but it needs a fresh real-event validation sample before being counted as verified.",
+      "efficiency_path": "Warm USPS tracking page, then browser-side fetch to TrackConfirmAction and parse HTML in the browser."
+    },
+    {
+      "carrier": "intelcom",
+      "status": "scaffolded_unverified",
+      "sample": "INTLCMA049122639",
+      "sample_source": "https://parcelsapp.com/en/carriers/intelcom-express",
+      "result": "Endpoint executed successfully but returned zero events for the public example number.",
+      "efficiency_path": "Browser-side JSON fetch to https://intelcom.ca/cfworker/v3/tracking/{n}/."
+    },
+    {
+      "carrier": "bpost",
+      "status": "scaffolded_unverified",
+      "sample": "CE210887475BE",
+      "sample_source": "https://parcelsapp.com/en/carriers/bpost-international",
+      "result": "Endpoint executed successfully but returned NO_DATA_FOUND for the public example number.",
+      "efficiency_path": "Browser-side fetch to https://track.bpost.cloud/track/items."
+    },
+    {
+      "carrier": "postnl",
+      "status": "scaffolded_unverified",
+      "sample": "RU179726789NL",
+      "sample_source": "https://parcelsapp.com/en/carriers/postnl-international",
+      "result": "Returned zero events for the public example number.",
+      "efficiency_path": "Browser-side fetch to the public Track & Trace page; likely needs destination postal-code context or a deeper app endpoint."
+    },
+    {
+      "carrier": "correos",
+      "status": "scaffolded_unverified",
+      "sample": "RR123456789ES",
+      "sample_source": "https://courierstracker.com/correos-tracking/",
+      "result": "Returned zero events for the published format example.",
+      "efficiency_path": "Browser-side fetch to Correos public details page; deeper shipment API still needs payload validation."
+    },
+    {
+      "carrier": "poste-italiane",
+      "status": "verified",
+      "sample": "200973597556",
+      "sample_source": "https://business.poste.it/professionisti-imprese/cerca/index.html",
+      "result": "Returned 4 normalized events, delivered=true, from the official DQ-REST tracking endpoint.",
+      "efficiency_path": "Browser warm on the official Poste tracking page, then browser-side POST to /online/dovequando/DQ-REST/ricercasemplice."
+    },
+    {
+      "carrier": "purolator",
+      "status": "verified",
+      "sample": "610592457812",
+      "sample_source": "https://www.purolator.com/en/shipping/tracker?pin=610592457812&sdate=2026-03-16",
+      "result": "Returned 11 normalized events, delivered=true, service level, weight, origin/destination, and shipment references.",
+      "efficiency_path": "System Chrome warm clears Cloudflare, then module captures the carrier app's own POST https://track.purolator.com/tracking-ext/v1/search JSON response."
+    },
+    {
+      "carrier": "yunexpress",
+      "status": "verified",
+      "sample": "YT2315921266046217",
+      "sample_source": "https://www.parcelpanel.com/couriers/yunexpress/",
+      "result": "Returned 6 normalized events, delivered=true, weight, USPS last-mile tracking metadata, and origin/destination country metadata.",
+      "efficiency_path": "Browser warm on YunTrack, then browser-side signed POST to https://services.yuntrack.com/Track/Query."
+    },
+    {
+      "carrier": "dpd-uk",
+      "status": "verified",
+      "sample": "15501234567890",
+      "sample_source": "https://ordertrackly.com/carrier/dpd-uk-tracking",
+      "result": "Returned 8 normalized events from the public DPD parcel JSON endpoints.",
+      "efficiency_path": "Browser warm resolves parcel key, then browser-side JSON fetches to /v1/parcels/{parcelKey} and /parcelevents. No Node-side HTTP is used."
+    },
+    {
+      "carrier": "canada-post",
+      "status": "verified",
+      "sample": "LM217656065CA",
+      "sample_source": "https://www.canadapost-postescanada.ca/track-reperage/en/details/LM217656065CA",
+      "result": "Returned 11 normalized events, delivered=true, service level, origin/destination, and cross-border handoff events.",
+      "efficiency_path": "Browser warm on Canada Post detail page, then browser-side JSON fetch to the package detail endpoint."
+    },
+    {
+      "carrier": "speedeedelivery",
+      "status": "verified",
+      "sample": "1234567890",
+      "sample_source": "https://packages.speedeedelivery.com/package_progress.php?v=detail&barcode=1234567890",
+      "result": "Returned 3 normalized events from Spee-Dee's compact package progress table.",
+      "efficiency_path": "Browser warm and steady browser-side fetch use the compact package progress HTML endpoint."
+    },
+    {
+      "carrier": "4px",
+      "status": "scaffolded_unverified",
+      "sample": "4PX3000702123943CN",
+      "sample_source": "https://www.17track.net/en/carriers/4px",
+      "result": "Browser-side JSON endpoint executed but returned zero events for the public format/example number.",
+      "efficiency_path": "Browser-side POST to 4PX JSON tracking endpoint."
+    },
+    {
+      "carrier": "yanwen",
+      "status": "scaffolded_unverified",
+      "sample": "UH360795712YP",
+      "sample_source": "https://www.parcelpanel.com/couriers/yanwen/",
+      "result": "Browser-side endpoint executed but returned zero events for the public example number.",
+      "efficiency_path": "Browser-side fetch from warmed Yanwen tracking surface."
+    },
+    {
+      "carrier": "cainiao",
+      "status": "scaffolded_unverified",
+      "sample": "LP00123456789123",
+      "sample_source": "https://locateparcels.com/cainiao-tracking/",
+      "result": "Browser-side endpoint executed but returned zero events for the public example number.",
+      "efficiency_path": "Browser-side fetch to Cainiao public detail JSON endpoint."
+    },
+    {
+      "carrier": "sf-express",
+      "status": "scaffolded_unverified",
+      "sample": "SF1541932890638",
+      "sample_source": "https://www.ship24.com/couriers/sf-express-tracking/sf-express-tracking-number",
+      "result": "Browser-side endpoint executed but returned zero events for the public example number.",
+      "efficiency_path": "Browser-side fetch from warmed SF Express tracking surface."
+    },
+    {
+      "carrier": "china-post",
+      "status": "scaffolded_unverified",
+      "sample": "EY123456789CN",
+      "sample_source": "https://www.parcelpanel.com/couriers/china-post/",
+      "result": "Browser-side endpoint executed but returned zero events for the public example number.",
+      "efficiency_path": "Browser-side fetch from China Post/EMS tracking surface."
+    },
+    {
+      "carrier": "royal-mail",
+      "status": "scaffolded_unverified",
+      "sample": "ZW924750388GB",
+      "sample_source": "https://www.royalmail.com/royal-mail-you/intellectual-property-rights/linking-our-website",
+      "result": "Dedicated browser-side scraper is wired, but the Royal Mail API fetch failed from this environment with TypeError: Failed to fetch and returned zero events.",
+      "efficiency_path": "Warm Royal Mail Track and Trace, capture app responses when available, otherwise browser-side fetch to Royal Mail API. No Node-side request is used."
+    },
+    {
+      "carrier": "japan-post",
+      "status": "scaffolded_unverified",
+      "sample": "EN279250643JP",
+      "sample_source": "https://www.trackingmore.com/japan-post-tracking",
+      "result": "Official tracking page returned item-not-found for the public example number. Config now fails cleanly instead of parsing the not-found table as events.",
+      "efficiency_path": "Browser-side fetch to Japan Post Track & Trace direct search page."
+    },
+    {
+      "carrier": "australia-post",
+      "status": "scaffolded_unverified",
+      "sample": "EE999999999AU",
+      "sample_source": "https://www.easyship.com/blog/australia-post-tracking-guide",
+      "result": "Public format example returned zero events. Generic adapter now fails cleanly on empty event timelines.",
+      "efficiency_path": "Browser-side fetch to Australia Post public tracking surface."
+    },
+    {
+      "carrier": "deutsche-post",
+      "status": "scaffolded_unverified",
+      "sample": "445209416454",
+      "sample_source": "https://parcelsapp.com/en/carriers/deutsche-post",
+      "result": "Public example returned HTTP 404 from current configured surface.",
+      "efficiency_path": "Browser-side fetch to Deutsche Post configured tracking page."
+    },
+    {
+      "carrier": "la-poste",
+      "status": "scaffolded_unverified",
+      "sample": "8D00432154789",
+      "sample_source": "https://www.ship24.com/couriers/la-poste-tracking",
+      "result": "Public format example returned HTTP 403 from the current configured surface.",
+      "efficiency_path": "Browser-side fetch to La Poste configured tracking page."
+    },
+    {
+      "carrier": "ems",
+      "status": "scaffolded_unverified",
+      "sample": "EZ987654321XX",
+      "sample_source": "https://www.ems.post/en/global-network/tracking",
+      "result": "Public example did not return real shipment events. The current generic parser can produce page-shell/navigation false positives, so EMS remains unverified until the publicTracking API returns events.",
+      "efficiency_path": "EMS page calls https://items.ems.post/api/publicTracking/track, but that endpoint returned HTTP 403 from this environment."
+    },
+    {
+      "carrier": "aramex",
+      "status": "scaffolded_unverified",
+      "sample": "31682309422",
+      "sample_source": "https://www.parcelpanel.com/couriers/aramex/",
+      "result": "Multiple public/example Aramex numbers returned HTTP 403 from the current configured surface and zero verified events.",
+      "efficiency_path": "Current config uses browser-side fetch to Aramex tracking results page; deeper sidecar/API capture still required."
+    },
+    {
+      "carrier": "ontrac",
+      "status": "scaffolded_unverified",
+      "sample": "D10014672133598",
+      "sample_source": "https://www.scribd.com/document/872516364/Tracking-OnTrac",
+      "result": "Hand-coded OnTrac/LaserShip unified endpoint exists, but the checked public sample returned not found and zero events.",
+      "efficiency_path": "Browser-side fetch to webtrack.ontrac.com package tracking endpoint."
+    },
+    {
+      "carrier": "lasership",
+      "status": "scaffolded_unverified",
+      "sample": "D10014672133598",
+      "sample_source": "https://www.scribd.com/document/872516364/Tracking-OnTrac",
+      "result": "Shares the OnTrac implementation path, but no safely public LaserShip sample returned events.",
+      "efficiency_path": "Browser-side fetch to webtrack.ontrac.com package tracking endpoint."
+    },
+    {
+      "carrier": "tforce-final-mile",
+      "status": "scaffolded_unverified",
+      "sample": "TF1000003421772",
+      "sample_source": "https://www.parcelpanel.com/couriers/tforce/",
+      "result": "Configured public page path executed, but the checked public example returned no shipments/events.",
+      "efficiency_path": "Browser-side fetch through the config adapter."
+    },
+    {
+      "carrier": "tforce-freight",
+      "status": "scaffolded_unverified",
+      "sample": "076958582",
+      "sample_source": "https://www.tforcefreight.com/ltl/apps/Tracking?proNumbers=076958582%2F1000",
+      "result": "Configured public page path executed, but indexed public examples returned invalid/no parsed events.",
+      "efficiency_path": "Browser-side fetch through the config adapter."
+    },
+    {
+      "carrier": "lso",
+      "status": "scaffolded_unverified",
+      "sample": "123456789",
+      "sample_source": "https://www.lso.com/tracking",
+      "result": "Efficient JSON endpoint config exists, but the checked public example returned zero events and was rejected as no tracking events returned.",
+      "efficiency_path": "Browser-side JSON endpoint through the config adapter."
+    },
+    {
+      "carrier": "evri",
+      "status": "scaffolded_unverified",
+      "sample": null,
+      "sample_source": null,
+      "result": "Config exists with tightened selectors, but no safely public real event-returning sample was found.",
+      "efficiency_path": "Browser-side fetch through the config adapter."
+    },
+    {
+      "carrier": "gls",
+      "status": "scaffolded_unverified",
+      "sample": null,
+      "sample_source": null,
+      "result": "Config exists with tightened selectors, but no safely public real event-returning sample was found.",
+      "efficiency_path": "Browser-side fetch through the config adapter."
+    },
+    {
+      "carrier": "tnt",
+      "status": "scaffolded_unverified",
+      "sample": "01719000",
+      "sample_source": "https://www.tnt.com/express/pt_br/site/shipping-tools/tracking.html?cons=01719000&searchType=CON&source=home_widget",
+      "result": "Public indexed sample returned zero normalized events; current configured surface returned HTTP 404 and redirected detail API returned HTTP 500 in this environment.",
+      "efficiency_path": "Browser-side fetch through the config adapter."
+    },
+    {
+      "carrier": "yodel",
+      "status": "scaffolded_unverified",
+      "sample": "JD0002210160195973",
+      "sample_source": "https://parcelsapp.com/en/carriers/yodel",
+      "result": "Public sample returned zero normalized events and was rejected as no tracking events returned.",
+      "efficiency_path": "Browser-side fetch through the config adapter."
+    },
+    {
+      "carrier": "an-post",
+      "status": "scaffolded_unverified",
+      "sample": "CN025484145IE",
+      "sample_source": "An Post public tracking page probe",
+      "result": "Efficient public browser-side GetItemSummary endpoint is wired, but the checked sample returned an empty GetItemSummaryResult array.",
+      "efficiency_path": "Warm An Post tracking page, then browser-side POST to ttservice-public-apweb/GetItemSummary with the same public headers used by the web app."
+    },
+    {
+      "carrier": "austrian-post",
+      "status": "scaffolded_unverified",
+      "sample": "RA123456789AT",
+      "sample_source": "Austrian Post public tracking page probe",
+      "result": "Efficient public GraphQL endpoint is wired, but the checked sample returned einzelsendung=null.",
+      "efficiency_path": "Warm Austrian Post detail page, then browser-side POST to https://api.post.at/sendungen/sv/graphqlPublic."
+    },
+    {
+      "carrier": "swiss-post",
+      "status": "scaffolded_unverified",
+      "sample": "990012345619584678",
+      "sample_source": "Swiss Post public EasyTrack probe",
+      "result": "Public EasyTrack surface is wired with no-data failure guards, but the checked sample returned no consignment found.",
+      "efficiency_path": "Browser-side fetch to Swiss Post EasyTrack after warm."
+    },
+    {
+      "carrier": "chronopost",
+      "status": "scaffolded_unverified",
+      "sample": "EE01002000FR",
+      "sample_source": "Chronopost public tracking page probe",
+      "result": "Public tracking surface is wired with security/no-data guards, but this environment hit a security verification response instead of shipment events.",
+      "efficiency_path": "Browser-side fetch to Chronopost public tracking page; deeper app-side endpoint capture still required for verification."
+    },
+    {
+      "carrier": "colissimo",
+      "status": "scaffolded_unverified",
+      "sample": null,
+      "sample_source": null,
+      "result": "Colissimo is scaffolded separately from La Poste for catalog parity, but no safely public event-returning sample has been validated yet.",
+      "efficiency_path": "Browser-side fetch to La Poste/Colissimo tracking surface through the config adapter."
+    },
+    {
+      "carrier": "singapore-post",
+      "status": "scaffolded_unverified",
+      "sample": "RC987654321SG",
+      "sample_source": "https://parcelsapp.com/en/carriers/singapore-post",
+      "result": "Config adapter module is wired for Singapore Post. Public format examples RC987654321SG/RX123456789SG returned no tracking data and did not verify.",
+      "efficiency_path": "Browser-side fetch to Singapore Post public tracking surface through the config adapter."
+    },
+    {
+      "carrier": "taiwan-post",
+      "status": "scaffolded_unverified",
+      "sample": null,
+      "sample_source": null,
+      "result": "Config adapter module is wired for Taiwan Post, but no safely public real event-returning sample has been validated yet.",
+      "efficiency_path": "Browser-side fetch to Taiwan Post public tracking surface through the config adapter."
+    },
+    {
+      "carrier": "postnord-se",
+      "status": "verified",
+      "sample": "LD244987870FR",
+      "sample_source": "https://www.kickstarter.com/projects/pulsebooks/budterence/comments",
+      "result": "Dedicated PostNord sidecar verified against a public tracking link. The localized postnord.se page is Cloudflare-protected, so the module uses tracking.postnord.com and the official widget's browser proof header. Returned 10 normalized events and delivered status on 2026-06-20.",
+      "efficiency_path": "Browser-side fetch from the warmed tracking.postnord.com page to the public trackingweb shipmentInformation endpoint with x-bap-key and X-CustomHeader proof-of-work."
+    },
+    {
+      "carrier": "postnord-dk",
+      "status": "scaffolded_unverified",
+      "sample": "66695159070SE",
+      "sample_source": "https://developer.postnord.com/pdf/PostNord_Tracking_Widget_Guide.pdf",
+      "result": "Config adapter module is wired for PostNord Denmark. Public documented widget sample returned HTTP 403 from this environment due Cloudflare challenge and did not verify.",
+      "efficiency_path": "Browser-side fetch to PostNord Denmark public tracking surface through the config adapter."
+    },
+    {
+      "carrier": "posten-norge",
+      "status": "scaffolded_unverified",
+      "sample": null,
+      "sample_source": null,
+      "result": "Config adapter module is wired for Posten Norge, but no safely public real event-returning sample has been validated yet.",
+      "efficiency_path": "Browser-side fetch to Posten Norge public tracking surface through the config adapter."
+    },
+    {
+      "carrier": "posti",
+      "status": "scaffolded_unverified",
+      "sample": "EE123456789FI",
+      "sample_source": "UPU S10 format probe",
+      "result": "Config adapter module is wired for Posti Finland. Public format probe returned zero normalized events and did not verify.",
+      "efficiency_path": "Browser-side fetch to Posti public tracking surface through the config adapter."
+    },
+    {
+      "carrier": "poczta-polska",
+      "status": "scaffolded_unverified",
+      "sample": "RR123456789PL",
+      "sample_source": "UPU S10 format probe",
+      "result": "Config adapter module is wired for Poczta Polska. Public format probe returned zero normalized events and did not verify.",
+      "efficiency_path": "Browser-side fetch to Poczta Polska public tracking surface through the config adapter."
+    },
+    {
+      "carrier": "ctt-portugal",
+      "status": "scaffolded_unverified",
+      "sample": "RR123456789PT",
+      "sample_source": "UPU S10 format probe",
+      "result": "Config adapter module is wired for CTT Portugal. Public format probe returned zero normalized events and did not verify.",
+      "efficiency_path": "Browser-side fetch to CTT Portugal public tracking surface through the config adapter."
+    },
+    {
+      "carrier": "nz-post",
+      "status": "scaffolded_unverified",
+      "sample": "JP100000271NZ",
+      "sample_source": "https://anypoint.mulesoft.com/exchange/portals/nz-post-group/b8271f09-2ad8-4e1c-b6b1-322c5727d148/parceltrack-api/minor/2.0/pages/Track%20a%20Parcel/",
+      "result": "NZ Post module was moved to the web app's public parceltrack endpoint. Official API sample JP100000271NZ and public format examples returned No data found and did not verify.",
+      "efficiency_path": "Warm NZ Post tracking page, then browser-side GET https://tools.nzpost.co.nz/tracking/api/parceltrack/parcels?tracking_reference={n}."
+    }
+  ]
+}

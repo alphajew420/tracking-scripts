@@ -1,0 +1,24 @@
+{
+  "id": "correos",
+  "displayName": "Correos de Espana",
+  "mode": "scraper",
+  "warmUrl": "https://www.correos.es/es/en/tools/tracker/items/details?tracking-number={n}",
+  "awaitReady": "body",
+  "queryStrategy": "in_page_fetch",
+  "fetchUrl": "https://www.correos.es/es/en/tools/tracker/items/details?tracking-number={n}",
+  "parseHtml": {
+    "events": ".tracking-event, .shipment-event, .event, .timeline-item, correos-cdk-tracking-stepper li, li",
+    "date": "time, .date, .event-date, .fecha",
+    "location": ".location, .event-location, .oficina",
+    "description": ".status, .description, .event-description, .estado, .message, h2, h3"
+  },
+  "statusMap": [
+    { "status": "delivered", "pattern": "delivered|entregado|entregada|delivery completed" },
+    { "status": "exception", "pattern": "exception|incident|failed|returned|devuelto|devoluci[oó]n|no entregado|aduana|customs|retenido" },
+    { "status": "pickup", "pattern": "pickup|collection|recogida|recoger|oficina|available for collection" },
+    { "status": "in_transit", "pattern": "in transit|transit|admitted|accepted|classified|arrived|departed|en camino|en curso|admitido|clasificado|en reparto|proceso de entrega" }
+  ],
+  "trackingNumberPattern": "^[A-Z]{2}\\d{9}ES$|^[A-Z0-9]{10,24}$",
+  "regions": ["ES"],
+  "tier": 1
+}
