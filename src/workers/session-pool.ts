@@ -5,6 +5,7 @@ import type { ScrapeResult } from "../types.ts";
 import { buildCarrierSessionOptions } from "../carrier-runtime.ts";
 import { getBrowserSidecarEndpoint, invalidateBrowserSidecar } from "../browser-sidecar.ts";
 import type { BrowserProxy } from "../proxy.ts";
+import { proxyIsQuarantined, quarantineProxy, recordProxyHealth } from "../proxy-health.ts";
 
 interface PooledSession {
   session: TrackingSession;
@@ -15,6 +16,8 @@ interface PooledSession {
 
 const maxAgeMs = Number(process.env.SESSION_MAX_AGE_MS ?? 60 * 60_000);
 const maxUses = Number(process.env.SESSION_MAX_USES ?? 250);
+const maxProxyPickAttempts = Number(process.env.PROXY_PICK_ATTEMPTS ?? 5);
+let generatedProxySessionCounter = 0;
 
 function booleanEnv(name: string, fallback: boolean): boolean {
   const value = process.env[name];
@@ -34,7 +37,10 @@ function proxySessionForCarrier(carrierId: string): string {
   const carrierKey = carrierId.toUpperCase().replaceAll("-", "_");
   const fixed = process.env[`PROXY_SESSION_${carrierKey}`] ?? process.env.PROXY_SESSION;
   if (fixed) return fixed;
-  if (carrierId === "fedex") return `${carrierId}-${process.pid}-${Date.now().toString(36)}`;
+  if (carrierId === "fedex") {
+    generatedProxySessionCounter += 1;
+    return `${carrierId}-${process.pid}-${Date.now().toString(36)}-${generatedProxySessionCounter}`;
+  }
   return carrierId;
 }
 
@@ -58,7 +64,17 @@ export class SessionPool {
     const factory = getCarrierFactory(carrierId);
     if (!factory) throw new Error(`unsupported carrier: ${carrierId}`);
     const useProxy = carrierId !== "fedex" || booleanEnv("FEDEX_USE_PROXY", false);
-    const proxy = useProxy ? proxyForCarrier(carrierId, { session: proxySessionForCarrier(carrierId) }) : undefined;
+    let proxy: BrowserProxy | undefined;
+    if (useProxy) {
+      for (let attempt = 0; attempt < maxProxyPickAttempts; attempt += 1) {
+        const candidate = proxyForCarrier(carrierId, { session: proxySessionForCarrier(carrierId) });
+        if (!candidate || !(await proxyIsQuarantined(carrierId, candidate))) {
+          proxy = candidate;
+          break;
+        }
+      }
+      proxy ??= proxyForCarrier(carrierId, { session: proxySessionForCarrier(carrierId) });
+    }
     const browserCdpEndpoint =
       carrierId === "fedex" ? await getBrowserSidecarEndpoint(carrierId, proxy) : undefined;
     const session = new TrackingSession(
@@ -88,11 +104,22 @@ export class SessionPool {
   async track(carrierId: string, trackingNumber: string): Promise<ScrapeResult> {
     return this.withCarrierLock(carrierId, async () => {
       const session = await this.get(carrierId);
+      const startedAt = Date.now();
       const result = await session.track(trackingNumber);
+      const pooled = this.sessions.get(carrierId);
+      await recordProxyHealth({
+        carrier: carrierId,
+        proxy: pooled?.proxy,
+        ok: result.ok,
+        elapsedMs: Date.now() - startedAt,
+        error: result.ok ? undefined : result.error,
+      });
       if (!result.ok && /Target page|context or browser|Browser has been closed/i.test(result.error ?? "")) {
+        await quarantineProxy({ carrier: carrierId, proxy: pooled?.proxy, reason: result.error ?? "browser failure" });
         await this.invalidate(carrierId);
       }
       if (!result.ok && shouldRetryFedExWithCleanPage(carrierId, result)) {
+        await quarantineProxy({ carrier: carrierId, proxy: pooled?.proxy, reason: result.error ?? "fedex retryable failure" });
         await this.invalidate(carrierId);
         const cleanPageSession = await this.get(carrierId);
         const cleanPageResult = await cleanPageSession.track(trackingNumber);

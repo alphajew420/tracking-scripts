@@ -1,4 +1,5 @@
 import { createServer } from "node:net";
+import { createHash } from "node:crypto";
 import { existsSync, rmSync } from "node:fs";
 import { spawn, type ChildProcess } from "node:child_process";
 import { homedir, platform } from "node:os";
@@ -87,8 +88,16 @@ async function waitForEndpoint(endpoint: string, timeoutMs = 20_000): Promise<vo
   throw new Error(`CDP endpoint did not become ready: ${endpoint}`);
 }
 
+function proxyFingerprint(proxy?: BrowserProxy): string {
+  if (!proxy) return "direct";
+  return createHash("sha256")
+    .update(`${proxy.server}|${proxy.username ?? ""}`)
+    .digest("hex")
+    .slice(0, 16);
+}
+
 function cacheKeyFor(carrier: string, proxy?: BrowserProxy): string {
-  return `${carrier}:${proxy ? "proxy" : "direct"}`;
+  return `${carrier}:${proxyFingerprint(proxy)}`;
 }
 
 function safeRemoveProfile(profile: string | undefined): void {
@@ -110,10 +119,10 @@ async function launchSidecar(carrier: string, proxy?: BrowserProxy): Promise<Sid
   if (explicitEndpoint) return { endpoint: explicitEndpoint, explicitEndpoint: true };
 
   const port = Number(process.env[carrierEnvName("BROWSER_CDP_PORT", carrier)] ?? process.env.BROWSER_CDP_PORT ?? 0) || await pickFreePort();
-  const profile =
+  const explicitProfile =
     process.env[carrierEnvName("CDP_PROFILE_DIR", carrier)] ??
-    process.env.CDP_PROFILE_DIR ??
-    `.browser-profiles/cdp-${carrier}-${process.pid}`;
+    process.env.CDP_PROFILE_DIR;
+  const profile = explicitProfile ?? `.browser-profiles/cdp-${carrier}-${process.pid}-${proxyFingerprint(proxy)}`;
   const url = process.env[carrierEnvName("BROWSER_CDP_URL", carrier)] ?? carrierDefaultUrl(carrier);
   const useXvfb =
     platform() === "linux" &&
@@ -136,7 +145,7 @@ async function launchSidecar(carrier: string, proxy?: BrowserProxy): Promise<Sid
         })
       : undefined);
   const proxyExtension = effectiveProxy
-    ? createProxyExtension(effectiveProxy, `${carrier}-sidecar-${process.pid}`)
+    ? createProxyExtension(effectiveProxy, `${carrier}-sidecar-${process.pid}-${proxyFingerprint(effectiveProxy)}`)
     : null;
 
   const chromeArgs = [
