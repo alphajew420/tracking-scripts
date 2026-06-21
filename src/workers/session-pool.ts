@@ -69,11 +69,18 @@ export class SessionPool {
       if (!result.ok && /Target page|context or browser|Browser has been closed/i.test(result.error ?? "")) {
         await this.invalidate(carrierId);
       }
-      if (!result.ok && shouldRetryWithFreshSidecar(carrierId, result)) {
+      if (!result.ok && shouldRetryFedExWithCleanPage(carrierId, result)) {
+        await this.invalidate(carrierId);
+        const cleanPageSession = await this.get(carrierId);
+        const cleanPageResult = await cleanPageSession.track(trackingNumber);
+        if (cleanPageResult.ok || !shouldRetryFedExWithCleanPage(carrierId, cleanPageResult)) {
+          return cleanPageResult;
+        }
+
         await this.invalidate(carrierId);
         await invalidateBrowserSidecar(carrierId);
-        const freshSession = await this.get(carrierId);
-        return await freshSession.track(trackingNumber);
+        const freshSidecarSession = await this.get(carrierId);
+        return await freshSidecarSession.track(trackingNumber);
       }
       return result;
     });
@@ -110,7 +117,7 @@ export class SessionPool {
   }
 }
 
-function shouldRetryWithFreshSidecar(carrierId: string, result: ScrapeResult): boolean {
+function shouldRetryFedExWithCleanPage(carrierId: string, result: ScrapeResult): boolean {
   if (carrierId !== "fedex") return false;
   return /tracking number not found|no results found|rendered tracking data not available|system-error/i.test(
     result.error ?? "",
