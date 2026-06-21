@@ -264,7 +264,7 @@ try {
     timeout: Number(process.env.FEDEX_WARM_TIMEOUT_MS ?? 180000),
   });
   if (fedexCarrier.awaitReady) await fedexCarrier.awaitReady(page, NUMS[0]!);
-  postWarm = true;
+  postWarm = !fedexCarrier.keepWarmRouting;
   const warmMs = Date.now() - warmT0;
   dumpCounter("WARM one-time browser/session", warm, warmMs);
 

@@ -61,6 +61,8 @@ export interface ScraperCarrier extends CarrierBase {
   awaitReady?(page: Page, num: string): Promise<void>;
   /** Execute one tracking lookup through the warmed browser context. */
   runQuery(ctx: QueryCtx, num: string): Promise<ScrapeResult>;
+  /** Keep warm-phase routing after warm when a carrier's app must render repeated lookups. */
+  keepWarmRouting?: boolean;
 }
 
 export type Carrier = ScraperCarrier;
@@ -352,7 +354,9 @@ export class TrackingSession {
     // Flip the route blocker into "block everything but HTML/JSON" mode now
     // that anti-bot cookies are valid. Per-query bandwidth collapses to the
     // size of the response body.
-    (this as unknown as { _flipPostWarm?: () => void })._flipPostWarm?.();
+    if (!this.carrier.keepWarmRouting) {
+      (this as unknown as { _flipPostWarm?: () => void })._flipPostWarm?.();
+    }
     this.opts.onWarm?.();
   }
 

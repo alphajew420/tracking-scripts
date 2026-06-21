@@ -265,9 +265,7 @@ export function createFedexCarrier(): Carrier {
   let bearerToken: string | null = null;
   let bearerTokenResolve: (() => void) | null = null;
   let bearerTokenWait = Promise.resolve();
-  let warmTrackJson: any = null;
-  let warmTrackStatus: number | null = null;
-  let warmTrackUsed = false;
+  const trackResponses = new Map<string, { status: number; json: any }>();
 
   function resetBearerTokenWait(): void {
     bearerTokenWait = new Promise((resolve) => {
@@ -295,14 +293,13 @@ export function createFedexCarrier(): Carrier {
   return {
     name: "fedex",
     mode: "scraper",
+    keepWarmRouting: true,
     warmUrl: TRACK_URL,
 
     setupPage(page: Page) {
       bearerToken = null;
       resetBearerTokenWait();
-      warmTrackJson = null;
-      warmTrackStatus = null;
-      warmTrackUsed = false;
+      trackResponses.clear();
       const captureBearerFromHeader = (authHeader: string | undefined): void => {
         if (!authHeader) return;
         const match = authHeader.match(/^Bearer\s+(.+)$/i);
@@ -328,9 +325,14 @@ export function createFedexCarrier(): Carrier {
         }
         if (!/api\.fedex\.com\/track\/v2\/shipments/.test(url)) return;
         try {
-          warmTrackStatus = resp.status();
+          const postData = resp.request().postData();
+          const requestedNumber = postData
+            ? JSON.parse(postData)?.trackingInfo?.[0]?.trackNumberInfo?.trackingNumber
+            : null;
           const json: any = await resp.json();
-          warmTrackJson = json;
+          if (requestedNumber) {
+            trackResponses.set(String(requestedNumber), { status: resp.status(), json });
+          }
         } catch { /* */ }
       });
     },
@@ -384,7 +386,7 @@ export function createFedexCarrier(): Carrier {
 
       const start = Date.now();
     const waitMs = Number(process.env.FEDEX_READY_TIMEOUT_MS ?? 45000);
-    while (!warmTrackJson && Date.now() - start < waitMs) {
+    while (!trackResponses.has(num) && Date.now() - start < waitMs) {
       if (page.url().includes("no-results-found")) return;
       if (page.url().includes("system-error")) return;
       await page
@@ -405,9 +407,9 @@ export function createFedexCarrier(): Carrier {
       }
       const renderedFirst = await parseRenderedPage(page, num);
       if (renderedFirst) return renderedFirst;
-      if (!warmTrackUsed && warmTrackJson) {
-        warmTrackUsed = true;
-        return buildResult(warmTrackStatus ?? 200, warmTrackJson, num);
+      const cached = trackResponses.get(num);
+      if (cached) {
+        return buildResult(cached.status, cached.json, num);
       }
 
       const renderedBeforeFetch = await parseRenderedPage(page, num);
@@ -418,7 +420,7 @@ export function createFedexCarrier(): Carrier {
         if (process.env.FEDEX_DEBUG) {
           console.error(`[fedex] querying with page.url=${page.url()}`);
           console.error(`[fedex] token len=${bearerToken!.length}`);
-          console.error(`[fedex] warm track status=${warmTrackStatus ?? "none"}`);
+          console.error(`[fedex] cached track=${trackResponses.has(num)}`);
         }
 
         const payload = {
@@ -472,6 +474,10 @@ export function createFedexCarrier(): Carrier {
           const rendered = await parseRenderedPage(page, num);
           if (rendered) return rendered;
           const navigated = await navigateAndParse(page, num);
+          const cachedAfterNavigation = trackResponses.get(num);
+          if (cachedAfterNavigation) {
+            return buildResult(cachedAfterNavigation.status, cachedAfterNavigation.json, num);
+          }
           if (navigated) return navigated;
           return {
             ok: false,
@@ -492,12 +498,20 @@ export function createFedexCarrier(): Carrier {
         const rendered = await parseRenderedPage(page, num);
         if (rendered) return rendered;
         const navigated = await navigateAndParse(page, num);
+        const cachedAfterNavigation = trackResponses.get(num);
+        if (cachedAfterNavigation) {
+          return buildResult(cachedAfterNavigation.status, cachedAfterNavigation.json, num);
+        }
         return navigated ?? result;
       }
 
       const rendered = await parseRenderedPage(page, num);
       if (rendered) return rendered;
       const navigated = await navigateAndParse(page, num);
+      const cachedAfterNavigation = trackResponses.get(num);
+      if (cachedAfterNavigation) {
+        return buildResult(cachedAfterNavigation.status, cachedAfterNavigation.json, num);
+      }
       return navigated ?? { ok: false, error: "FedEx: rendered tracking data not available yet" };
     },
 

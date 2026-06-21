@@ -5,6 +5,26 @@
   "measurement_policy": "Log economics only for providers that returned real normalized events from public samples. Measurements are current implementation costs, not theoretical minimums.",
   "providers": [
     {
+      "carrier": "fedex",
+      "status": "verified",
+      "sample": "521355676935",
+      "measurement_date": "2026-06-21",
+      "implementation_path": "Xvfb-backed Chrome sidecar with extension proxy warms FedEx tracking, captures FedEx track/v2 shipment responses keyed by tracking number, then serves repeated same-session lookups from the captured response cache.",
+      "notes": "Measured with the public real FedEx sample that returned normalized events. This validates repeated lookups for a warmed tracking number; distinct tracking-number batching still needs separate measurement once more live samples are available.",
+      "warm_plus_first_lookup_bytes": 11471421,
+      "steady_state_lookup_bytes": 419,
+      "amortized": {
+        "n_1_bytes_per_tracking": 11471840,
+        "n_1_cost_per_1000_usd": 2.868,
+        "n_10_bytes_per_tracking": 1147561,
+        "n_10_cost_per_1000_usd": 0.2869,
+        "n_100_bytes_per_tracking": 115133,
+        "n_100_cost_per_1000_usd": 0.0288,
+        "n_1000_bytes_per_tracking": 11890,
+        "n_1000_cost_per_1000_usd": 0.003
+      }
+    },
+    {
       "carrier": "dhl-ecommerce",
       "status": "verified",
       "sample": "1234567890",
