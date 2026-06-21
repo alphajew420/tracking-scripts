@@ -13,6 +13,26 @@ function normalizeStatus(status: string | undefined): string {
   return status;
 }
 
+function scrapeTimeoutMs(carrier: string): number {
+  const carrierKey = carrier.toUpperCase().replaceAll("-", "_");
+  const override = process.env[`SCRAPE_TIMEOUT_MS_${carrierKey}`];
+  return Number(override ?? process.env.SCRAPE_TIMEOUT_MS ?? 120_000);
+}
+
+async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  let timeout: NodeJS.Timeout | undefined;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>((_, reject) => {
+        timeout = setTimeout(() => reject(new Error(message)), timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+}
+
 interface ExistingTracking {
   id: string;
   account_id: string;
@@ -44,7 +64,11 @@ async function run() {
         carrier,
         reason: job.data.reason,
       });
-      const result = await poolSessions.track(carrier, job.data.tracking_number);
+      const result = await withTimeout(
+        poolSessions.track(carrier, job.data.tracking_number),
+        scrapeTimeoutMs(carrier),
+        `${carrier}: scrape timed out`,
+      );
       logger.info("scrape finished", {
         job_id: job.id,
         tracking_id: job.data.tracking_id,
