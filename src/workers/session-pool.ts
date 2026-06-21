@@ -25,10 +25,6 @@ function maxUsesForCarrier(carrierId: string): number {
   const override = process.env[envName];
   if (override != null && override !== "") return Number(override);
 
-  // FedEx is safe to amortize at the Chrome sidecar level, but reusing the
-  // same tracking page across different numbers can poison later lookups.
-  // A clean page per job keeps the browser/proxy warm without a full relaunch.
-  if (carrierId === "fedex") return 1;
   return maxUses;
 }
 
