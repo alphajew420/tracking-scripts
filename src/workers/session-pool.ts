@@ -28,6 +28,14 @@ function maxUsesForCarrier(carrierId: string): number {
   return maxUses;
 }
 
+function proxySessionForCarrier(carrierId: string): string {
+  const carrierKey = carrierId.toUpperCase().replaceAll("-", "_");
+  const fixed = process.env[`PROXY_SESSION_${carrierKey}`] ?? process.env.PROXY_SESSION;
+  if (fixed) return fixed;
+  if (carrierId === "fedex") return `${carrierId}-${process.pid}-${Date.now().toString(36)}`;
+  return carrierId;
+}
+
 export class SessionPool {
   private sessions = new Map<string, PooledSession>();
   private locks = new Map<string, Promise<unknown>>();
@@ -43,10 +51,10 @@ export class SessionPool {
 
     const factory = getCarrierFactory(carrierId);
     if (!factory) throw new Error(`unsupported carrier: ${carrierId}`);
-    const browserCdpEndpoint =
-      carrierId === "fedex" ? await getBrowserSidecarEndpoint(carrierId) : undefined;
     const useProxy = carrierId !== "fedex" || booleanEnv("FEDEX_USE_PROXY", false);
-    const proxy = useProxy ? proxyForCarrier(carrierId, { session: carrierId }) : undefined;
+    const proxy = useProxy ? proxyForCarrier(carrierId, { session: proxySessionForCarrier(carrierId) }) : undefined;
+    const browserCdpEndpoint =
+      carrierId === "fedex" ? await getBrowserSidecarEndpoint(carrierId, proxy) : undefined;
     const session = new TrackingSession(
       factory(),
       buildCarrierSessionOptions(carrierId, {

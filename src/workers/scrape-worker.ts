@@ -64,19 +64,33 @@ async function run() {
         carrier,
         reason: job.data.reason,
       });
-      const result = await withTimeout(
-        poolSessions.track(carrier, job.data.tracking_number),
-        scrapeTimeoutMs(carrier),
-        `${carrier}: scrape timed out`,
-      );
-      logger.info("scrape finished", {
-        job_id: job.id,
-        tracking_id: job.data.tracking_id,
-        carrier,
-        ok: result.ok,
-        elapsed_ms: Date.now() - startedAt,
-        error: result.ok ? undefined : result.error,
-      });
+      let result;
+      try {
+        result = await withTimeout(
+          poolSessions.track(carrier, job.data.tracking_number),
+          scrapeTimeoutMs(carrier),
+          `${carrier}: scrape timed out`,
+        );
+        logger.info("scrape finished", {
+          job_id: job.id,
+          tracking_id: job.data.tracking_id,
+          carrier,
+          ok: result.ok,
+          elapsed_ms: Date.now() - startedAt,
+          error: result.ok ? undefined : result.error,
+        });
+      } catch (error) {
+        result = { ok: false as const, error: error instanceof Error ? error.message : String(error) };
+        logger.info("scrape finished", {
+          job_id: job.id,
+          tracking_id: job.data.tracking_id,
+          carrier,
+          ok: false,
+          elapsed_ms: Date.now() - startedAt,
+          error: result.error,
+        });
+        await poolSessions.invalidate(carrier);
+      }
 
       if (!result.ok || !result.track) {
         await query(

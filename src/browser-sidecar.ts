@@ -128,7 +128,12 @@ async function launchSidecar(carrier: string, proxy?: BrowserProxy): Promise<Sid
   const effectiveProxy =
     proxy ??
     (carrier === "fedex" && /^(1|true|yes)$/i.test(process.env.FEDEX_USE_PROXY ?? "")
-      ? proxyForCarrier(carrier, { session: carrier })
+      ? proxyForCarrier(carrier, {
+          session:
+            process.env[carrierEnvName("PROXY_SESSION", carrier)] ??
+            process.env.PROXY_SESSION ??
+            `${carrier}-${process.pid}-${Date.now().toString(36)}`,
+        })
       : undefined);
   const proxyExtension = effectiveProxy
     ? createProxyExtension(effectiveProxy, `${carrier}-sidecar-${process.pid}`)
