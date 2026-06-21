@@ -401,8 +401,6 @@ export function createFedexCarrier(): Carrier {
       if (page.url().includes("no-results-found")) {
         return { ok: false, error: "FedEx: no results found (tracking number invalid)" };
       }
-      const renderedFirst = await parseRenderedPage(page, num);
-      if (renderedFirst) return renderedFirst;
       const cached = trackResponses.get(num);
       if (cached) {
         return buildResult(cached.status, cached.json, num);
