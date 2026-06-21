@@ -214,6 +214,11 @@ async function navigateAndParse(page: Page, num: string): Promise<ScrapeResult |
     };
   }
 
+  if (targetUrl === LANDING_URL) {
+    await clearFedExOverlays(page);
+    await submitTrackingFromLanding(page, num);
+  }
+
   await page.waitForTimeout(Number(process.env.FEDEX_RENDER_SETTLE_MS ?? 12000));
 
   if (page.url().includes("system-error")) {
@@ -230,6 +235,44 @@ async function navigateAndParse(page: Page, num: string): Promise<ScrapeResult |
     return { ok: false, error: "FedEx: tracking number not found" };
   }
   return null;
+}
+
+async function submitTrackingFromLanding(page: Page, num: string): Promise<void> {
+  const visibleLandingInput = page.locator("input[id^='tracking_number_0_']").first();
+  const trackingInput = page.locator("#trackingModuleTrackingNum, input[name='trackingNumber']").first();
+  const trackButton = page
+    .locator("button:visible")
+    .filter({ hasText: /^TRACK$/i })
+    .first();
+
+  if (await visibleLandingInput.isVisible({ timeout: 5000 }).catch(() => false)) {
+    await visibleLandingInput.click({ timeout: 10000, force: true });
+    await page.keyboard.press(process.platform === "darwin" ? "Meta+A" : "Control+A");
+    await page.keyboard.type(num, { delay: 20 });
+  } else if (await trackingInput.isVisible({ timeout: 5000 }).catch(() => false)) {
+    await trackingInput.evaluate((input, trackingNumber) => {
+      const el = input as HTMLInputElement;
+      el.value = String(trackingNumber);
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+      el.dispatchEvent(new Event("change", { bubbles: true }));
+    }, num);
+  } else {
+    await page.waitForSelector("#trackingModuleTrackingNum, input[name='trackingNumber']", {
+      state: "attached",
+      timeout: 45000,
+    }).catch(() => {});
+    await page.evaluate((trackingNumber) => {
+      const input = document.querySelector<HTMLInputElement>(
+        "#trackingModuleTrackingNum, input[name='trackingNumber']",
+      );
+      if (!input) throw new Error("FedEx tracking input not found");
+      input.value = trackingNumber;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    }, num).catch(() => {});
+  }
+
+  await trackButton.click({ timeout: 10000, force: true }).catch(() => {});
 }
 
 async function clearFedExOverlays(page: Page): Promise<void> {
@@ -359,42 +402,8 @@ export function createFedexCarrier(): Carrier {
       await clearFedExOverlays(page);
       await page.waitForLoadState("domcontentloaded").catch(() => {});
 
-      const visibleLandingInput = page.locator("input[id^='tracking_number_0_']").first();
-      const trackingInput = page.locator("#trackingModuleTrackingNum, input[name='trackingNumber']").first();
-      const trackButton = page
-        .locator("button:visible")
-        .filter({ hasText: /^TRACK$/i })
-        .first();
-
       if (!deepLinked) {
-        if (await visibleLandingInput.isVisible({ timeout: 5000 }).catch(() => false)) {
-          await visibleLandingInput.click({ timeout: 10000, force: true });
-          await page.keyboard.press(process.platform === "darwin" ? "Meta+A" : "Control+A");
-          await page.keyboard.type(num, { delay: 20 });
-        } else if (await trackingInput.isVisible({ timeout: 5000 }).catch(() => false)) {
-          await trackingInput.evaluate((input, trackingNumber) => {
-            const el = input as HTMLInputElement;
-            el.value = String(trackingNumber);
-            el.dispatchEvent(new Event("input", { bubbles: true }));
-            el.dispatchEvent(new Event("change", { bubbles: true }));
-          }, num);
-        } else {
-          await page.waitForSelector("#trackingModuleTrackingNum, input[name='trackingNumber']", {
-            state: "attached",
-            timeout: 45000,
-          }).catch(() => {});
-          await page.evaluate((trackingNumber) => {
-            const input = document.querySelector<HTMLInputElement>(
-              "#trackingModuleTrackingNum, input[name='trackingNumber']",
-            );
-            if (!input) throw new Error("FedEx tracking input not found");
-            input.value = trackingNumber;
-            input.dispatchEvent(new Event("input", { bubbles: true }));
-            input.dispatchEvent(new Event("change", { bubbles: true }));
-          }, num).catch(() => {});
-        }
-
-        await trackButton.click({ timeout: 10000, force: true }).catch(() => {});
+        await submitTrackingFromLanding(page, num);
       }
 
       await page.waitForTimeout(Number(process.env.FEDEX_RENDER_SETTLE_MS ?? 12000));
