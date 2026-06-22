@@ -149,6 +149,8 @@ For continuous health checks, run `npm run carrier-canary -- fedex` under the sa
 
 Browser temp cleanup runs opportunistically before FedEx session creation and canary checks. Tune with `BROWSER_TMP_MAX_AGE_SECONDS`; it only removes Trackified browser profiles, stale X lock files, and Chrome scratch dirs under `/tmp`.
 
+Use `DISABLED_CARRIERS=fedex` to pause a problematic carrier without stopping the scheduler/worker for other carriers. The scheduler skips disabled carriers, and the worker releases already-queued disabled-carrier jobs without launching a browser.
+
 The authenticated operational endpoint shows the current Redis session state:
 
 ```bash

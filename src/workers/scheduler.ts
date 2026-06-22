@@ -1,6 +1,7 @@
 import { migrate, pool, query } from "../db.ts";
 import { createLogger } from "../logger.ts";
 import { enqueueScrape, enqueueWebhook } from "../queue.ts";
+import { carrierDisabled } from "../carrier-flags.ts";
 
 interface DueTracking {
   id: string;
@@ -25,6 +26,16 @@ async function tick(): Promise<void> {
 
   const leaseSeconds = Number(process.env.SCHEDULER_SCRAPE_LEASE_SECONDS ?? 300);
   for (const tracking of result.rows) {
+    if (carrierDisabled(tracking.carrier)) {
+      await query(
+        `update trackings
+         set next_scrape_at = now() + ($2::text || ' seconds')::interval,
+             updated_at = now()
+         where id = $1`,
+        [tracking.id, leaseSeconds],
+      );
+      continue;
+    }
     await enqueueScrape({
       tracking_id: tracking.id,
       carrier: tracking.carrier,

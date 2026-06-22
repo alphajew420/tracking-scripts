@@ -6,6 +6,7 @@ import { failedScrapeRetryAt, nextScrapeAt } from "../scrape-cadence.ts";
 import { enqueueWebhookEvent } from "../webhook-dispatch.ts";
 import { SessionPool } from "./session-pool.ts";
 import { activeProxySession, markProxySessionBad } from "../proxy-session-manager.ts";
+import { carrierDisabled } from "../carrier-flags.ts";
 
 function normalizeStatus(status: string | undefined): string {
   if (!status || status === "unknown") return "unknown";
@@ -65,6 +66,27 @@ async function run() {
         carrier,
         reason: job.data.reason,
       });
+      if (carrierDisabled(carrier)) {
+        logger.warn("scrape skipped; carrier disabled", {
+          job_id: job.id,
+          tracking_id: job.data.tracking_id,
+          carrier,
+        });
+        await query(
+          `update trackings
+           set exception = $2,
+               next_scrape_at = now() + ($3::text || ' seconds')::interval,
+               updated_at = now()
+           where id = $1`,
+          [
+            job.data.tracking_id,
+            `${carrier}: carrier temporarily disabled`,
+            Number(process.env.SCHEDULER_SCRAPE_LEASE_SECONDS ?? 300),
+          ],
+        );
+        await releaseScrapeEnqueueLock(job.data.tracking_id);
+        return;
+      }
       let result;
       try {
         result = await withTimeout(
