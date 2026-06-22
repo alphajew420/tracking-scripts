@@ -61,6 +61,15 @@ function responseSummary(response: Response) {
   };
 }
 
+async function responseBodySummary(response: Response): Promise<{ body?: string; error?: string }> {
+  try {
+    const body = await response.text();
+    return { body: body.slice(0, 4000) };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const trackingNumber = args.find((arg) => !arg.startsWith("--"));
@@ -125,6 +134,7 @@ async function main() {
     await page.waitForTimeout(Number(process.env.PROXY_EXTENSION_SETTLE_MS_FEDEX ?? process.env.PROXY_EXTENSION_SETTLE_MS ?? 3000));
   }
   const responses: ReturnType<typeof responseSummary>[] = [];
+  const responseBodies: Array<Promise<unknown>> = [];
   const failures: Array<{ method: string; url: string; error: string }> = [];
   const requests: Array<{
     method: string;
@@ -142,7 +152,19 @@ async function main() {
     });
   });
   page.on("response", (response) => {
-    if (interesting(response.url())) responses.push(responseSummary(response));
+    if (!interesting(response.url())) return;
+    responses.push(responseSummary(response));
+    if (response.url().includes("/track/v2/shipments") || response.url().includes("/trackingCal/track")) {
+      responseBodies.push(
+        responseBodySummary(response).then((summary) => {
+          responses.push({
+            status: response.status(),
+            url: `${response.url()}#body:${JSON.stringify(summary)}`,
+            type: response.headers()["content-type"] ?? "",
+          });
+        }),
+      );
+    }
   });
   page.on("requestfailed", (request) => {
     if (!interesting(request.url())) return;
@@ -209,6 +231,7 @@ async function main() {
       await page.goto(trackingUrl(trackingNumber), { waitUntil: "domcontentloaded", timeout: 90000 }).catch(() => {});
     }
     await page.waitForTimeout(Number(process.env.FEDEX_RENDER_SETTLE_MS ?? 12000));
+    await Promise.all(responseBodies).catch(() => {});
 
     const legacyFetch = await page.evaluate(async (trackingNumber) => {
       const payload = {
