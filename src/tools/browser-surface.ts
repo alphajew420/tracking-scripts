@@ -4,7 +4,7 @@ import { proxyForCarrier } from "../proxy.ts";
 import { createProxyExtension } from "../session.ts";
 
 function usage(): never {
-  console.error(`usage: browser:surface <carrier> <url> [--country=gb] [--session=id] [--profile-dir=path] [--cdp-endpoint=url]
+  console.error(`usage: browser:surface <carrier> <url> [--country=gb] [--session=id] [--profile-dir=path] [--cdp-endpoint=url] [--har-path=path] [--headless=true|false]
 
 Loads a carrier URL through a browser session and prints page/network diagnostics without
 leaking proxy credentials. Use --proxy-mode=native or --proxy-mode=extension to compare paths.`);
@@ -35,6 +35,12 @@ function proxyModeFromArgs(args: string[]): "native" | "extension" {
   return value === "extension" ? "extension" : "native";
 }
 
+function headlessFromArgs(args: string[], fallback: boolean): boolean {
+  const raw = args.find((arg) => arg.startsWith("--headless="));
+  if (!raw) return fallback;
+  return /^(1|true|yes)$/i.test(raw.slice("--headless=".length));
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const positional = args.filter((arg) => !arg.startsWith("--"));
@@ -48,8 +54,10 @@ async function main() {
   const cdpEndpoint = flagValue(args, "--cdp-endpoint", process.env.BROWSER_CDP_ENDPOINT ?? "");
   const proxyModeArg = flagValue(args, "--proxy-mode", process.env.PROXY_MODE ?? "native");
   const proxy = proxyModeArg === "direct" ? undefined : proxyForCarrier(carrier, { country, session });
+  const harPath = flagValue(args, "--har-path", "");
+  const headless = headlessFromArgs(args, proxyModeArg !== "direct" && !harPath);
   const sessionOptions = buildCarrierSessionOptions(carrier, {
-    headless: process.env.HEADLESS !== "false",
+    headless,
     proxy,
     proxyMode: proxyModeArg === "direct" ? "native" : proxyMode,
     cdpEndpoint: cdpEndpoint || undefined,
@@ -74,7 +82,9 @@ async function main() {
         headless: sessionOptions.headless ?? true,
         viewport: { width: 1280, height: 900 },
         locale: "en-US",
+        userAgent: sessionOptions.userAgent ?? undefined,
         ...(proxy && proxyModeArg === "native" ? { proxy } : {}),
+        ...(harPath ? { recordHar: { path: harPath, content: "embed" as const } } : {}),
         args: [
           "--disable-blink-features=AutomationControlled",
           ...(sessionOptions.launchArgs ?? []),
@@ -152,6 +162,7 @@ async function main() {
           proxy: proxy
             ? { server: proxy.server, hasUsername: Boolean(proxy.username), hasPassword: Boolean(proxy.password) }
             : null,
+          harPath: harPath || null,
           ip,
           navigation,
           pageState,
