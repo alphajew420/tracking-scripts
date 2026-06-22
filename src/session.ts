@@ -9,6 +9,7 @@ import type { APIRequestContext, Browser, BrowserContext, Page } from "patchrigh
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { ScrapeResult } from "./types.ts";
+import { localProxyForwarder } from "./proxy-forwarder.ts";
 
 const BLOCKED_TYPES = new Set(["image", "font", "media", "stylesheet"]);
 const BLOCKED_DOMAINS = [
@@ -105,7 +106,7 @@ export interface SessionOptions {
     password?: string;
   };
   /** Use a Chrome extension to set/authenticate the proxy instead of Playwright's proxy option. */
-  proxyMode?: "native" | "extension";
+  proxyMode?: "native" | "extension" | "forwarder";
   /** Attach to an already-running Chrome instance, e.g. http://127.0.0.1:9222. */
   cdpEndpoint?: string;
   /** Extra Chromium launch args for carrier-specific transport workarounds. */
@@ -196,9 +197,14 @@ export class TrackingSession {
       this.context = null;
     }
 
+    const browserProxy =
+      this.opts.proxy && this.opts.proxyMode === "forwarder"
+        ? await localProxyForwarder(this.opts.proxy)
+        : this.opts.proxy;
+
     const extensionProxy =
-      this.opts.proxy && this.opts.proxyMode === "extension"
-        ? createProxyExtension(this.opts.proxy, this.carrier.name)
+      browserProxy && this.opts.proxyMode === "extension"
+        ? createProxyExtension(browserProxy, this.carrier.name)
         : null;
 
     const contextOptions = {
@@ -212,7 +218,7 @@ export class TrackingSession {
           }),
       viewport: { width: 1280, height: 800 },
       locale: "en-US",
-      ...(this.opts.proxy && !extensionProxy ? { proxy: this.opts.proxy } : {}),
+      ...(browserProxy && !extensionProxy ? { proxy: browserProxy } : {}),
     };
 
     const extensionArgs = extensionProxy

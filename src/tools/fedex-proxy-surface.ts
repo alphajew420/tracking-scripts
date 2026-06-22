@@ -3,6 +3,7 @@ import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { proxyForCarrier } from "../proxy.ts";
 import { createProxyExtension } from "../session.ts";
+import { localProxyForwarder } from "../proxy-forwarder.ts";
 
 function flagValue(args: string[], name: string, fallback: string): string {
   const prefix = `${name}=`;
@@ -10,10 +11,11 @@ function flagValue(args: string[], name: string, fallback: string): string {
   return found ? found.slice(prefix.length) : fallback;
 }
 
-function proxyMode(args: string[]): "native" | "extension" | "hybrid" | "direct" {
+function proxyMode(args: string[]): "native" | "extension" | "hybrid" | "forwarder" | "direct" {
   const mode = flagValue(args, "--proxy-mode", process.env.PROXY_MODE ?? "native");
   if (mode === "extension") return "extension";
   if (mode === "hybrid") return "hybrid";
+  if (mode === "forwarder") return "forwarder";
   if (mode === "direct") return "direct";
   return "native";
 }
@@ -46,7 +48,7 @@ async function main() {
   const args = process.argv.slice(2);
   const trackingNumber = args.find((arg) => !arg.startsWith("--"));
   if (!trackingNumber) {
-    console.error("usage: fedex-proxy-surface <tracking-number> [--session=id] [--proxy-mode=native|extension]");
+    console.error("usage: fedex-proxy-surface <tracking-number> [--session=id] [--proxy-mode=native|extension|forwarder|direct]");
     process.exit(2);
   }
 
@@ -54,6 +56,7 @@ async function main() {
   const mode = proxyMode(args);
   const proxy = mode === "direct" ? undefined : proxyForCarrier("fedex", { country: "us", session });
   if (mode !== "direct" && !proxy) throw new Error("missing FedEx proxy env");
+  const browserProxy = mode === "forwarder" && proxy ? await localProxyForwarder(proxy) : proxy;
 
   const profileDir = resolve(flagValue(args, "--profile-dir", `.browser-profiles/fedex-proxy-surface-${session}`));
   mkdirSync(profileDir, { recursive: true });
@@ -79,7 +82,7 @@ async function main() {
         ? undefined
         : process.env.FEDEX_USER_AGENT ||
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36",
-    ...(mode === "native" && proxy ? { proxy } : {}),
+    ...((mode === "native" || mode === "forwarder") && browserProxy ? { proxy: browserProxy } : {}),
     args: [
       "--disable-blink-features=AutomationControlled",
       ...(proxyServerArg ? [proxyServerArg] : []),

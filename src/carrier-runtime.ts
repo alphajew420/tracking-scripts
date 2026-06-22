@@ -5,7 +5,7 @@ interface CarrierSessionOverrides {
   headless?: boolean;
   debug?: boolean;
   proxy?: BrowserProxy;
-  proxyMode?: "native" | "extension";
+  proxyMode?: "native" | "extension" | "forwarder";
   cdpEndpoint?: string;
   launchArgs?: string[];
   persistentProfileDir?: string;
@@ -89,7 +89,10 @@ export function buildCarrierSessionOptions(carrierId: string, overrides: Carrier
   const proxy = overrides.proxy;
   const proxyMode =
     overrides.proxyMode ??
-    (process.env[`PROXY_${carrierId.toUpperCase().replaceAll("-", "_")}_MODE`] === "extension" ||
+    (process.env[`PROXY_${carrierId.toUpperCase().replaceAll("-", "_")}_MODE`] === "forwarder" ||
+    process.env.PROXY_MODE === "forwarder"
+      ? "forwarder"
+      : process.env[`PROXY_${carrierId.toUpperCase().replaceAll("-", "_")}_MODE`] === "extension" ||
     process.env.PROXY_MODE === "extension" ||
     (proxy && prefersExtensionProxy(carrierId))
       ? "extension"
