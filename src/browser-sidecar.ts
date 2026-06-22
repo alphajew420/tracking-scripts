@@ -4,6 +4,7 @@ import { existsSync, rmSync } from "node:fs";
 import { spawn, type ChildProcess } from "node:child_process";
 import { homedir, platform } from "node:os";
 import { join } from "node:path";
+import { createLogger } from "./logger.ts";
 import { proxyForCarrier } from "./proxy.ts";
 import { createProxyExtension } from "./session.ts";
 import { defaultHeadlessForCarrier } from "./carrier-runtime.ts";
@@ -14,9 +15,11 @@ interface SidecarState {
   child?: ChildProcess;
   profile?: string;
   explicitEndpoint?: boolean;
+  proxyFingerprint: string;
 }
 
 const launched = new Map<string, Promise<SidecarState>>();
+const logger = createLogger("browser-sidecar");
 
 function chromePath(): string {
   const explicit = process.env.CHROME_PATH;
@@ -97,8 +100,8 @@ function proxyFingerprint(proxy?: BrowserProxy): string {
     .slice(0, 16);
 }
 
-function cacheKeyFor(carrier: string, proxy?: BrowserProxy): string {
-  return `${carrier}:${proxyFingerprint(proxy)}`;
+function cacheKeyFor(carrier: string): string {
+  return carrier;
 }
 
 function safeRemoveProfile(profile: string | undefined): void {
@@ -113,11 +116,12 @@ function safeRemoveProfile(profile: string | undefined): void {
 }
 
 async function launchSidecar(carrier: string, proxy?: BrowserProxy): Promise<SidecarState> {
-  if (!shouldAutoLaunch(carrier)) return { endpoint: undefined };
+  const launchFingerprint = proxyFingerprint(proxy);
+  if (!shouldAutoLaunch(carrier)) return { endpoint: undefined, proxyFingerprint: launchFingerprint };
 
   const explicitEndpoint =
     process.env[carrierEnvName("BROWSER_CDP_ENDPOINT", carrier)] ?? process.env.BROWSER_CDP_ENDPOINT;
-  if (explicitEndpoint) return { endpoint: explicitEndpoint, explicitEndpoint: true };
+  if (explicitEndpoint) return { endpoint: explicitEndpoint, explicitEndpoint: true, proxyFingerprint: launchFingerprint };
 
   const port = Number(process.env[carrierEnvName("BROWSER_CDP_PORT", carrier)] ?? process.env.BROWSER_CDP_PORT ?? 0) || await pickFreePort();
   const explicitProfile =
@@ -171,13 +175,38 @@ async function launchSidecar(carrier: string, proxy?: BrowserProxy): Promise<Sid
 
   const endpoint = `http://127.0.0.1:${port}`;
   await waitForEndpoint(endpoint);
-  return { endpoint, child, profile };
+  logger.info("sidecar launched", {
+    carrier,
+    proxy_fingerprint: launchFingerprint,
+    headless,
+    use_xvfb: useXvfb,
+    endpoint,
+  });
+  return { endpoint, child, profile, proxyFingerprint: launchFingerprint };
 }
 
 export async function getBrowserSidecarEndpoint(carrier: string, proxy?: BrowserProxy): Promise<string | undefined> {
-  const cacheKey = cacheKeyFor(carrier, proxy);
+  const cacheKey = cacheKeyFor(carrier);
   const existing = launched.get(cacheKey);
-  if (existing) return (await existing).endpoint;
+  const requestedFingerprint = proxyFingerprint(proxy);
+  if (existing) {
+    const state = await existing;
+    if (state.proxyFingerprint !== requestedFingerprint) {
+      logger.info("sidecar reused across proxy churn", {
+        carrier,
+        cached_proxy_fingerprint: state.proxyFingerprint,
+        requested_proxy_fingerprint: requestedFingerprint,
+        endpoint: state.endpoint ?? null,
+      });
+    } else {
+      logger.debug("sidecar reused", {
+        carrier,
+        proxy_fingerprint: requestedFingerprint,
+        endpoint: state.endpoint ?? null,
+      });
+    }
+    return state.endpoint;
+  }
 
   const promise = launchSidecar(carrier, proxy).catch((error) => {
     launched.delete(cacheKey);
@@ -188,7 +217,7 @@ export async function getBrowserSidecarEndpoint(carrier: string, proxy?: Browser
 }
 
 export async function invalidateBrowserSidecar(carrier: string, proxy?: BrowserProxy): Promise<void> {
-  const cacheKey = cacheKeyFor(carrier, proxy);
+  const cacheKey = cacheKeyFor(carrier);
   const existing = launched.get(cacheKey);
   if (!existing) return;
   launched.delete(cacheKey);
