@@ -10,9 +10,10 @@ function flagValue(args: string[], name: string, fallback: string): string {
   return found ? found.slice(prefix.length) : fallback;
 }
 
-function proxyMode(args: string[]): "native" | "extension" | "direct" {
+function proxyMode(args: string[]): "native" | "extension" | "hybrid" | "direct" {
   const mode = flagValue(args, "--proxy-mode", process.env.PROXY_MODE ?? "native");
   if (mode === "extension") return "extension";
+  if (mode === "hybrid") return "hybrid";
   if (mode === "direct") return "direct";
   return "native";
 }
@@ -56,7 +57,14 @@ async function main() {
 
   const profileDir = resolve(flagValue(args, "--profile-dir", `.browser-profiles/fedex-proxy-surface-${session}`));
   mkdirSync(profileDir, { recursive: true });
-  const extension = mode === "extension" && proxy ? createProxyExtension(proxy, `fedex-surface-${session}`) : null;
+  const extension =
+    (mode === "extension" || mode === "hybrid") && proxy
+      ? createProxyExtension(proxy, `fedex-surface-${session}`)
+      : null;
+  const proxyServerArg =
+    mode === "hybrid" && proxy
+      ? `--proxy-server=${/^[a-z][a-z\d+.-]*:\/\//i.test(proxy.server) ? proxy.server : `http://${proxy.server}`}`
+      : null;
   const engine = process.env.FEDEX_BROWSER_ENGINE ?? "chromium";
   const browserType = engine === "firefox" ? firefox : engine === "webkit" ? webkit : chromium;
   const context = await browserType.launchPersistentContext(profileDir, {
@@ -74,6 +82,7 @@ async function main() {
     ...(mode === "native" && proxy ? { proxy } : {}),
     args: [
       "--disable-blink-features=AutomationControlled",
+      ...(proxyServerArg ? [proxyServerArg] : []),
       ...(extension ? [`--disable-extensions-except=${extension}`, `--load-extension=${extension}`] : []),
     ],
   });
