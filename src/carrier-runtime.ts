@@ -101,6 +101,17 @@ function defaultPersistentProfileDir(carrierId: string): string | undefined {
   return undefined;
 }
 
+export function defaultHeadlessForCarrier(carrierId: string): boolean {
+  if (carrierId === "fedex") {
+    const configured = process.env.FEDEX_HEADLESS ?? process.env.HEADLESS;
+    if (configured != null && configured !== "") return /^(1|true|yes)$/i.test(configured);
+    return false;
+  }
+  const configured = process.env[carrierEnvName("HEADLESS", carrierId)] ?? process.env.HEADLESS;
+  if (configured == null || configured === "") return true;
+  return /^(1|true|yes)$/i.test(configured);
+}
+
 export function buildCarrierSessionOptions(carrierId: string, overrides: CarrierSessionOverrides = {}): SessionOptions {
   const proxy = overrides.proxy;
   const carrierProxyMode = process.env[`PROXY_${carrierId.toUpperCase().replaceAll("-", "_")}_MODE`];
@@ -116,7 +127,7 @@ export function buildCarrierSessionOptions(carrierId: string, overrides: Carrier
           : "native");
 
   return {
-    headless: overrides.headless,
+    headless: overrides.headless ?? defaultHeadlessForCarrier(carrierId),
     debug: overrides.debug,
     proxy,
     proxyMode,

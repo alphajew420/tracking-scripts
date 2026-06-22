@@ -6,6 +6,7 @@ import { homedir, platform } from "node:os";
 import { join } from "node:path";
 import { proxyForCarrier } from "./proxy.ts";
 import { createProxyExtension } from "./session.ts";
+import { defaultHeadlessForCarrier } from "./carrier-runtime.ts";
 import type { BrowserProxy } from "./proxy.ts";
 
 interface SidecarState {
@@ -129,11 +130,10 @@ async function launchSidecar(carrier: string, proxy?: BrowserProxy): Promise<Sid
     /^(1|true|yes)$/i.test(
       process.env[carrierEnvName("BROWSER_CDP_XVFB", carrier)] ?? process.env.BROWSER_CDP_XVFB ?? "true",
     );
-  const headless =
-    !useXvfb &&
-    /^(1|true|yes)$/i.test(
-      process.env[carrierEnvName("BROWSER_CDP_HEADLESS", carrier)] ?? process.env.BROWSER_CDP_HEADLESS ?? "true",
-    );
+  const headlessOverride = process.env[carrierEnvName("BROWSER_CDP_HEADLESS", carrier)] ?? process.env.BROWSER_CDP_HEADLESS;
+  const headless = headlessOverride != null && headlessOverride !== ""
+    ? /^(1|true|yes)$/i.test(headlessOverride)
+    : defaultHeadlessForCarrier(carrier);
   const effectiveProxy =
     proxy ??
     (carrier === "fedex" && /^(1|true|yes)$/i.test(process.env.FEDEX_USE_PROXY ?? "")

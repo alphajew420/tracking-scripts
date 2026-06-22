@@ -10,6 +10,7 @@ import type { BrowserProxy } from "../proxy.ts";
 import { proxyIsQuarantined, quarantineProxy, recordProxyHealth } from "../proxy-health.ts";
 import { markProxySessionBad, proxySessionCandidates } from "../proxy-session-manager.ts";
 import { cleanupBrowserTempArtifacts } from "../browser-temp-cleanup.ts";
+import { defaultHeadlessForCarrier } from "../carrier-runtime.ts";
 
 interface PooledSession {
   session: TrackingSession;
@@ -27,14 +28,6 @@ function booleanEnv(name: string, fallback: boolean): boolean {
   const value = process.env[name];
   if (value == null || value === "") return fallback;
   return /^(1|true|yes)$/i.test(value);
-}
-
-function carrierBooleanEnv(prefix: string, carrierId: string, fallback: boolean): boolean {
-  const carrierKey = `${prefix}_${carrierId.toUpperCase().replaceAll("-", "_")}`;
-  if (process.env[carrierKey] != null && process.env[carrierKey] !== "") {
-    return booleanEnv(carrierKey, fallback);
-  }
-  return booleanEnv(prefix, fallback);
 }
 
 function maxUsesForCarrier(carrierId: string): number {
@@ -148,7 +141,7 @@ export class SessionPool {
         headless:
           carrierId === "purolator"
             ? booleanEnv("PUROLATOR_HEADLESS", false)
-            : carrierBooleanEnv("HEADLESS", carrierId, true),
+            : defaultHeadlessForCarrier(carrierId),
         debug: process.env.DEBUG_SCRAPES === "1",
         proxy,
         cdpEndpoint: browserCdpEndpoint,

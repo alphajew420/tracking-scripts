@@ -2,6 +2,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { randomUUID, timingSafeEqual } from "node:crypto";
 import { fedexCarrier } from "../carriers/fedex.ts";
 import { buildCarrierSessionOptions } from "../carrier-runtime.ts";
+import { defaultHeadlessForCarrier } from "../carrier-runtime.ts";
 import { proxyForCarrier } from "../proxy.ts";
 import { TrackingSession } from "../session.ts";
 
@@ -32,7 +33,7 @@ const server = createServer(async (req, res) => {
     const session = new TrackingSession(
       fedexCarrier,
       buildCarrierSessionOptions("fedex", {
-        headless: process.env.HEADLESS !== "false",
+        headless: defaultHeadlessForCarrier("fedex"),
         debug: process.env.DEBUG_SCRAPES === "1",
         proxy,
         proxyMode: (process.env.PROXY_FEDEX_MODE as "native" | "extension" | "forwarder" | undefined) ?? "extension",
