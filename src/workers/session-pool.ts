@@ -12,6 +12,7 @@ interface PooledSession {
   createdAt: number;
   uses: number;
   proxy?: BrowserProxy;
+  proxySession?: string;
 }
 
 const maxAgeMs = Number(process.env.SESSION_MAX_AGE_MS ?? 60 * 60_000);
@@ -49,15 +50,41 @@ function numericCarrierEnv(prefix: string, carrierId: string, fallback: number):
   return fallback;
 }
 
-function proxySessionForCarrier(carrierId: string): string {
+function listEnv(name: string): string[] {
+  const raw = process.env[name];
+  if (!raw) return [];
+  return raw
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function carrierEnvName(prefix: string, carrierId: string): string {
+  return `${prefix}_${carrierId.toUpperCase().replaceAll("-", "_")}`;
+}
+
+function dynamicProxySessionForCarrier(carrierId: string): string {
+  generatedProxySessionCounter += 1;
+  return `${carrierId}-${process.pid}-${Date.now().toString(36)}-${generatedProxySessionCounter}`;
+}
+
+function proxySessionsForCarrier(carrierId: string, attempts: number): string[] {
   const carrierKey = carrierId.toUpperCase().replaceAll("-", "_");
   const fixed = process.env[`PROXY_SESSION_${carrierKey}`] ?? process.env.PROXY_SESSION;
-  if (fixed) return fixed;
-  if (carrierId === "fedex") {
-    generatedProxySessionCounter += 1;
-    return `${carrierId}-${process.pid}-${Date.now().toString(36)}-${generatedProxySessionCounter}`;
+  const fallbacks = [
+    ...listEnv(`PROXY_SESSION_FALLBACKS_${carrierKey}`),
+    ...listEnv("PROXY_SESSION_FALLBACKS"),
+  ];
+  const sessions = [...new Set([fixed, ...fallbacks].filter((value): value is string => Boolean(value)))];
+
+  const allowDynamic =
+    carrierId !== "fedex" ||
+    booleanEnv("FEDEX_ALLOW_DYNAMIC_PROXY_SESSIONS", sessions.length === 0);
+  while (allowDynamic && sessions.length < attempts) {
+    sessions.push(dynamicProxySessionForCarrier(carrierId));
   }
-  return carrierId;
+  if (sessions.length > 0) return sessions;
+  return [carrierId];
 }
 
 export class SessionPool {
@@ -81,16 +108,21 @@ export class SessionPool {
     if (!factory) throw new Error(`unsupported carrier: ${carrierId}`);
     const useProxy = carrierId !== "fedex" || booleanEnv("FEDEX_USE_PROXY", false);
     let proxy: BrowserProxy | undefined;
+    let proxySession: string | undefined;
     if (useProxy) {
       const maxProxyPickAttempts = numericCarrierEnv("PROXY_PICK_ATTEMPTS", carrierId, 5);
-      for (let attempt = 0; attempt < maxProxyPickAttempts; attempt += 1) {
-        const candidate = proxyForCarrier(carrierId, { session: proxySessionForCarrier(carrierId) });
+      const sessions = proxySessionsForCarrier(carrierId, maxProxyPickAttempts);
+      for (const session of sessions.slice(0, maxProxyPickAttempts)) {
+        const candidate = proxyForCarrier(carrierId, { session });
         if (!candidate || !(await proxyIsQuarantined(carrierId, candidate))) {
           proxy = candidate;
+          proxySession = session;
           break;
         }
       }
-      proxy ??= proxyForCarrier(carrierId, { session: proxySessionForCarrier(carrierId) });
+      const fallbackSession = sessions[0] ?? dynamicProxySessionForCarrier(carrierId);
+      proxy ??= proxyForCarrier(carrierId, { session: fallbackSession });
+      proxySession ??= fallbackSession;
     }
     const browserCdpEndpoint =
       carrierId === "fedex" ? await getBrowserSidecarEndpoint(carrierId, proxy) : undefined;
@@ -114,7 +146,7 @@ export class SessionPool {
                 : undefined,
       }),
     );
-    this.sessions.set(carrierId, { session, createdAt: Date.now(), uses: 1, proxy });
+    this.sessions.set(carrierId, { session, createdAt: Date.now(), uses: 1, proxy, proxySession });
     return session;
   }
 

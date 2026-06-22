@@ -86,20 +86,53 @@ PROXY_FEDEX=http://fedex-proxy:port docker compose up -d
 
 Warm navigation and all `page.evaluate(fetch)` queries stay inside the same browser context and proxy.
 
-FedEx should run through the worker sidecar with Chrome extension proxy mode. This matches browser proxy extensions more closely than Playwright's native proxy option and lets one warmed browser process handle many queued FedEx trackings:
+FedEx is sensitive to browser surface and proxy exit quality. The working VPS profile is:
+
+- Worker process runs under explicit Xvfb, not `xvfb-run` as the long-lived PID.
+- FedEx runs in system Chrome with `HEADLESS_FEDEX=false`.
+- Proxy mode is `forwarder`; extension mode did not apply reliably in Linux/headless containers.
+- Browser UA is native Chrome; do not force the old macOS spoof on the VPS.
+- Tracking surface is the direct FedEx tracking URL, not the landing-page submit flow.
+- CDP autolaunch is disabled for FedEx; the worker owns the browser session.
+- Use a known-good sticky proxy session first, with optional fallback sessions for controlled rotation.
 
 ```bash
 PROXY_FEDEX=http://fedex-proxy:port
 PROXY_FEDEX_USERNAME=<username>
 PROXY_FEDEX_PASSWORD=<password>
-PROXY_FEDEX_MODE=extension
-BROWSER_CHANNEL_FEDEX=bundled
-HEADLESS=false
+PROXY_FEDEX_MODE=forwarder
+PROXY_SESSION_FEDEX=<known-good-session>
+PROXY_SESSION_FALLBACKS_FEDEX=<fallback-session-1>,<fallback-session-2>
+FEDEX_ALLOW_DYNAMIC_PROXY_SESSIONS=false
+FEDEX_USE_PROXY=true
+FEDEX_TRACK_SURFACE=direct
+BROWSER_CHANNEL_FEDEX=chrome
+BROWSER_USER_AGENT_FEDEX=native
+BROWSER_EXTRA_ARGS_FEDEX="--no-sandbox --disable-dev-shm-usage"
+BROWSER_CDP_AUTOLAUNCH_FEDEX=false
+FEDEX_FINGERPRINT_PROFILE=none
+HEADLESS=true
+HEADLESS_FEDEX=false
 SESSION_MAX_AGE_MS=3600000
 SESSION_MAX_USES=250
+FEDEX_PROFILE_DIR=/tmp/trackified-fedex-profile-worker
 ```
 
-The Compose worker runs under `xvfb-run` so `HEADLESS=false` works on a VPS. Do not run FedEx lookups in the API process; `POST /v1/trackings`, `/v1/trackings/bulk`, and `/v1/trackings/{id}/retrack` enqueue jobs, and the worker keeps the browser session hot.
+The Compose worker command starts Xvfb and then execs the Node worker:
+
+```yaml
+command: ["sh", "-lc", "Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp & export DISPLAY=:99; exec npm run worker"]
+```
+
+Do not run FedEx lookups in the API process. `POST /v1/trackings`, `/v1/trackings/bulk`, and `/v1/trackings/{id}/retrack` enqueue jobs, and the worker keeps the browser session hot.
+
+Run the FedEx canary after deploys or proxy changes:
+
+```bash
+docker compose -f docker-compose.prod.yml exec -T worker npm run fedex:canary -- 382150811542
+```
+
+Known-good proof from the VPS on June 22, 2026: the live API queued `382150811542`, the worker scraped FedEx successfully, and `GET /v1/trackings/:id` returned `in_transit` with 5 events. The first event was `Arrived at FedEx location`, `AURORA, CO`, `2026-06-21 01:27:00`.
 
 ### CDP Browser Sidecar
 
