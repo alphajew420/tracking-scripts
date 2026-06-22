@@ -24,6 +24,14 @@ function booleanEnv(name: string, fallback: boolean): boolean {
   return /^(1|true|yes)$/i.test(value);
 }
 
+function carrierBooleanEnv(prefix: string, carrierId: string, fallback: boolean): boolean {
+  const carrierKey = `${prefix}_${carrierId.toUpperCase().replaceAll("-", "_")}`;
+  if (process.env[carrierKey] != null && process.env[carrierKey] !== "") {
+    return booleanEnv(carrierKey, fallback);
+  }
+  return booleanEnv(prefix, fallback);
+}
+
 function maxUsesForCarrier(carrierId: string): number {
   const envName = `SESSION_MAX_USES_${carrierId.toUpperCase().replaceAll("-", "_")}`;
   const override = process.env[envName];
@@ -92,7 +100,7 @@ export class SessionPool {
         headless:
           carrierId === "purolator"
             ? booleanEnv("PUROLATOR_HEADLESS", false)
-            : process.env.HEADLESS !== "false",
+            : carrierBooleanEnv("HEADLESS", carrierId, true),
         debug: process.env.DEBUG_SCRAPES === "1",
         proxy,
         cdpEndpoint: browserCdpEndpoint,

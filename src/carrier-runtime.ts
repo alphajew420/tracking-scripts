@@ -27,6 +27,10 @@ function carrierEnvName(prefix: string, carrier: string): string {
   return `${prefix}_${carrier.toUpperCase().replaceAll("-", "_")}`;
 }
 
+function carrierEnvValue(prefix: string, carrier: string): string | undefined {
+  return process.env[carrierEnvName(prefix, carrier)] ?? process.env[prefix];
+}
+
 function browserChannel(carrierId: string): SessionOptions["channel"] {
   const key = carrierEnvName("BROWSER_CHANNEL", carrierId);
   const value = process.env[key] ?? process.env.BROWSER_CHANNEL;
@@ -55,8 +59,20 @@ function cdpEndpointForCarrier(carrierId: string): string | undefined {
 }
 
 function launchArgsForCarrier(carrierId: string): string[] {
-  const raw = process.env[carrierEnvName("BROWSER_EXTRA_ARGS", carrierId)] ?? process.env.BROWSER_EXTRA_ARGS;
+  const raw = carrierEnvValue("BROWSER_EXTRA_ARGS", carrierId);
   return raw ? raw.split(/\s+/).filter(Boolean) : [];
+}
+
+function userAgentForCarrier(carrierId: string): SessionOptions["userAgent"] | undefined {
+  const configured = carrierEnvValue("BROWSER_USER_AGENT", carrierId);
+  if (configured === "native" || configured === "none") return null;
+  if (configured != null && configured !== "") return configured;
+
+  if (carrierId === "fedex") {
+    return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36";
+  }
+  if (carrierId === "dhl" || carrierId === "purolator") return null;
+  return undefined;
 }
 
 function defaultDisableBlocking(carrierId: string): boolean {
@@ -109,11 +125,7 @@ export function buildCarrierSessionOptions(carrierId: string, overrides: Carrier
     userAgent:
       overrides.userAgent !== undefined
         ? overrides.userAgent
-        : carrierId === "fedex"
-          ? "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
-          : carrierId === "dhl" || carrierId === "purolator"
-            ? null
-          : undefined,
+        : userAgentForCarrier(carrierId),
     fingerprintProfile:
       overrides.fingerprintProfile ??
       (carrierId === "fedex" && process.env.FEDEX_FINGERPRINT_PROFILE !== "none"
