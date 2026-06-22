@@ -15,6 +15,13 @@ function carrierEnv(name: string, carrier: string): string | undefined {
   return process.env[`${name}_${carrier.toUpperCase().replaceAll("-", "_")}`] ?? process.env[name];
 }
 
+function numberCarrierEnv(name: string, carrier: string, fallback: number): number {
+  const value = carrierEnv(name, carrier);
+  if (value == null || value === "") return fallback;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
 function canaryNumber(carrier: string): string | null {
   const value = carrierEnv("CANARY_TRACKING_NUMBER", carrier) ?? carrierEnv("FEDEX_CANARY_TRACKING_NUMBER", carrier);
   return value && value.trim() ? value.trim() : null;
@@ -42,53 +49,70 @@ async function runCanary(carrier: string, poolSessions: SessionPool): Promise<bo
     return false;
   }
 
-  const timeoutMs = Number(carrierEnv("CANARY_TIMEOUT_MS", carrier) ?? process.env.FEDEX_CANARY_TIMEOUT_MS ?? 240_000);
+  const attempts = numberCarrierEnv("CANARY_ATTEMPTS", carrier, 3);
+  const timeoutMs = numberCarrierEnv("CANARY_ATTEMPT_TIMEOUT_MS", carrier, numberCarrierEnv("CANARY_TIMEOUT_MS", carrier, 240_000));
   const startedAt = Date.now();
-  const sessionBefore = carrier === "fedex" ? await activeProxySession(carrier) : null;
   const cleanup = cleanupBrowserTempArtifacts();
 
   logger.info("started", {
     tracking_number: number,
+    attempts,
     timeout_ms: timeoutMs,
-    proxy_session: sessionBefore,
     cleanup,
   });
 
-  try {
-    const result = await withTimeout(
-      poolSessions.track(carrier, number),
-      timeoutMs,
-      `${carrier}: canary timed out`,
-    );
-    const elapsedMs = Date.now() - startedAt;
-    if (result.ok && result.track?.events.length) {
-      logger.info("passed", {
-        elapsed_ms: elapsedMs,
-        tracking_number: number,
-        event_count: result.track.events.length,
-        proxy_session: sessionBefore,
-      });
-      return true;
-    }
+  let lastReason = "canary failed";
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    const attemptStartedAt = Date.now();
+    const proxySession = carrier === "fedex" ? await activeProxySession(carrier) : null;
+    logger.info("attempt started", { attempt, attempts, proxy_session: proxySession });
 
-    const reason = result.ok ? "canary returned no normalized events" : result.error ?? "canary failed";
-    logger.warn("failed", { elapsed_ms: elapsedMs, reason, proxy_session: sessionBefore });
-    if (carrier === "fedex") {
-      const next = await markProxySessionBad({ carrier, session: sessionBefore, reason });
-      await sendDiscordWebhook(`Trackified ${carrier} canary failed: ${reason}. Rotated session ${sessionBefore ?? "unknown"} -> ${next ?? "unknown"}.`);
+    try {
+      const result = await withTimeout(
+        poolSessions.track(carrier, number),
+        timeoutMs,
+        `${carrier}: canary attempt timed out`,
+      );
+      const attemptElapsedMs = Date.now() - attemptStartedAt;
+      if (result.ok && result.track?.events.length) {
+        logger.info("passed", {
+          attempt,
+          elapsed_ms: Date.now() - startedAt,
+          attempt_elapsed_ms: attemptElapsedMs,
+          tracking_number: number,
+          event_count: result.track.events.length,
+          proxy_session: proxySession,
+        });
+        return true;
+      }
+
+      lastReason = result.ok ? "canary returned no normalized events" : result.error ?? "canary failed";
+      logger.warn("attempt failed", { attempt, attempts, attempt_elapsed_ms: attemptElapsedMs, reason: lastReason, proxy_session: proxySession });
+      if (carrier === "fedex") {
+        await markProxySessionBad({ carrier, session: proxySession, reason: lastReason });
+      }
+      await poolSessions.invalidate(carrier);
+    } catch (error) {
+      lastReason = error instanceof Error ? error.message : String(error);
+      logger.warn("attempt failed", {
+        attempt,
+        attempts,
+        attempt_elapsed_ms: Date.now() - attemptStartedAt,
+        reason: lastReason,
+        proxy_session: proxySession,
+      });
+      if (carrier === "fedex") {
+        await markProxySessionBad({ carrier, session: proxySession, reason: lastReason });
+      }
+      await poolSessions.invalidate(carrier);
     }
-    await poolSessions.invalidate(carrier);
-    return false;
-  } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
-    logger.warn("failed", { elapsed_ms: Date.now() - startedAt, reason, proxy_session: sessionBefore });
-    if (carrier === "fedex") {
-      const next = await markProxySessionBad({ carrier, session: sessionBefore, reason });
-      await sendDiscordWebhook(`Trackified ${carrier} canary failed: ${reason}. Rotated session ${sessionBefore ?? "unknown"} -> ${next ?? "unknown"}.`);
-    }
-    await poolSessions.invalidate(carrier);
-    return false;
   }
+
+  logger.warn("failed", { elapsed_ms: Date.now() - startedAt, reason: lastReason, attempts });
+  if (carrier === "fedex") {
+    await sendDiscordWebhook(`Trackified ${carrier} canary failed after ${attempts} attempts: ${lastReason}.`);
+  }
+  return false;
 }
 
 async function run(): Promise<void> {
