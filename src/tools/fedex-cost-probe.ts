@@ -57,7 +57,7 @@ function costPer1k(bytesEach: number): string {
 
 function proxyExtension(): string | null {
   const server = process.env.PROXY_FEDEX;
-  if (!server || process.env.PROXY_FEDEX_MODE !== "extension") return null;
+  if (!server) return null;
 
   const parsed = new URL(server);
   const dir = join(process.cwd(), ".browser-profiles", "proxy-extensions", "fedex-cost-probe");

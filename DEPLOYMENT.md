@@ -90,7 +90,7 @@ FedEx is sensitive to browser surface and proxy exit quality. The working VPS pr
 
 - Worker process runs under explicit Xvfb, not `xvfb-run` as the long-lived PID.
 - FedEx runs in system Chrome with `HEADLESS_FEDEX=false`.
-- Proxy mode is `native`; the local forwarder path caused FedEx `/track/v2/shipments` requests to fail on the VPS.
+- Proxy mode is `extension`; the FedEx worker and canary both use the browser extension proxy path.
 - Browser UA is native Chrome; do not force the old macOS spoof on the VPS.
 - Tracking surface is the landing page first; direct deep links land on `system-error` more often on the VPS.
 - CDP autolaunch is disabled for FedEx; the worker owns the browser session.
@@ -102,7 +102,6 @@ FedEx is sensitive to browser surface and proxy exit quality. The working VPS pr
 PROXY_FEDEX=http://fedex-proxy:port
 PROXY_FEDEX_USERNAME=<username>
 PROXY_FEDEX_PASSWORD=<password>
-PROXY_FEDEX_MODE=native
 PROXY_SESSION_FEDEX=<known-good-session>
 PROXY_SESSION_FALLBACKS_FEDEX=<fallback-session-1>,<fallback-session-2>
 PROXY_SESSION_PREFIX_FEDEX=fedexprod

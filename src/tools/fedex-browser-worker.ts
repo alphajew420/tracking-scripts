@@ -36,7 +36,6 @@ const server = createServer(async (req, res) => {
         headless: defaultHeadlessForCarrier("fedex"),
         debug: process.env.DEBUG_SCRAPES === "1",
         proxy,
-        proxyMode: (process.env.PROXY_FEDEX_MODE as "native" | "extension" | "forwarder" | undefined) ?? "extension",
         persistentProfileDir: `${process.env.FEDEX_BROWSER_WORKER_PROFILE_DIR ?? ".browser-profiles/fedex-worker"}/${sessionId}`,
       }),
     );

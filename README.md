@@ -13,19 +13,7 @@ npm install
 
 System Chrome (`channel: "chrome"`) is required for UPS scraper (reCAPTCHA flags bundled Chromium) — install Chrome separately or set the `--chrome` flag.
 
-## Working path
-
-FedEx is the current reference carrier for the warm-reuse path:
-
-```bash
-npm run probe:bandwidth-fedex -- 382150811542 521355676935
-npm run fedex:canary -- 382150811542
-```
-
-The verified production flow is:
-- warm one carrier session in a long-lived worker
-- reuse the same warmed browser sidecar for subsequent FedEx lookups
-- re-warm only when the carrier session expires or gets invalidated
+Operational notes and validation commands live in [`INTERNAL.md`](/Users/shinbetsolutions/ForgeDeck/trackified/tracking-scripts/INTERNAL.md).
 
 ## API testing
 
@@ -92,7 +80,7 @@ The carrier scraper uses `page.evaluate(fetch)` because that path is what Akamai
 
 ### FedEx runtime
 
-FedEx uses a carrier-scoped browser sidecar plus a warm `TrackingSession`. The worker reuses that session across lookups while it remains valid, and the FedEx proxy mode is pinned to the browser extension path when a proxy is present.
+FedEx uses a carrier-scoped browser sidecar plus a warm `TrackingSession`. The worker reuses that session across lookups while it remains valid.
 
 ## Probes
 

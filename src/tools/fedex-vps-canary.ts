@@ -43,7 +43,6 @@ try {
         event_count: result.track!.events.length,
         first_event: result.track!.events[0] ?? null,
         runtime: {
-          proxy_mode: process.env.PROXY_FEDEX_MODE ?? process.env.PROXY_MODE ?? null,
           track_surface: process.env.FEDEX_TRACK_SURFACE ?? null,
           browser_channel: process.env.BROWSER_CHANNEL_FEDEX ?? process.env.BROWSER_CHANNEL ?? null,
           headless_fedex: process.env.HEADLESS_FEDEX ?? null,

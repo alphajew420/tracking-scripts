@@ -54,7 +54,6 @@ console.log(JSON.stringify({
     cdpAutoLaunch: process.env.BROWSER_CDP_AUTOLAUNCH_FEDEX ?? process.env.BROWSER_CDP_AUTOLAUNCH ?? null,
     profile: process.env.CDP_PROFILE_DIR_FEDEX ?? process.env.CDP_PROFILE_DIR ?? null,
     sessionMaxUsesFedex: process.env.SESSION_MAX_USES_FEDEX ?? null,
-    proxyMode: process.env.PROXY_FEDEX_MODE ?? process.env.PROXY_MODE ?? null,
     hasProxyDefault: Boolean(process.env.PROXY_DEFAULT),
     hasProxyFedex: Boolean(process.env.PROXY_FEDEX),
   },
