@@ -13,6 +13,20 @@ npm install
 
 System Chrome (`channel: "chrome"`) is required for UPS scraper (reCAPTCHA flags bundled Chromium) — install Chrome separately or set the `--chrome` flag.
 
+## Working path
+
+FedEx is the current reference carrier for the warm-reuse path:
+
+```bash
+npm run probe:bandwidth-fedex -- 382150811542 521355676935
+npm run fedex:canary -- 382150811542
+```
+
+The verified production flow is:
+- warm one carrier session in a long-lived worker
+- reuse the same warmed browser sidecar for subsequent FedEx lookups
+- re-warm only when the carrier session expires or gets invalidated
+
 ## API testing
 
 ```bash
@@ -45,7 +59,7 @@ A single warm `TrackingSession` can run many queries. Re-warming only happens on
 src/
   types.ts         Status, Event, Track, ScrapeResult
   session.ts       TrackingSession + ScraperCarrier interface
-  cli.ts           legacy CLI helper, not exposed by package scripts
+  cli.ts           internal-only legacy helper; not exposed by package scripts
   index.ts         public exports
   server.ts        REST API skeleton
   detect.ts        tracking-number carrier detection
@@ -75,6 +89,10 @@ Heavy resource types (`image`, `font`, `media`, `stylesheet`) and known ad/track
 | Warm + tightened route blocker | ~70-100 KB target | Keeps only the response path and anti-bot pings |
 
 The carrier scraper uses `page.evaluate(fetch)` because that path is what Akamai signs off on. `context.request` uses Node's network stack and should not be used for anti-bot-sensitive carrier data fetches.
+
+### FedEx runtime
+
+FedEx uses a carrier-scoped browser sidecar plus a warm `TrackingSession`. The worker reuses that session across lookups while it remains valid, and the FedEx proxy mode is pinned to the browser extension path when a proxy is present.
 
 ## Probes
 
