@@ -10,6 +10,7 @@
     "api": "tsx src/server.ts",
     "worker": "tsx src/workers/scrape-worker.ts",
     "webhook-worker": "tsx src/workers/webhook-worker.ts",
+    "fedex:browser-worker": "tsx src/tools/fedex-browser-worker.ts",
     "scheduler": "tsx src/workers/scheduler.ts",
     "migrate": "tsx src/db.ts",
     "carriers:catalog": "node scripts/fetch-carrier-catalogs.mjs",

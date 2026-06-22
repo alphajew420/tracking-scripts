@@ -461,9 +461,12 @@ export function createFedexCarrier(): Carrier {
         .catch(() => {});
       await page.waitForTimeout(200);
     }
-  },
+    },
 
     async runQuery({ page }: QueryCtx, num: string): Promise<ScrapeResult> {
+      const remoteWorkerResult = await maybeTrackViaRemoteWorker(num);
+      if (remoteWorkerResult) return remoteWorkerResult;
+
       // If the page landed on /no-results-found (because the warm number
       // was invalid), the API also returns nothing useful. Surface it.
       if (page.url().includes("no-results-found")) {
@@ -590,3 +593,28 @@ export function createFedexCarrier(): Carrier {
 }
 
 export const fedexCarrier: Carrier = createFedexCarrier();
+
+async function maybeTrackViaRemoteWorker(num: string): Promise<ScrapeResult | null> {
+  const url = process.env.FEDEX_REMOTE_WORKER_URL;
+  if (!url) return null;
+  try {
+    const response = await fetch(url.replace(/\/$/, "") + "/track", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(process.env.FEDEX_REMOTE_WORKER_TOKEN
+          ? { Authorization: `Bearer ${process.env.FEDEX_REMOTE_WORKER_TOKEN}` }
+          : {}),
+      },
+      body: JSON.stringify({ tracking_number: num }),
+      signal: AbortSignal.timeout(Number(process.env.FEDEX_REMOTE_WORKER_TIMEOUT_MS ?? 180000)),
+    });
+    const json = await response.json().catch(() => null);
+    if (!response.ok) {
+      return { ok: false, error: `FedEx remote worker HTTP ${response.status}` };
+    }
+    return json as ScrapeResult;
+  } catch (error) {
+    return { ok: false, error: `FedEx remote worker failed: ${error instanceof Error ? error.message : String(error)}` };
+  }
+}
