@@ -98,6 +98,9 @@ async function main() {
       "sec-ch-ua-platform": "\"macOS\"",
     });
   }
+  if (extension) {
+    await page.waitForTimeout(Number(process.env.PROXY_EXTENSION_SETTLE_MS_FEDEX ?? process.env.PROXY_EXTENSION_SETTLE_MS ?? 3000));
+  }
   const responses: ReturnType<typeof responseSummary>[] = [];
   const failures: Array<{ method: string; url: string; error: string }> = [];
   const requests: Array<{

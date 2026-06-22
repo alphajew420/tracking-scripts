@@ -160,7 +160,7 @@ async function launchSidecar(carrier: string, proxy?: BrowserProxy): Promise<Sid
     ...(proxyExtension
       ? [`--disable-extensions-except=${proxyExtension}`, `--load-extension=${proxyExtension}`]
       : []),
-    ...(url ? [url] : []),
+    ...(url && !proxyExtension ? [url] : []),
   ];
 
   const child = spawn(useXvfb ? "xvfb-run" : chromePath(), useXvfb ? ["-a", chromePath(), ...chromeArgs] : chromeArgs, {

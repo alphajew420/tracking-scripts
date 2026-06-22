@@ -334,6 +334,10 @@ export class TrackingSession {
       await scraperForSetup.setupPage(this.page);
     }
 
+    if (extensionProxy) {
+      await this.page.waitForTimeout(proxyExtensionSettleMs(this.carrier.name));
+    }
+
     await this.page.goto(this.carrier.warmUrl(num), {
       waitUntil: this.opts.warmWaitUntil ?? "load",
       timeout: this.opts.warmTimeoutMs ?? 60000,
@@ -431,6 +435,11 @@ chrome.webRequest.onAuthRequired.addListener(
 
 function normalizeProxyServer(server: string): string {
   return /^[a-z][a-z\d+.-]*:\/\//i.test(server) ? server : `http://${server}`;
+}
+
+function proxyExtensionSettleMs(carrierName: string): number {
+  const key = `PROXY_EXTENSION_SETTLE_MS_${carrierName.toUpperCase().replaceAll("-", "_")}`;
+  return Number(process.env[key] ?? process.env.PROXY_EXTENSION_SETTLE_MS ?? 3000);
 }
 
 function formatCarrierError(err: unknown): string {
