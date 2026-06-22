@@ -110,6 +110,8 @@ export interface SessionOptions {
   cdpEndpoint?: string;
   /** Extra Chromium launch args for carrier-specific transport workarounds. */
   launchArgs?: string[];
+  /** Browser-surface spoofing profile for anti-bot-sensitive carriers. */
+  fingerprintProfile?: "mac-chrome";
 }
 
 const DEFAULT_EXPIRED_MARKERS =
@@ -295,6 +297,10 @@ export class TrackingSession {
       this.context = await this.browser.newContext(contextOptions);
     }
 
+    if (this.opts.fingerprintProfile === "mac-chrome") {
+      await applyMacChromeFingerprint(this.context);
+    }
+
     // Two-phase blocker:
     //   Phase 1 (warm): block heavy resource types + ad domains, but let
     //   the SPA's own JS/CSS through so Akamai's sensor.js can run + mint
@@ -374,6 +380,46 @@ export class TrackingSession {
     if (this.carrier.isExpired) return this.carrier.isExpired(result);
     return DEFAULT_EXPIRED_MARKERS.test(result.error || "");
   }
+}
+
+async function applyMacChromeFingerprint(context: BrowserContext): Promise<void> {
+  await context.setExtraHTTPHeaders({
+    "sec-ch-ua": "\"Google Chrome\";v=\"149\", \"Chromium\";v=\"149\", \"Not)A;Brand\";v=\"24\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"macOS\"",
+  });
+  await context.addInitScript(() => {
+    const defineGetter = (target: object, key: string, value: unknown) => {
+      try {
+        Object.defineProperty(target, key, { get: () => value, configurable: true });
+      } catch {
+        // Ignore locked browser fields.
+      }
+    };
+
+    defineGetter(Navigator.prototype, "platform", "MacIntel");
+    defineGetter(Navigator.prototype, "hardwareConcurrency", 8);
+    defineGetter(Navigator.prototype, "deviceMemory", 8);
+    defineGetter(Navigator.prototype, "maxTouchPoints", 0);
+    defineGetter(Navigator.prototype, "vendor", "Google Inc.");
+    defineGetter(Navigator.prototype, "languages", ["en-US", "en"]);
+    defineGetter(Navigator.prototype, "webdriver", undefined);
+
+    const originalResolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
+    Intl.DateTimeFormat.prototype.resolvedOptions = function resolvedOptions() {
+      return {
+        ...originalResolvedOptions.call(this),
+        timeZone: "America/New_York",
+      };
+    };
+
+    const getParameter = WebGLRenderingContext.prototype.getParameter;
+    WebGLRenderingContext.prototype.getParameter = function getParameterSpoof(parameter) {
+      if (parameter === 37445) return "Intel Inc.";
+      if (parameter === 37446) return "Intel Iris OpenGL Engine";
+      return getParameter.call(this, parameter);
+    };
+  });
 }
 
 export function createProxyExtension(

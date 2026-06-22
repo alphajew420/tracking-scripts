@@ -14,6 +14,7 @@ interface CarrierSessionOverrides {
   warmTimeoutMs?: number;
   warmWaitUntil?: SessionOptions["warmWaitUntil"];
   channel?: SessionOptions["channel"];
+  fingerprintProfile?: SessionOptions["fingerprintProfile"];
 }
 
 function booleanEnv(name: string, fallback: boolean): boolean {
@@ -105,9 +106,16 @@ export function buildCarrierSessionOptions(carrierId: string, overrides: Carrier
     userAgent:
       overrides.userAgent !== undefined
         ? overrides.userAgent
-        : carrierId === "fedex" || carrierId === "dhl" || carrierId === "purolator"
-          ? null
+        : carrierId === "fedex"
+          ? "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36"
+          : carrierId === "dhl" || carrierId === "purolator"
+            ? null
           : undefined,
+    fingerprintProfile:
+      overrides.fingerprintProfile ??
+      (carrierId === "fedex" && process.env.FEDEX_FINGERPRINT_PROFILE !== "none"
+        ? "mac-chrome"
+        : undefined),
     disableBlocking: overrides.disableBlocking ?? defaultDisableBlocking(carrierId),
     warmTimeoutMs: overrides.warmTimeoutMs ?? defaultWarmTimeoutMs(carrierId),
     warmWaitUntil:
