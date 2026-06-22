@@ -498,7 +498,7 @@ export function createFedexCarrier(): Carrier {
               trackNumberInfo: {
                 trackingNumber: num,
                 trackingQualifier: TRACKING_QUALIFIER(num),
-                trackingCarrier: "FDEG",
+                trackingCarrier: process.env.FEDEX_TRACKING_CARRIER ?? "",
               },
             },
           ],
