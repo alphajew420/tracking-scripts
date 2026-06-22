@@ -158,6 +158,53 @@ async function main() {
     }
     await page.waitForTimeout(Number(process.env.FEDEX_RENDER_SETTLE_MS ?? 12000));
 
+    const legacyFetch = await page.evaluate(async (trackingNumber) => {
+      const payload = {
+        TrackPackagesRequest: {
+          appType: "WTRK",
+          appDeviceType: "DESKTOP",
+          uniqueKey: "",
+          processingParameters: {
+            anonymousTransaction: true,
+            clientId: "WTRK",
+            returnDetailedErrors: true,
+            returnLocalizedDateTime: false,
+          },
+          trackingInfoList: [
+            {
+              trackNumberInfo: {
+                trackingNumber,
+                trackingQualifier: "",
+                trackingCarrier: "",
+              },
+            },
+          ],
+        },
+      };
+      const body = new URLSearchParams({
+        data: JSON.stringify(payload),
+        action: "trackpackages",
+        locale: "en_US",
+        format: "json",
+        version: "99",
+      });
+      try {
+        const response = await fetch("https://www.fedex.com/trackingCal/track", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            Accept: "application/json, text/javascript, */*; q=0.01",
+            "X-Requested-With": "XMLHttpRequest",
+          },
+          body,
+        });
+        return { status: response.status, text: (await response.text()).slice(0, 2000) };
+      } catch (error) {
+        return { error: error instanceof Error ? error.message : String(error) };
+      }
+    }, trackingNumber);
+
     const state = await page.evaluate(() => {
       const text = document.body?.innerText?.replace(/\s+/g, " ").trim() ?? "";
       return {
@@ -187,6 +234,7 @@ async function main() {
       finalUrl: page.url(),
       state,
       shipmentResponses: responses.filter((entry) => entry.url.includes("/track/v2/shipments")),
+      legacyFetch,
       shipmentRequests: requests
         .filter((entry) => entry.url.includes("/track/v2/shipments"))
         .map((entry) => ({
