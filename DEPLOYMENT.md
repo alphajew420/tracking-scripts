@@ -90,22 +90,23 @@ FedEx is sensitive to browser surface and proxy exit quality. The working VPS pr
 
 - Worker process runs under explicit Xvfb, not `xvfb-run` as the long-lived PID.
 - FedEx runs in system Chrome with `HEADLESS_FEDEX=false`.
-- Proxy mode is `forwarder`; extension mode did not apply reliably in Linux/headless containers.
+- Proxy mode is `native`; the local forwarder path caused FedEx `/track/v2/shipments` requests to fail on the VPS.
 - Browser UA is native Chrome; do not force the old macOS spoof on the VPS.
-- Tracking surface is the direct FedEx tracking URL, not the landing-page submit flow.
+- Tracking surface is the landing page first; direct deep links land on `system-error` more often on the VPS.
 - CDP autolaunch is disabled for FedEx; the worker owns the browser session.
 - Use a known-good sticky proxy session first, with optional fallback sessions for controlled rotation.
+- Persistent browser profiles can retain stale Chrome `Singleton*` lock files after container restarts. The session layer prunes those before launch by default; set `BROWSER_PRUNE_STALE_PROFILE_LOCKS=0` only when debugging Chrome profile ownership.
 
 ```bash
 PROXY_FEDEX=http://fedex-proxy:port
 PROXY_FEDEX_USERNAME=<username>
 PROXY_FEDEX_PASSWORD=<password>
-PROXY_FEDEX_MODE=forwarder
+PROXY_FEDEX_MODE=native
 PROXY_SESSION_FEDEX=<known-good-session>
 PROXY_SESSION_FALLBACKS_FEDEX=<fallback-session-1>,<fallback-session-2>
 FEDEX_ALLOW_DYNAMIC_PROXY_SESSIONS=false
 FEDEX_USE_PROXY=true
-FEDEX_TRACK_SURFACE=direct
+FEDEX_TRACK_SURFACE=landing
 BROWSER_CHANNEL_FEDEX=chrome
 BROWSER_USER_AGENT_FEDEX=native
 BROWSER_EXTRA_ARGS_FEDEX="--no-sandbox --disable-dev-shm-usage"
@@ -116,6 +117,7 @@ HEADLESS_FEDEX=false
 SESSION_MAX_AGE_MS=3600000
 SESSION_MAX_USES=250
 FEDEX_PROFILE_DIR=/tmp/trackified-fedex-profile-worker
+BROWSER_PRUNE_STALE_PROFILE_LOCKS=1
 ```
 
 The Compose worker command starts Xvfb and then execs the Node worker:

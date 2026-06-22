@@ -6,7 +6,7 @@
 // CDP traces patchright actually scrubs).
 import { chromium } from "patchright";
 import type { APIRequestContext, Browser, BrowserContext, Page } from "patchright";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { ScrapeResult } from "./types.ts";
 import { localProxyForwarder } from "./proxy-forwarder.ts";
@@ -29,6 +29,8 @@ const BLOCKED_DOMAINS = [
   "smetrics.fedex.com",
   "evergage.com",
 ];
+
+const CHROME_SINGLETON_FILES = ["SingletonLock", "SingletonSocket", "SingletonCookie"];
 
 interface CarrierBase {
   /** Stable identifier, e.g. "usps". */
@@ -245,6 +247,7 @@ export class TrackingSession {
         throw new Error(`CDP browser at ${this.opts.cdpEndpoint} has no available context`);
       }
     } else if (this.opts.persistentProfileDir) {
+      pruneStaleChromeProfileLocks(this.opts.persistentProfileDir);
       const persistentOptions = {
         ...contextOptions,
         headless: this.opts.headless ?? true,
@@ -385,6 +388,18 @@ export class TrackingSession {
   private detectExpired(result: ScrapeResult): boolean {
     if (this.carrier.isExpired) return this.carrier.isExpired(result);
     return DEFAULT_EXPIRED_MARKERS.test(result.error || "");
+  }
+}
+
+function pruneStaleChromeProfileLocks(profileDir: string): void {
+  if (process.env.BROWSER_PRUNE_STALE_PROFILE_LOCKS === "0") return;
+
+  for (const file of CHROME_SINGLETON_FILES) {
+    try {
+      rmSync(join(profileDir, file), { force: true });
+    } catch {
+      // Stale singleton files are best-effort cleanup before Chrome launch.
+    }
   }
 }
 
