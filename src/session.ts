@@ -376,7 +376,7 @@ export function createProxyExtension(
   proxy: NonNullable<SessionOptions["proxy"]>,
   carrierName: string,
 ): string {
-  const parsed = new URL(proxy.server);
+  const parsed = new URL(normalizeProxyServer(proxy.server));
   const scheme = parsed.protocol.replace(":", "") || "http";
   const host = parsed.hostname;
   const port = Number(parsed.port || (scheme === "https" ? 443 : 80));
@@ -427,6 +427,10 @@ chrome.webRequest.onAuthRequired.addListener(
 `.trimStart(),
   );
   return dir;
+}
+
+function normalizeProxyServer(server: string): string {
+  return /^[a-z][a-z\d+.-]*:\/\//i.test(server) ? server : `http://${server}`;
 }
 
 function formatCarrierError(err: unknown): string {
