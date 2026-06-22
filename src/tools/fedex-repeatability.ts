@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { SessionPool } from "../workers/session-pool.ts";
-import { activeProxySession, proxySessionHealth } from "../proxy-session-manager.ts";
+import { activeProxySession, markProxySessionBad, proxySessionHealth, rotateProxySession } from "../proxy-session-manager.ts";
 
 function chromeSidecars(): string[] {
   try {
@@ -32,12 +32,18 @@ function summarize(result: Awaited<ReturnType<SessionPool["track"]>>) {
   };
 }
 
-const numbers = process.argv.slice(2);
+const numbers = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
 if (numbers.length === 0) {
   numbers.push("382150811542", "521355676935");
 }
 
 const rounds = Number(process.env.FEDEX_REPEAT_ROUNDS ?? 1);
+const rotateProxySessionEachRound =
+  process.argv.includes("--rotate-proxy-session") ||
+  /^(1|true|yes)$/i.test(process.env.FEDEX_ROTATE_PROXY_SESSION_EACH_ROUND ?? "");
+const rotateProxySessionOnFailure =
+  !process.argv.includes("--no-rotate-on-fail") &&
+  !/^(1|true|yes)$/i.test(process.env.FEDEX_NO_ROTATE_ON_FAIL ?? "");
 const pool = new SessionPool();
 
 console.log(JSON.stringify({
@@ -62,10 +68,21 @@ console.log(JSON.stringify({
 
 try {
   for (let round = 1; round <= rounds; round += 1) {
+    if (rotateProxySessionEachRound) {
+      const next = await rotateProxySession("fedex", `fedex-repeatability round ${round}`);
+      console.log(JSON.stringify({ round, rotated_proxy_session: next }, null, 2));
+    }
     for (const number of numbers) {
       const startedAt = Date.now();
       const result = await pool.track("fedex", number);
       const elapsedMs = Date.now() - startedAt;
+      if (!result.ok && rotateProxySessionOnFailure) {
+        await markProxySessionBad({
+          carrier: "fedex",
+          session: await activeProxySession("fedex"),
+          reason: result.error ?? "fedex-repeatability failure",
+        });
+      }
       console.log(JSON.stringify({
         round,
         number,
