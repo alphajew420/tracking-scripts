@@ -63,9 +63,7 @@ function handleConnect(input: {
         `Host: ${target}`,
         input.auth ? `Proxy-Authorization: ${input.auth}` : null,
         "Proxy-Connection: keep-alive",
-        "",
-        "",
-      ].filter(Boolean).join("\r\n"),
+      ].filter((line): line is string => line != null).join("\r\n") + "\r\n\r\n",
     );
   });
 
