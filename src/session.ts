@@ -432,20 +432,27 @@ export function createProxyExtension(
   const port = Number(parsed.port || (scheme === "https" ? 443 : 80));
   const dir = join(process.cwd(), ".browser-profiles", "proxy-extensions", carrierName);
   mkdirSync(dir, { recursive: true });
+  const useManifestV2 = process.env.PROXY_EXTENSION_MANIFEST_VERSION === "2";
   writeFileSync(
     join(dir, "manifest.json"),
-    JSON.stringify(
-      {
-        manifest_version: 3,
-        name: "Trackified Proxy",
-        version: "1.0.0",
-        permissions: ["proxy", "webRequest", "webRequestAuthProvider", "storage"],
-        host_permissions: ["<all_urls>"],
-        background: { service_worker: "background.js" },
-      },
-      null,
-      2,
-    ),
+    JSON.stringify(useManifestV2
+      ? {
+          manifest_version: 2,
+          name: "Trackified Proxy",
+          version: "1.0.0",
+          permissions: ["proxy", "webRequest", "webRequestBlocking", "<all_urls>"],
+          background: { scripts: ["background.js"], persistent: true },
+        }
+      : {
+          manifest_version: 3,
+          name: "Trackified Proxy",
+          version: "1.0.0",
+          permissions: ["proxy", "webRequest", "webRequestAuthProvider", "storage"],
+          host_permissions: ["<all_urls>"],
+          background: { service_worker: "background.js" },
+        },
+    null,
+    2),
   );
   writeFileSync(
     join(dir, "background.js"),
