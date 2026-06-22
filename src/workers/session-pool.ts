@@ -87,6 +87,19 @@ function proxySessionsForCarrier(carrierId: string, attempts: number): string[] 
   return [carrierId];
 }
 
+function persistentProfileDirForCarrier(carrierId: string): string | undefined {
+  if (carrierId === "fedex") {
+    const base = process.env.FEDEX_PROFILE_DIR ?? "/tmp/trackified-fedex-profile";
+    if (process.env.FEDEX_PROFILE_ISOLATION === "fixed") return base;
+    return `${base}-${process.pid}-${Date.now().toString(36)}-${generatedProxySessionCounter}`;
+  }
+  if (carrierId === "royal-mail") return process.env.ROYAL_MAIL_PROFILE_DIR ?? "/tmp/trackified-royal-mail-profile";
+  if (carrierId === "postnord-se" || carrierId === "postnord-dk") {
+    return process.env.POSTNORD_PROFILE_DIR ?? "/tmp/trackified-postnord-profile";
+  }
+  return undefined;
+}
+
 export class SessionPool {
   private sessions = new Map<string, PooledSession>();
   private locks = new Map<string, Promise<unknown>>();
@@ -136,14 +149,7 @@ export class SessionPool {
         debug: process.env.DEBUG_SCRAPES === "1",
         proxy,
         cdpEndpoint: browserCdpEndpoint,
-        persistentProfileDir:
-          carrierId === "fedex"
-            ? process.env.FEDEX_PROFILE_DIR ?? "/tmp/trackified-fedex-profile"
-            : carrierId === "royal-mail"
-              ? process.env.ROYAL_MAIL_PROFILE_DIR ?? "/tmp/trackified-royal-mail-profile"
-              : carrierId === "postnord-se" || carrierId === "postnord-dk"
-                ? process.env.POSTNORD_PROFILE_DIR ?? "/tmp/trackified-postnord-profile"
-                : undefined,
+        persistentProfileDir: persistentProfileDirForCarrier(carrierId),
       }),
     );
     this.sessions.set(carrierId, { session, createdAt: Date.now(), uses: 1, proxy, proxySession });

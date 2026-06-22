@@ -95,6 +95,7 @@ FedEx is sensitive to browser surface and proxy exit quality. The working VPS pr
 - Tracking surface is the landing page first; direct deep links land on `system-error` more often on the VPS.
 - CDP autolaunch is disabled for FedEx; the worker owns the browser session.
 - Use a known-good sticky proxy session first, with optional fallback sessions for controlled rotation.
+- FedEx uses an ephemeral profile per worker browser session by default, then reuses that warm in-memory session for amortized lookups. Set `FEDEX_PROFILE_ISOLATION=fixed` only when deliberately debugging a persistent profile.
 - Persistent browser profiles can retain stale Chrome `Singleton*` lock files after container restarts. The session layer prunes those before launch by default; set `BROWSER_PRUNE_STALE_PROFILE_LOCKS=0` only when debugging Chrome profile ownership.
 
 ```bash
@@ -117,6 +118,7 @@ HEADLESS_FEDEX=false
 SESSION_MAX_AGE_MS=3600000
 SESSION_MAX_USES=250
 FEDEX_PROFILE_DIR=/tmp/trackified-fedex-profile-worker
+FEDEX_PROFILE_ISOLATION=ephemeral
 BROWSER_PRUNE_STALE_PROFILE_LOCKS=1
 ```
 
