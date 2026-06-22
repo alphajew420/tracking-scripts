@@ -118,72 +118,68 @@ async function parseRenderedPage(page: Page, num: string): Promise<ScrapeResult 
   const parsedResult = await page.evaluate(
     ({ trackingText, trackingNumber }: { trackingText: string; trackingNumber: string }) => {
       const text = trackingText;
-    if (!text.includes(trackingNumber)) {
-      return null;
-    }
-    if (/we can.t find that tracking number|tracking number is incorrect/i.test(text)) {
-      return null;
-    }
+      if (!text.includes(trackingNumber)) return null;
+      if (/we can.t find that tracking number|tracking number is incorrect/i.test(text)) return null;
 
-    const lines = text
-      .split(/\n+/)
-      .map((line) => line.trim())
-      .filter(Boolean);
-    const statusLine =
-      lines.find((line) =>
-        /delivered|out for delivery|on the way|label created|shipment exception|arrived at fedex location/i.test(line),
-      ) ??
-      "";
-    const delivered = /delivered/i.test(statusLine);
-
-    const events: Array<{ date: string | null; location: string; description: string }> = [];
-    for (let i = 0; i < lines.length; i += 1) {
-      const line = lines[i] ?? "";
-      if (!/delivered|out for delivery|on the way|label created|picked up|shipment exception|arrived|departed/i.test(line)) {
-        continue;
-      }
-      const next = lines[i + 1] ?? "";
-      const after = lines[i + 2] ?? "";
-      const date = /\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}/.test(next)
-        ? next
-        : /\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}/.test(after)
-          ? after
-        : null;
-      const location = /^[A-Z][A-Z .'-]+,\s?[A-Z]{2}(?:\s[A-Z]{2})?$/.test(next) ? next : "";
-      events.push({ date, location, description: line });
-    }
-
-    const seen = new Set<string>();
-    const dedupedEvents = events.filter((event) => {
-      if (!event.date && !event.location && /^(on the way|out for delivery)$/i.test(event.description)) {
-        return false;
-      }
-      const key = `${event.date ?? ""}|${event.location}|${event.description}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-
-    if (events.length === 0) {
-      const summaryLine =
-        lines.find((line) => /scheduled delivery date|we have your package|on the way|out for delivery/i.test(line)) ??
+      const lines = text
+        .split(/\n+/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+      const statusLine =
+        lines.find((line) =>
+          /delivered|out for delivery|on the way|label created|shipment exception|arrived at fedex location/i.test(line),
+        ) ??
         "";
-      if (summaryLine) {
-        events.push({
-          date: null,
-          location: "",
-          description: summaryLine,
-        });
-      }
-    }
+      const delivered = /delivered/i.test(statusLine);
 
-    return {
-      delivered,
-      events: dedupedEvents.length > 0 ? dedupedEvents : events,
-      recipient:
-        lines.find((line) => /^signed for by:/i.test(line))?.replace(/^signed for by:\s*/i, "") ??
-        undefined,
-    };
+      const events: Array<{ date: string | null; location: string; description: string }> = [];
+      for (let i = 0; i < lines.length; i += 1) {
+        const line = lines[i] ?? "";
+        if (!/delivered|out for delivery|on the way|label created|picked up|shipment exception|arrived|departed/i.test(line)) {
+          continue;
+        }
+        const next = lines[i + 1] ?? "";
+        const after = lines[i + 2] ?? "";
+        const date = /\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}/.test(next)
+          ? next
+          : /\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}/.test(after)
+            ? after
+            : null;
+        const location = /^[A-Z][A-Z .'-]+,\s?[A-Z]{2}(?:\s[A-Z]{2})?$/.test(next) ? next : "";
+        events.push({ date, location, description: line });
+      }
+
+      const seen = new Set<string>();
+      const dedupedEvents = events.filter((event) => {
+        if (!event.date && !event.location && /^(on the way|out for delivery)$/i.test(event.description)) {
+          return false;
+        }
+        const key = `${event.date ?? ""}|${event.location}|${event.description}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      if (events.length === 0) {
+        const summaryLine =
+          lines.find((line) => /scheduled delivery date|we have your package|on the way|out for delivery/i.test(line)) ??
+          "";
+        if (summaryLine) {
+          events.push({
+            date: null,
+            location: "",
+            description: summaryLine,
+          });
+        }
+      }
+
+      return {
+        delivered,
+        events: dedupedEvents.length > 0 ? dedupedEvents : events,
+        recipient:
+          lines.find((line) => /^signed for by:/i.test(line))?.replace(/^signed for by:\s*/i, "") ??
+          undefined,
+      };
     },
     { trackingText: text, trackingNumber: num },
   );
@@ -464,9 +460,6 @@ export function createFedexCarrier(): Carrier {
     },
 
     async runQuery({ page }: QueryCtx, num: string): Promise<ScrapeResult> {
-      const remoteWorkerResult = await maybeTrackViaRemoteWorker(num);
-      if (remoteWorkerResult) return remoteWorkerResult;
-
       // If the page landed on /no-results-found (because the warm number
       // was invalid), the API also returns nothing useful. Surface it.
       if (page.url().includes("no-results-found")) {
@@ -593,28 +586,3 @@ export function createFedexCarrier(): Carrier {
 }
 
 export const fedexCarrier: Carrier = createFedexCarrier();
-
-async function maybeTrackViaRemoteWorker(num: string): Promise<ScrapeResult | null> {
-  const url = process.env.FEDEX_REMOTE_WORKER_URL;
-  if (!url) return null;
-  try {
-    const response = await fetch(url.replace(/\/$/, "") + "/track", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(process.env.FEDEX_REMOTE_WORKER_TOKEN
-          ? { Authorization: `Bearer ${process.env.FEDEX_REMOTE_WORKER_TOKEN}` }
-          : {}),
-      },
-      body: JSON.stringify({ tracking_number: num }),
-      signal: AbortSignal.timeout(Number(process.env.FEDEX_REMOTE_WORKER_TIMEOUT_MS ?? 180000)),
-    });
-    const json = await response.json().catch(() => null);
-    if (!response.ok) {
-      return { ok: false, error: `FedEx remote worker HTTP ${response.status}` };
-    }
-    return json as ScrapeResult;
-  } catch (error) {
-    return { ok: false, error: `FedEx remote worker failed: ${error instanceof Error ? error.message : String(error)}` };
-  }
-}
