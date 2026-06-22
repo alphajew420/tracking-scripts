@@ -177,7 +177,12 @@ export class SessionPool {
   }
 
   async close(): Promise<void> {
-    await Promise.all(Array.from(this.sessions.values()).map((entry) => entry.session.close()));
+    await Promise.all(
+      Array.from(this.sessions.entries()).map(async ([carrierId, entry]) => {
+        await entry.session.close();
+        await invalidateBrowserSidecar(carrierId, entry.proxy);
+      }),
+    );
     this.sessions.clear();
   }
 }
