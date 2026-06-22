@@ -103,16 +103,17 @@ function defaultPersistentProfileDir(carrierId: string): string | undefined {
 
 export function buildCarrierSessionOptions(carrierId: string, overrides: CarrierSessionOverrides = {}): SessionOptions {
   const proxy = overrides.proxy;
+  const carrierProxyMode = process.env[`PROXY_${carrierId.toUpperCase().replaceAll("-", "_")}_MODE`];
+  const globalProxyMode = process.env.PROXY_MODE;
   const proxyMode =
     overrides.proxyMode ??
-    (process.env[`PROXY_${carrierId.toUpperCase().replaceAll("-", "_")}_MODE`] === "forwarder" ||
-    process.env.PROXY_MODE === "forwarder"
-      ? "forwarder"
-      : process.env[`PROXY_${carrierId.toUpperCase().replaceAll("-", "_")}_MODE`] === "extension" ||
-    process.env.PROXY_MODE === "extension" ||
-    (proxy && prefersExtensionProxy(carrierId))
-      ? "extension"
-      : "native");
+    (carrierProxyMode === "native" || carrierProxyMode === "extension" || carrierProxyMode === "forwarder"
+      ? carrierProxyMode
+      : globalProxyMode === "forwarder"
+        ? "forwarder"
+        : globalProxyMode === "extension" || (proxy && prefersExtensionProxy(carrierId))
+          ? "extension"
+          : "native");
 
   return {
     headless: overrides.headless,
