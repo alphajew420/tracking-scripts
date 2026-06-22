@@ -57,7 +57,7 @@ async function main() {
   mkdirSync(profileDir, { recursive: true });
   const extension = mode === "extension" ? createProxyExtension(proxy, `fedex-surface-${session}`) : null;
   const context = await chromium.launchPersistentContext(profileDir, {
-    channel: "chrome",
+    ...(process.env.FEDEX_BROWSER_CHANNEL === "bundled" ? {} : { channel: "chrome" as const }),
     headless: process.env.HEADLESS !== "false",
     viewport: { width: 1280, height: 900 },
     locale: "en-US",
@@ -74,6 +74,16 @@ async function main() {
   });
 
   const page = await context.newPage();
+  if (process.env.FEDEX_PLATFORM_SPOOF === "mac") {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "platform", { get: () => "MacIntel" });
+      Object.defineProperty(navigator, "hardwareConcurrency", { get: () => 8 });
+      Object.defineProperty(navigator, "deviceMemory", { get: () => 8 });
+    });
+    await page.setExtraHTTPHeaders({
+      "sec-ch-ua-platform": "\"macOS\"",
+    });
+  }
   const responses: ReturnType<typeof responseSummary>[] = [];
   const failures: Array<{ method: string; url: string; error: string }> = [];
   const requests: Array<{
