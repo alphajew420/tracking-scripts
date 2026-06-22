@@ -1,4 +1,6 @@
 import { TrackingSession, type Carrier } from "../session.ts";
+import { readdirSync, rmSync, statSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { getCarrierFactory } from "../carriers/registry.ts";
 import { proxyForCarrier } from "../proxy.ts";
 import type { ScrapeResult } from "../types.ts";
@@ -71,6 +73,7 @@ function persistentProfileDirForCarrier(carrierId: string): string | undefined {
   if (carrierId === "fedex") {
     const base = process.env.FEDEX_PROFILE_DIR ?? "/tmp/trackified-fedex-profile";
     if (process.env.FEDEX_PROFILE_ISOLATION === "fixed") return base;
+    cleanupOldProfiles(base, numericCarrierEnv("BROWSER_PROFILE_MAX_AGE_SECONDS", carrierId, 6 * 60 * 60));
     return `${base}-${process.pid}-${Date.now().toString(36)}-${generatedProxySessionCounter}`;
   }
   if (carrierId === "royal-mail") return process.env.ROYAL_MAIL_PROFILE_DIR ?? "/tmp/trackified-royal-mail-profile";
@@ -78,6 +81,24 @@ function persistentProfileDirForCarrier(carrierId: string): string | undefined {
     return process.env.POSTNORD_PROFILE_DIR ?? "/tmp/trackified-postnord-profile";
   }
   return undefined;
+}
+
+function cleanupOldProfiles(base: string, maxAgeSeconds: number): void {
+  const parent = dirname(base);
+  const prefix = `${base.split("/").pop() ?? ""}-`;
+  const cutoff = Date.now() - maxAgeSeconds * 1000;
+
+  try {
+    for (const entry of readdirSync(parent)) {
+      if (!entry.startsWith(prefix)) continue;
+      const path = join(parent, entry);
+      const stat = statSync(path);
+      if (stat.mtimeMs > cutoff) continue;
+      rmSync(path, { recursive: true, force: true });
+    }
+  } catch {
+    // Profile cleanup is opportunistic; never block a scrape on filesystem cleanup.
+  }
 }
 
 export class SessionPool {
