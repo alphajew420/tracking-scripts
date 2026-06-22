@@ -105,6 +105,9 @@ PROXY_FEDEX_PASSWORD=<password>
 PROXY_FEDEX_MODE=native
 PROXY_SESSION_FEDEX=<known-good-session>
 PROXY_SESSION_FALLBACKS_FEDEX=<fallback-session-1>,<fallback-session-2>
+PROXY_SESSION_PREFIX_FEDEX=fedexprod
+PROXY_SESSION_BAD_TTL_SECONDS_FEDEX=1800
+PROXY_PICK_ATTEMPTS_FEDEX=4
 FEDEX_ALLOW_DYNAMIC_PROXY_SESSIONS=false
 FEDEX_USE_PROXY=true
 FEDEX_TRACK_SURFACE=landing
@@ -120,6 +123,8 @@ SESSION_MAX_USES=250
 FEDEX_PROFILE_DIR=/tmp/trackified-fedex-profile-worker
 FEDEX_PROFILE_ISOLATION=ephemeral
 BROWSER_PRUNE_STALE_PROFILE_LOCKS=1
+SCRAPE_TIMEOUT_MS_FEDEX=240000
+CANARY_INTERVAL_MS_FEDEX=900000
 ```
 
 The Compose worker command starts Xvfb and then execs the Node worker:
@@ -134,6 +139,15 @@ Run the FedEx canary after deploys or proxy changes:
 
 ```bash
 docker compose -f docker-compose.prod.yml exec -T worker npm run fedex:canary -- 382150811542
+```
+
+For continuous health checks, run `npm run carrier-canary -- fedex` under the same Xvfb wrapper as the worker. On timeout/system-error, it marks the current Redis active sticky session bad, rotates to a fresh session, and sends a Discord alert when `DISCORD_WEBHOOK_URL` is configured.
+
+The authenticated operational endpoint shows the current Redis session state:
+
+```bash
+curl https://api.trackified.example/v1/carriers/fedex/proxy-session \
+  -H "Authorization: Bearer $TRACKING_API_KEY"
 ```
 
 Known-good proof from the VPS on June 22, 2026: the live API queued `382150811542`, the worker scraped FedEx successfully, and `GET /v1/trackings/:id` returned `in_transit` with 5 events. The first event was `Arrived at FedEx location`, `AURORA, CO`, `2026-06-21 01:27:00`.

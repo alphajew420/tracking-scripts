@@ -5,6 +5,7 @@ import { redisConnection, releaseScrapeEnqueueLock, type ScrapeJob } from "../qu
 import { failedScrapeRetryAt, nextScrapeAt } from "../scrape-cadence.ts";
 import { enqueueWebhookEvent } from "../webhook-dispatch.ts";
 import { SessionPool } from "./session-pool.ts";
+import { activeProxySession, markProxySessionBad } from "../proxy-session-manager.ts";
 
 function normalizeStatus(status: string | undefined): string {
   if (!status || status === "unknown") return "unknown";
@@ -81,6 +82,13 @@ async function run() {
         });
       } catch (error) {
         result = { ok: false as const, error: error instanceof Error ? error.message : String(error) };
+        if (carrier === "fedex" && /timed out|system-error|browser/i.test(result.error)) {
+          await markProxySessionBad({
+            carrier,
+            session: await activeProxySession(carrier),
+            reason: result.error,
+          });
+        }
         logger.info("scrape finished", {
           job_id: job.id,
           tracking_id: job.data.tracking_id,

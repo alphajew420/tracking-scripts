@@ -6,6 +6,7 @@ import { buildCarrierSessionOptions } from "../carrier-runtime.ts";
 import { getBrowserSidecarEndpoint, invalidateBrowserSidecar } from "../browser-sidecar.ts";
 import type { BrowserProxy } from "../proxy.ts";
 import { proxyIsQuarantined, quarantineProxy, recordProxyHealth } from "../proxy-health.ts";
+import { markProxySessionBad, proxySessionCandidates } from "../proxy-session-manager.ts";
 
 interface PooledSession {
   session: TrackingSession;
@@ -50,41 +51,20 @@ function numericCarrierEnv(prefix: string, carrierId: string, fallback: number):
   return fallback;
 }
 
-function listEnv(name: string): string[] {
-  const raw = process.env[name];
-  if (!raw) return [];
-  return raw
-    .split(",")
-    .map((value) => value.trim())
-    .filter(Boolean);
-}
-
-function carrierEnvName(prefix: string, carrierId: string): string {
-  return `${prefix}_${carrierId.toUpperCase().replaceAll("-", "_")}`;
-}
-
 function dynamicProxySessionForCarrier(carrierId: string): string {
   generatedProxySessionCounter += 1;
   return `${carrierId}-${process.pid}-${Date.now().toString(36)}-${generatedProxySessionCounter}`;
 }
 
-function proxySessionsForCarrier(carrierId: string, attempts: number): string[] {
-  const carrierKey = carrierId.toUpperCase().replaceAll("-", "_");
-  const fixed = process.env[`PROXY_SESSION_${carrierKey}`] ?? process.env.PROXY_SESSION;
-  const fallbacks = [
-    ...listEnv(`PROXY_SESSION_FALLBACKS_${carrierKey}`),
-    ...listEnv("PROXY_SESSION_FALLBACKS"),
-  ];
-  const sessions = [...new Set([fixed, ...fallbacks].filter((value): value is string => Boolean(value)))];
+async function proxySessionsForCarrier(carrierId: string, attempts: number): Promise<string[]> {
+  if (carrierId === "fedex") return await proxySessionCandidates(carrierId, attempts);
 
-  const allowDynamic =
-    carrierId !== "fedex" ||
-    booleanEnv("FEDEX_ALLOW_DYNAMIC_PROXY_SESSIONS", sessions.length === 0);
-  while (allowDynamic && sessions.length < attempts) {
+  const fixed = process.env[`PROXY_SESSION_${carrierId.toUpperCase().replaceAll("-", "_")}`] ?? process.env.PROXY_SESSION;
+  const sessions = [...new Set([fixed].filter((value): value is string => Boolean(value)))];
+  while (sessions.length < attempts) {
     sessions.push(dynamicProxySessionForCarrier(carrierId));
   }
-  if (sessions.length > 0) return sessions;
-  return [carrierId];
+  return sessions.length > 0 ? sessions : [carrierId];
 }
 
 function persistentProfileDirForCarrier(carrierId: string): string | undefined {
@@ -124,7 +104,7 @@ export class SessionPool {
     let proxySession: string | undefined;
     if (useProxy) {
       const maxProxyPickAttempts = numericCarrierEnv("PROXY_PICK_ATTEMPTS", carrierId, 5);
-      const sessions = proxySessionsForCarrier(carrierId, maxProxyPickAttempts);
+      const sessions = await proxySessionsForCarrier(carrierId, maxProxyPickAttempts);
       for (const session of sessions.slice(0, maxProxyPickAttempts)) {
         const candidate = proxyForCarrier(carrierId, { session });
         if (!candidate || !(await proxyIsQuarantined(carrierId, candidate))) {
@@ -170,10 +150,22 @@ export class SessionPool {
         error: result.ok ? undefined : result.error,
       });
       if (!result.ok && /Target page|context or browser|Browser has been closed/i.test(result.error ?? "")) {
+        if (carrierId === "fedex") {
+          await markProxySessionBad({
+            carrier: carrierId,
+            session: pooled?.proxySession,
+            reason: result.error ?? "browser failure",
+          });
+        }
         await quarantineProxy({ carrier: carrierId, proxy: pooled?.proxy, reason: result.error ?? "browser failure" });
         await this.invalidate(carrierId);
       }
       if (!result.ok && shouldRetryFedExWithCleanPage(carrierId, result)) {
+        await markProxySessionBad({
+          carrier: carrierId,
+          session: pooled?.proxySession,
+          reason: result.error ?? "fedex retryable failure",
+        });
         await quarantineProxy({ carrier: carrierId, proxy: pooled?.proxy, reason: result.error ?? "fedex retryable failure" });
         await this.invalidate(carrierId);
         const cleanPageSession = await this.get(carrierId);

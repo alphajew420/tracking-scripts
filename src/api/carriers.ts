@@ -2,6 +2,7 @@ import { pageParams } from "../api-helpers.ts";
 import type { ApiRouteContext } from "./types.ts";
 import { getCarrierApiAdapter, listCarrierApiCatalog } from "../carriers/api-registry.ts";
 import { listCarrierValidationSummary } from "../../lib/carrier-validation.ts";
+import { proxySessionHealth } from "../proxy-session-manager.ts";
 
 export async function handleCarrierRoutes({ req, res, url, requestId, auth, deps }: ApiRouteContext): Promise<boolean> {
   if (req.method === "GET" && url.pathname === "/v1/carriers") {
@@ -21,6 +22,13 @@ export async function handleCarrierRoutes({ req, res, url, requestId, auth, deps
   if (req.method === "GET" && url.pathname === "/v1/carriers/status") {
     const summary = listCarrierValidationSummary();
     deps.json(res, 200, summary, requestId);
+    return true;
+  }
+
+  const proxySessionMatch = /^\/v1\/carriers\/([^/]+)\/proxy-session$/.exec(url.pathname);
+  if (req.method === "GET" && proxySessionMatch) {
+    const carrierId = proxySessionMatch[1]!;
+    deps.json(res, 200, await proxySessionHealth(carrierId), requestId);
     return true;
   }
 
