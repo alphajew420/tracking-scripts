@@ -76,9 +76,20 @@ async function main() {
   const page = await context.newPage();
   const responses: ReturnType<typeof responseSummary>[] = [];
   const failures: Array<{ method: string; url: string; error: string }> = [];
-  const requests: Array<{ method: string; url: string }> = [];
+  const requests: Array<{
+    method: string;
+    url: string;
+    headers?: Record<string, string>;
+    postData?: string | null;
+  }> = [];
   page.on("request", (request) => {
-    if (interesting(request.url())) requests.push({ method: request.method(), url: request.url() });
+    if (!interesting(request.url())) return;
+    requests.push({
+      method: request.method(),
+      url: request.url(),
+      headers: request.url().includes("/track/v2/shipments") ? request.headers() : undefined,
+      postData: request.url().includes("/track/v2/shipments") ? request.postData() : undefined,
+    });
   });
   page.on("response", (response) => {
     if (interesting(response.url())) responses.push(responseSummary(response));
@@ -176,6 +187,18 @@ async function main() {
       finalUrl: page.url(),
       state,
       shipmentResponses: responses.filter((entry) => entry.url.includes("/track/v2/shipments")),
+      shipmentRequests: requests
+        .filter((entry) => entry.url.includes("/track/v2/shipments"))
+        .map((entry) => ({
+          method: entry.method,
+          url: entry.url,
+          headers: Object.fromEntries(
+            Object.entries(entry.headers ?? {}).filter(([key]) =>
+              /^(accept|accept-language|authorization|content-type|origin|referer|sec-|x-|user-agent)/i.test(key),
+            ),
+          ),
+          postData: entry.postData,
+        })),
       tokenResponses: responses.filter((entry) => entry.url.includes("/auth/oauth")),
       failures,
       fedexRequestCount: requests.length,
