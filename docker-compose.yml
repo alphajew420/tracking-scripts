@@ -63,7 +63,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["sh", "-lc", "Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp & export DISPLAY=:99; exec npm run worker"]
+    command: ["sh", "-lc", "rm -f /tmp/.X99-lock; Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp & XVFB_PID=$!; for i in $(seq 1 50); do [ -S /tmp/.X11-unix/X99 ] && break; sleep 0.1; done; export DISPLAY=:99; npm run worker; STATUS=$?; kill $XVFB_PID 2>/dev/null || true; exit $STATUS"]
     environment:
       NODE_ENV: production
       DATABASE_URL: postgres://trackified:trackified@postgres:5432/trackified
