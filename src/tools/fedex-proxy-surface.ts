@@ -20,7 +20,11 @@ function envValue(...names: string[]): string | undefined {
 }
 
 function proxyMode(args: string[]): "native" | "extension" | "hybrid" | "forwarder" | "direct" {
-  const mode = flagValue(args, "--proxy-mode", process.env.PROXY_MODE ?? "native");
+  const mode = flagValue(
+    args,
+    "--proxy-mode",
+    process.env.PROXY_FEDEX_MODE ?? process.env.PROXY_MODE ?? "native",
+  );
   if (mode === "extension") return "extension";
   if (mode === "hybrid") return "hybrid";
   if (mode === "forwarder") return "forwarder";
