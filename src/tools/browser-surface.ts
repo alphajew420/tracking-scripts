@@ -31,6 +31,7 @@ function summarizeResponse(response: Response): { status: number; url: string; t
 
 function proxyModeFromArgs(args: string[]): "native" | "extension" {
   const value = flagValue(args, "--proxy-mode", process.env.PROXY_MODE ?? "native");
+  if (value === "direct") return "native";
   return value === "extension" ? "extension" : "native";
 }
 
@@ -45,11 +46,12 @@ async function main() {
   const session = flagValue(args, "--session", carrier);
   const proxyMode = proxyModeFromArgs(args);
   const cdpEndpoint = flagValue(args, "--cdp-endpoint", process.env.BROWSER_CDP_ENDPOINT ?? "");
-  const proxy = proxyForCarrier(carrier, { country, session });
+  const proxyModeArg = flagValue(args, "--proxy-mode", process.env.PROXY_MODE ?? "native");
+  const proxy = proxyModeArg === "direct" ? undefined : proxyForCarrier(carrier, { country, session });
   const sessionOptions = buildCarrierSessionOptions(carrier, {
     headless: process.env.HEADLESS !== "false",
     proxy,
-    proxyMode,
+    proxyMode: proxyModeArg === "direct" ? "native" : proxyMode,
     cdpEndpoint: cdpEndpoint || undefined,
   });
   const profileDir = flagValue(args, "--profile-dir", sessionOptions.persistentProfileDir ?? `/tmp/trackified-surface-${carrier}-${session}`);
@@ -72,7 +74,7 @@ async function main() {
         headless: sessionOptions.headless ?? true,
         viewport: { width: 1280, height: 900 },
         locale: "en-US",
-        ...(proxy && proxyMode === "native" ? { proxy } : {}),
+        ...(proxy && proxyModeArg === "native" ? { proxy } : {}),
         args: [
           "--disable-blink-features=AutomationControlled",
           ...(sessionOptions.launchArgs ?? []),
