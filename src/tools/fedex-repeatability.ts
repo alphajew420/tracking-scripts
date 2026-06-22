@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { SessionPool } from "../workers/session-pool.ts";
+import { activeProxySession, proxySessionHealth } from "../proxy-session-manager.ts";
 
 function chromeSidecars(): string[] {
   try {
@@ -54,6 +55,10 @@ console.log(JSON.stringify({
 }, null, 2));
 
 console.log("sidecars.before", JSON.stringify(chromeSidecars(), null, 2));
+console.log(JSON.stringify({
+  proxy_health: await proxySessionHealth("fedex"),
+  active_proxy_session: await activeProxySession("fedex"),
+}, null, 2));
 
 try {
   for (let round = 1; round <= rounds; round += 1) {
@@ -66,12 +71,18 @@ try {
         number,
         elapsedMs,
         result: summarize(result),
+        proxy_health: await proxySessionHealth("fedex"),
+        active_proxy_session: await activeProxySession("fedex"),
         sidecars: chromeSidecars(),
       }, null, 2));
     }
   }
 } finally {
   await pool.close();
+  console.log(JSON.stringify({
+    proxy_health: await proxySessionHealth("fedex"),
+    active_proxy_session: await activeProxySession("fedex"),
+  }, null, 2));
   console.log("sidecars.afterClose", JSON.stringify(chromeSidecars(), null, 2));
   process.exit(0);
 }
