@@ -48,6 +48,7 @@ function browserChannel(carrierId: string): SessionOptions["channel"] {
 
 function prefersExtensionProxy(carrierId: string): boolean {
   return (
+    carrierId === "fedex" ||
     carrierId === "royal-mail" ||
     carrierId === "postnord-se" ||
     carrierId === "postnord-dk"
@@ -116,15 +117,18 @@ export function buildCarrierSessionOptions(carrierId: string, overrides: Carrier
   const proxy = overrides.proxy;
   const carrierProxyMode = process.env[`PROXY_${carrierId.toUpperCase().replaceAll("-", "_")}_MODE`];
   const globalProxyMode = process.env.PROXY_MODE;
+  const shouldPreferExtension = proxy ? prefersExtensionProxy(carrierId) : false;
   const proxyMode =
     overrides.proxyMode ??
-    (carrierProxyMode === "native" || carrierProxyMode === "extension" || carrierProxyMode === "forwarder"
-      ? carrierProxyMode
-      : globalProxyMode === "forwarder"
-        ? "forwarder"
-        : globalProxyMode === "extension" || (proxy && prefersExtensionProxy(carrierId))
-          ? "extension"
-          : "native");
+    (carrierProxyMode === "forwarder"
+      ? "forwarder"
+      : carrierProxyMode === "extension" || (carrierProxyMode === "native" && !shouldPreferExtension)
+        ? carrierProxyMode
+        : globalProxyMode === "forwarder"
+          ? "forwarder"
+          : globalProxyMode === "extension" || shouldPreferExtension
+            ? "extension"
+            : "native");
 
   return {
     headless: overrides.headless ?? defaultHeadlessForCarrier(carrierId),
