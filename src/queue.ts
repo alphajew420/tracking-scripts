@@ -46,14 +46,23 @@ export const webhookQueue = new Queue<WebhookJob>("webhooks", {
 
 const enqueueLockRedis = new Redis(redisConnection());
 
-function scrapeLockTtlSeconds(reason: ScrapeJob["reason"]): number {
+function carrierEnvName(prefix: string, carrier: string | null): string | null {
+  if (!carrier) return null;
+  return `${prefix}_${carrier.toUpperCase().replaceAll("-", "_")}`;
+}
+
+function scrapeLockTtlSeconds(job: ScrapeJob): number {
+  const reason = job.reason;
   if (reason === "bulk_lookup" || reason === "retrack") return 30;
+  const carrierKey = carrierEnvName("SCRAPE_ENQUEUE_LOCK_SECONDS", job.carrier);
+  const carrierValue = carrierKey ? process.env[carrierKey] : undefined;
+  if (carrierValue != null && carrierValue !== "") return Number(carrierValue);
   return Number(process.env.SCRAPE_ENQUEUE_LOCK_SECONDS ?? 600);
 }
 
 export async function enqueueScrape(job: ScrapeJob, delay = 0): Promise<void> {
   const lockKey = `scrape:enqueue:${job.tracking_id}`;
-  const lockTtl = scrapeLockTtlSeconds(job.reason);
+  const lockTtl = scrapeLockTtlSeconds(job);
   const locked = await enqueueLockRedis.set(lockKey, "1", "EX", lockTtl, "NX");
   if (!locked && job.reason !== "retrack") return;
 

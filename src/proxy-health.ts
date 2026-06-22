@@ -5,6 +5,18 @@ import type { BrowserProxy } from "./proxy.ts";
 
 const redis = new Redis(redisConnection());
 
+function carrierEnvName(prefix: string, carrier: string): string {
+  return `${prefix}_${carrier.toUpperCase().replaceAll("-", "_")}`;
+}
+
+function numericCarrierEnv(prefix: string, carrier: string, fallback: number): number {
+  const carrierValue = process.env[carrierEnvName(prefix, carrier)];
+  if (carrierValue != null && carrierValue !== "") return Number(carrierValue);
+  const genericValue = process.env[prefix];
+  if (genericValue != null && genericValue !== "") return Number(genericValue);
+  return fallback;
+}
+
 export function proxyFingerprint(proxy: BrowserProxy | undefined): string | null {
   if (!proxy) return null;
   return createHash("sha256")
@@ -34,7 +46,7 @@ export async function recordProxyHealth(input: {
       error: input.error ?? "",
       updated_at: now,
     })
-    .expire(key, Number(process.env.PROXY_HEALTH_TTL_SECONDS ?? 86_400))
+    .expire(key, numericCarrierEnv("PROXY_HEALTH_TTL_SECONDS", input.carrier, 86_400))
     .exec();
 }
 
@@ -49,7 +61,7 @@ export async function quarantineProxy(input: {
     `proxy:quarantine:${input.carrier}:${fingerprint}`,
     input.reason,
     "EX",
-    Number(process.env.PROXY_QUARANTINE_SECONDS ?? 1800),
+    numericCarrierEnv("PROXY_QUARANTINE_SECONDS", input.carrier, 1800),
   );
 }
 

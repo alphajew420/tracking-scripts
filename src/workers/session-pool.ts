@@ -16,7 +16,6 @@ interface PooledSession {
 
 const maxAgeMs = Number(process.env.SESSION_MAX_AGE_MS ?? 60 * 60_000);
 const maxUses = Number(process.env.SESSION_MAX_USES ?? 250);
-const maxProxyPickAttempts = Number(process.env.PROXY_PICK_ATTEMPTS ?? 5);
 let generatedProxySessionCounter = 0;
 
 function booleanEnv(name: string, fallback: boolean): boolean {
@@ -31,6 +30,15 @@ function maxUsesForCarrier(carrierId: string): number {
   if (override != null && override !== "") return Number(override);
 
   return maxUses;
+}
+
+function numericCarrierEnv(prefix: string, carrierId: string, fallback: number): number {
+  const carrierKey = carrierId.toUpperCase().replaceAll("-", "_");
+  const carrierValue = process.env[`${prefix}_${carrierKey}`];
+  if (carrierValue != null && carrierValue !== "") return Number(carrierValue);
+  const genericValue = process.env[prefix];
+  if (genericValue != null && genericValue !== "") return Number(genericValue);
+  return fallback;
 }
 
 function proxySessionForCarrier(carrierId: string): string {
@@ -66,6 +74,7 @@ export class SessionPool {
     const useProxy = carrierId !== "fedex" || booleanEnv("FEDEX_USE_PROXY", false);
     let proxy: BrowserProxy | undefined;
     if (useProxy) {
+      const maxProxyPickAttempts = numericCarrierEnv("PROXY_PICK_ATTEMPTS", carrierId, 5);
       for (let attempt = 0; attempt < maxProxyPickAttempts; attempt += 1) {
         const candidate = proxyForCarrier(carrierId, { session: proxySessionForCarrier(carrierId) });
         if (!candidate || !(await proxyIsQuarantined(carrierId, candidate))) {
