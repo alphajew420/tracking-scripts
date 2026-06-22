@@ -9,6 +9,7 @@ import { getBrowserSidecarEndpoint, invalidateBrowserSidecar } from "../browser-
 import type { BrowserProxy } from "../proxy.ts";
 import { proxyIsQuarantined, quarantineProxy, recordProxyHealth } from "../proxy-health.ts";
 import { markProxySessionBad, proxySessionCandidates } from "../proxy-session-manager.ts";
+import { cleanupBrowserTempArtifacts } from "../browser-temp-cleanup.ts";
 
 interface PooledSession {
   session: TrackingSession;
@@ -73,6 +74,7 @@ function persistentProfileDirForCarrier(carrierId: string): string | undefined {
   if (carrierId === "fedex") {
     const base = process.env.FEDEX_PROFILE_DIR ?? "/tmp/trackified-fedex-profile";
     if (process.env.FEDEX_PROFILE_ISOLATION === "fixed") return base;
+    cleanupBrowserTempArtifacts();
     cleanupOldProfiles(base, numericCarrierEnv("BROWSER_PROFILE_MAX_AGE_SECONDS", carrierId, 6 * 60 * 60));
     return `${base}-${process.pid}-${Date.now().toString(36)}-${generatedProxySessionCounter}`;
   }

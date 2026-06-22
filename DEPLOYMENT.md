@@ -144,6 +144,8 @@ docker compose -f docker-compose.prod.yml exec -T worker npm run fedex:canary --
 
 For continuous health checks, run `npm run carrier-canary -- fedex` under the same Xvfb wrapper as the worker. On timeout/system-error, it marks the current Redis active sticky session bad, rotates to a fresh session, and sends a Discord alert when `DISCORD_WEBHOOK_URL` is configured.
 
+Browser temp cleanup runs opportunistically before FedEx session creation and canary checks. Tune with `BROWSER_TMP_MAX_AGE_SECONDS`; it only removes Trackified browser profiles, stale X lock files, and Chrome scratch dirs under `/tmp`.
+
 The authenticated operational endpoint shows the current Redis session state:
 
 ```bash

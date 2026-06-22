@@ -2,6 +2,7 @@ import { createLogger } from "../logger.ts";
 import { migrate, pool } from "../db.ts";
 import { sendDiscordWebhook } from "../discord.ts";
 import { activeProxySession, markProxySessionBad, proxySessionHealth } from "../proxy-session-manager.ts";
+import { cleanupBrowserTempArtifacts } from "../browser-temp-cleanup.ts";
 import { SessionPool } from "./session-pool.ts";
 
 function booleanEnv(name: string, fallback: boolean): boolean {
@@ -44,6 +45,14 @@ async function runCanary(carrier: string, poolSessions: SessionPool): Promise<bo
   const timeoutMs = Number(carrierEnv("CANARY_TIMEOUT_MS", carrier) ?? process.env.FEDEX_CANARY_TIMEOUT_MS ?? 240_000);
   const startedAt = Date.now();
   const sessionBefore = carrier === "fedex" ? await activeProxySession(carrier) : null;
+  const cleanup = cleanupBrowserTempArtifacts();
+
+  logger.info("started", {
+    tracking_number: number,
+    timeout_ms: timeoutMs,
+    proxy_session: sessionBefore,
+    cleanup,
+  });
 
   try {
     const result = await withTimeout(
