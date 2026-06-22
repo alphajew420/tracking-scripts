@@ -110,7 +110,6 @@ export class SessionPool {
     if (existing) {
       this.sessions.delete(carrierId);
       await existing.session.close();
-      await invalidateBrowserSidecar(carrierId, existing.proxy);
     }
 
     const factory = getCarrierFactory(carrierId);
@@ -191,7 +190,6 @@ export class SessionPool {
         }
 
         await this.invalidate(carrierId);
-        await this.invalidateSidecar(carrierId);
         const freshSidecarSession = await this.get(carrierId);
         return await freshSidecarSession.track(trackingNumber);
       }
@@ -217,17 +215,14 @@ export class SessionPool {
     }
   }
 
-  async invalidate(carrierId: string): Promise<void> {
+  async invalidate(carrierId: string, keepSidecar = false): Promise<void> {
     const existing = this.sessions.get(carrierId);
     if (!existing) return;
     this.sessions.delete(carrierId);
     await existing.session.close();
-    await invalidateBrowserSidecar(carrierId, existing.proxy);
-  }
-
-  private async invalidateSidecar(carrierId: string): Promise<void> {
-    const existing = this.sessions.get(carrierId);
-    await invalidateBrowserSidecar(carrierId, existing?.proxy);
+    if (!keepSidecar) {
+      await invalidateBrowserSidecar(carrierId, existing.proxy);
+    }
   }
 
   async close(): Promise<void> {
