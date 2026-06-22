@@ -1,4 +1,4 @@
-import { chromium, type Response } from "patchright";
+import { chromium, firefox, webkit, type Response } from "patchright";
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { proxyForCarrier } from "../proxy.ts";
@@ -57,8 +57,12 @@ async function main() {
   const profileDir = resolve(flagValue(args, "--profile-dir", `.browser-profiles/fedex-proxy-surface-${session}`));
   mkdirSync(profileDir, { recursive: true });
   const extension = mode === "extension" && proxy ? createProxyExtension(proxy, `fedex-surface-${session}`) : null;
-  const context = await chromium.launchPersistentContext(profileDir, {
-    ...(process.env.FEDEX_BROWSER_CHANNEL === "bundled" ? {} : { channel: "chrome" as const }),
+  const engine = process.env.FEDEX_BROWSER_ENGINE ?? "chromium";
+  const browserType = engine === "firefox" ? firefox : engine === "webkit" ? webkit : chromium;
+  const context = await browserType.launchPersistentContext(profileDir, {
+    ...(engine === "chromium" && process.env.FEDEX_BROWSER_CHANNEL !== "bundled"
+      ? { channel: "chrome" as const }
+      : {}),
     headless: process.env.HEADLESS !== "false",
     viewport: { width: 1280, height: 900 },
     locale: "en-US",
