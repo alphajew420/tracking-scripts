@@ -11,6 +11,14 @@ function flagValue(args: string[], name: string, fallback: string): string {
   return found ? found.slice(prefix.length) : fallback;
 }
 
+function envValue(...names: string[]): string | undefined {
+  for (const name of names) {
+    const value = process.env[name];
+    if (value != null && value !== "") return value;
+  }
+  return undefined;
+}
+
 function proxyMode(args: string[]): "native" | "extension" | "hybrid" | "forwarder" | "direct" {
   const mode = flagValue(args, "--proxy-mode", process.env.PROXY_MODE ?? "native");
   if (mode === "extension") return "extension";
@@ -30,6 +38,11 @@ function trackingUrl(trackingNumber: string): string {
   const qualifier = trackingQualifier(trackingNumber);
   const base = `https://www.fedex.com/fedextrack/?trknbr=${encodeURIComponent(trackingNumber)}`;
   return qualifier ? `${base}&trkqual=${encodeURIComponent(qualifier)}` : base;
+}
+
+function startSurface(args: string[]): "landing" | "direct" {
+  const value = flagValue(args, "--start", envValue("FEDEX_DIAG_START", "FEDEX_TRACK_SURFACE") ?? "landing");
+  return value === "direct" ? "direct" : "landing";
 }
 
 function interesting(url: string): boolean {
@@ -54,6 +67,7 @@ async function main() {
 
   const session = flagValue(args, "--session", `fedexprobe${Date.now()}`);
   const mode = proxyMode(args);
+  const start = startSurface(args);
   const proxy = mode === "direct" ? undefined : proxyForCarrier("fedex", { country: "us", session });
   if (mode !== "direct" && !proxy) throw new Error("missing FedEx proxy env");
   const browserProxy = mode === "forwarder" && proxy ? await localProxyForwarder(proxy) : proxy;
@@ -70,17 +84,19 @@ async function main() {
       : null;
   const engine = process.env.FEDEX_BROWSER_ENGINE ?? "chromium";
   const browserType = engine === "firefox" ? firefox : engine === "webkit" ? webkit : chromium;
+  const userAgentMode = envValue("FEDEX_USER_AGENT", "BROWSER_USER_AGENT_FEDEX", "BROWSER_USER_AGENT");
+  const channel = envValue("FEDEX_BROWSER_CHANNEL", "BROWSER_CHANNEL_FEDEX", "BROWSER_CHANNEL");
   const context = await browserType.launchPersistentContext(profileDir, {
-    ...(engine === "chromium" && process.env.FEDEX_BROWSER_CHANNEL !== "bundled"
+    ...(engine === "chromium" && channel !== "bundled"
       ? { channel: "chrome" as const }
       : {}),
     headless: process.env.HEADLESS !== "false",
     viewport: { width: 1280, height: 900 },
     locale: "en-US",
     userAgent:
-      process.env.FEDEX_USER_AGENT === "native"
+      userAgentMode === "native" || userAgentMode === "none"
         ? undefined
-        : process.env.FEDEX_USER_AGENT ||
+        : userAgentMode ||
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36",
     ...((mode === "native" || mode === "forwarder") && browserProxy ? { proxy: browserProxy } : {}),
     args: [
@@ -139,51 +155,53 @@ async function main() {
       .then(() => page.textContent("body"))
       .catch((error) => `ip_error=${error instanceof Error ? error.message : String(error)}`);
 
-    await page.goto("https://www.fedex.com/en-us/tracking.html", {
-      waitUntil: "domcontentloaded",
-      timeout: 90000,
-    });
+    if (start === "landing") {
+      await page.goto("https://www.fedex.com/en-us/tracking.html", {
+        waitUntil: "domcontentloaded",
+        timeout: 90000,
+      });
 
-    await page.evaluate(() => {
-      document.cookie = "xacc=US; path=/; domain=.fedex.com; max-age=3600; secure";
-      document.cookie = "fdx_locale=en_US; path=/; domain=.fedex.com; max-age=86400; secure";
-      document.cookie = "fdx_redirect=en-us; path=/; domain=.fedex.com; max-age=86400; secure";
-      document.querySelector<HTMLButtonElement>("#accept")?.click();
-      document.querySelector<HTMLButtonElement>("#deny")?.click();
-    }).catch(() => {});
+      await page.evaluate(() => {
+        document.cookie = "xacc=US; path=/; domain=.fedex.com; max-age=3600; secure";
+        document.cookie = "fdx_locale=en_US; path=/; domain=.fedex.com; max-age=86400; secure";
+        document.cookie = "fdx_redirect=en-us; path=/; domain=.fedex.com; max-age=86400; secure";
+        document.querySelector<HTMLButtonElement>("#accept")?.click();
+        document.querySelector<HTMLButtonElement>("#deny")?.click();
+      }).catch(() => {});
 
-    await page.waitForSelector("input[id^='tracking_number_0_'], #trackingModuleTrackingNum, input[name='trackingNumber']", {
-      state: "attached",
-      timeout: 30000,
-    }).catch(() => {});
-    await page.evaluate((num) => {
-      const inputs = Array.from(
-        document.querySelectorAll<HTMLInputElement>(
-          "input[id^='tracking_number_0_'], #trackingModuleTrackingNum, input[name='trackingNumber']",
-        ),
-      );
-      for (const input of inputs) {
-        if (input.offsetParent === null && input.id !== "trackingModuleTrackingNum") continue;
-        input.value = num;
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-        input.dispatchEvent(new Event("change", { bubbles: true }));
-        input.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: num.slice(-1) || "0" }));
+      await page.waitForSelector("input[id^='tracking_number_0_'], #trackingModuleTrackingNum, input[name='trackingNumber']", {
+        state: "attached",
+        timeout: 30000,
+      }).catch(() => {});
+      await page.evaluate((num) => {
+        const inputs = Array.from(
+          document.querySelectorAll<HTMLInputElement>(
+            "input[id^='tracking_number_0_'], #trackingModuleTrackingNum, input[name='trackingNumber']",
+          ),
+        );
+        for (const input of inputs) {
+          if (input.offsetParent === null && input.id !== "trackingModuleTrackingNum") continue;
+          input.value = num;
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+          input.dispatchEvent(new Event("change", { bubbles: true }));
+          input.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: num.slice(-1) || "0" }));
+        }
+      }, trackingNumber);
+      const button = page.locator("#btnSingleTrack, button[type='submit']").first();
+      if (await button.isVisible({ timeout: 2500 }).catch(() => false)) {
+        await button.click({ timeout: 10000, force: true }).catch(() => {});
+      } else {
+        await page.locator("button:visible").filter({ hasText: /^TRACK$/i }).first().click({ timeout: 10000, force: true }).catch(() => {});
       }
-    }, trackingNumber);
-    const button = page.locator("#btnSingleTrack, button[type='submit']").first();
-    if (await button.isVisible({ timeout: 2500 }).catch(() => false)) {
-      await button.click({ timeout: 10000, force: true }).catch(() => {});
-    } else {
-      await page.locator("button:visible").filter({ hasText: /^TRACK$/i }).first().click({ timeout: 10000, force: true }).catch(() => {});
-    }
-    await page.evaluate(() => {
-      const form = document.querySelector<HTMLFormElement>("form");
-      if (form) form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
-    }).catch(() => {});
+      await page.evaluate(() => {
+        const form = document.querySelector<HTMLFormElement>("form");
+        if (form) form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+      }).catch(() => {});
 
-    await page.waitForLoadState("domcontentloaded", { timeout: 90000 }).catch(() => {});
-    await page.waitForTimeout(3000);
-    if (!responses.some((entry) => entry.url.includes("/track/v2/shipments"))) {
+      await page.waitForLoadState("domcontentloaded", { timeout: 90000 }).catch(() => {});
+      await page.waitForTimeout(3000);
+    }
+    if (start === "direct" || !responses.some((entry) => entry.url.includes("/track/v2/shipments"))) {
       await page.goto(trackingUrl(trackingNumber), { waitUntil: "domcontentloaded", timeout: 90000 }).catch(() => {});
     }
     await page.waitForTimeout(Number(process.env.FEDEX_RENDER_SETTLE_MS ?? 12000));
@@ -256,14 +274,46 @@ async function main() {
       };
     });
 
+    const fingerprint = await page.evaluate(() => {
+      const canvas = document.createElement("canvas");
+      const gl = canvas.getContext("webgl");
+      const debugInfo = gl?.getExtension("WEBGL_debug_renderer_info");
+      return {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        webdriver: navigator.webdriver,
+        languages: navigator.languages,
+        hardwareConcurrency: navigator.hardwareConcurrency,
+        deviceMemory: (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? null,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        viewport: {
+          innerWidth,
+          innerHeight,
+          outerWidth,
+          outerHeight,
+          devicePixelRatio,
+        },
+        webglVendor: gl && debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : null,
+        webglRenderer: gl && debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : null,
+      };
+    });
+
     console.log(JSON.stringify({
       proxyMode: mode,
+      startSurface: start,
+      browser: {
+        engine,
+        channel: channel ?? null,
+        headless: process.env.HEADLESS !== "false",
+        userAgentMode: userAgentMode ?? null,
+      },
       proxy: proxy
         ? { server: proxy.server, hasUsername: Boolean(proxy.username), hasPassword: Boolean(proxy.password) }
         : null,
       trackingQualifier: trackingQualifier(trackingNumber) || null,
       ip: ipText ? JSON.parse(ipText).ip : null,
       finalUrl: page.url(),
+      fingerprint,
       state,
       shipmentResponses: responses.filter((entry) => entry.url.includes("/track/v2/shipments")),
       legacyFetch,
