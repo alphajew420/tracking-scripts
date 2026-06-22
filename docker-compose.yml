@@ -63,7 +63,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["xvfb-run", "-a", "npm", "run", "worker"]
+    command: ["sh", "-lc", "exec xvfb-run -a npm run worker"]
     environment:
       NODE_ENV: production
       DATABASE_URL: postgres://trackified:trackified@postgres:5432/trackified
