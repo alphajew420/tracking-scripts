@@ -9,13 +9,6 @@ const guides = [
   ["Force retrack", "POST /v1/trackings/:id/retrack runs a rate-limited live refresh."],
 ];
 
-const validation = [
-  ["Carrier status", "npm run carriers:status"],
-  ["Carrier coverage validation", "npm run carriers:validate"],
-  ["FedEx reuse probe", "npm run probe:bandwidth-fedex -- 382150811542 521355676935"],
-  ["FedEx live canary", "npm run fedex:canary -- 382150811542"],
-];
-
 const quickstart = `curl -X POST ${apiBaseUrl()}/v1/trackings \\
   -H "Authorization: Bearer test_or_live_api_key" \\
   -H "Content-Type: application/json" \\
@@ -73,21 +66,6 @@ export default function Page() {
             <h3>Errors</h3>
             <p>Return stable JSON errors with `code`, `message`, and optional `details` for row-level bulk failures.</p>
           </article>
-        </div>
-      </section>
-      <section className="docs-deep">
-        <div className="section-kicker">
-          <p className="eyebrow">Validation</p>
-          <h2>Keep the working path small and repeatable.</h2>
-          <p>These are the only internal commands we keep exposed for routine sanity checks.</p>
-        </div>
-        <div className="docs-reference-grid">
-          {validation.map(([title, command]) => (
-            <article key={title}>
-              <h3>{title}</h3>
-              <p><code>{command}</code></p>
-            </article>
-          ))}
         </div>
       </section>
     </MarketingChrome>
