@@ -197,7 +197,7 @@ export class SessionPool {
 
 function shouldRetryFedExWithCleanPage(carrierId: string, result: ScrapeResult): boolean {
   if (carrierId !== "fedex") return false;
-  return /tracking number not found|no results found|rendered tracking data not available|system-error/i.test(
+  return /tracking number not found|no results found|rendered tracking data not available|system-error|browser fetch failed|navigation fallback failed|ERR_EMPTY_RESPONSE|page\.goto/i.test(
     result.error ?? "",
   );
 }
