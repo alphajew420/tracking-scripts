@@ -3,8 +3,12 @@ import type { Carrier, QueryCtx } from "../session.ts";
 import type { Event, ScrapeResult, Status } from "../types.ts";
 
 const LANDING_URL = "https://www.fedex.com/en-us/tracking.html";
-const TRACKING_QUALIFIER = (n: string) =>
-  process.env[`FEDEX_TRKQUAL_${n.replace(/\W/g, "_")}`] ?? process.env.FEDEX_TRKQUAL ?? `12030~${n}~FDEG`;
+const TRACKING_QUALIFIER = (n: string) => {
+  const specific = process.env[`FEDEX_TRKQUAL_${n.replace(/\W/g, "_")}`];
+  const configured = specific ?? process.env.FEDEX_TRKQUAL;
+  if (configured === "none" || configured === "") return "";
+  return configured ?? `12030~${n}~FDEG`;
+};
 const DEEP_LINK_URL = (n: string) => {
   const trkqual = TRACKING_QUALIFIER(n);
   if (trkqual) {
@@ -479,6 +483,7 @@ export function createFedexCarrier(): Carrier {
           console.error(`[fedex] querying with page.url=${page.url()}`);
           console.error(`[fedex] token len=${bearerToken!.length}`);
           console.error(`[fedex] cached track=${trackResponses.has(num)}`);
+          console.error(`[fedex] trkqual=${TRACKING_QUALIFIER(num) || "<none>"}`);
         }
 
         const payload = {
@@ -529,6 +534,9 @@ export function createFedexCarrier(): Carrier {
             { url: API_URL, token: bearerToken, body: payload, timeoutMs: BROWSER_FETCH_TIMEOUT_MS() },
           ), BROWSER_FETCH_TIMEOUT_MS() + 2000, "FedEx browser fetch timed out");
         } catch (err) {
+          if (process.env.FEDEX_DEBUG) {
+            console.error(`[fedex] browser fetch error=${err instanceof Error ? err.message : String(err)}`);
+          }
           const rendered = await parseRenderedPage(page, num);
           if (rendered) return rendered;
           const navigated = await navigateAndParse(page, num);

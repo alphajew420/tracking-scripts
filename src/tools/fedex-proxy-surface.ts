@@ -16,6 +16,18 @@ function proxyMode(args: string[]): "native" | "extension" {
     : "native";
 }
 
+function trackingQualifier(trackingNumber: string): string {
+  const configured = process.env[`FEDEX_TRKQUAL_${trackingNumber.replace(/\W/g, "_")}`] ?? process.env.FEDEX_TRKQUAL;
+  if (configured === "none" || configured === "") return "";
+  return configured ?? `12030~${trackingNumber}~FDEG`;
+}
+
+function trackingUrl(trackingNumber: string): string {
+  const qualifier = trackingQualifier(trackingNumber);
+  const base = `https://www.fedex.com/fedextrack/?trknbr=${encodeURIComponent(trackingNumber)}`;
+  return qualifier ? `${base}&trkqual=${encodeURIComponent(qualifier)}` : base;
+}
+
 function interesting(url: string): boolean {
   return /fedex|api\.fedex|akam|edgesuite|sensor|oauth|track\/v2\/shipments/i.test(url);
 }
@@ -49,6 +61,11 @@ async function main() {
     headless: process.env.HEADLESS !== "false",
     viewport: { width: 1280, height: 900 },
     locale: "en-US",
+    userAgent:
+      process.env.FEDEX_USER_AGENT === "native"
+        ? undefined
+        : process.env.FEDEX_USER_AGENT ||
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36",
     ...(mode === "native" ? { proxy } : {}),
     args: [
       "--disable-blink-features=AutomationControlled",
@@ -126,10 +143,7 @@ async function main() {
     await page.waitForLoadState("domcontentloaded", { timeout: 90000 }).catch(() => {});
     await page.waitForTimeout(3000);
     if (!responses.some((entry) => entry.url.includes("/track/v2/shipments"))) {
-      await page.goto(
-        `https://www.fedex.com/fedextrack/?trknbr=${encodeURIComponent(trackingNumber)}&trkqual=${encodeURIComponent(`12030~${trackingNumber}~FDEG`)}`,
-        { waitUntil: "domcontentloaded", timeout: 90000 },
-      ).catch(() => {});
+      await page.goto(trackingUrl(trackingNumber), { waitUntil: "domcontentloaded", timeout: 90000 }).catch(() => {});
     }
     await page.waitForTimeout(Number(process.env.FEDEX_RENDER_SETTLE_MS ?? 12000));
 
@@ -157,6 +171,7 @@ async function main() {
     console.log(JSON.stringify({
       proxyMode: mode,
       proxy: { server: proxy.server, hasUsername: Boolean(proxy.username), hasPassword: Boolean(proxy.password) },
+      trackingQualifier: trackingQualifier(trackingNumber) || null,
       ip: ipText ? JSON.parse(ipText).ip : null,
       finalUrl: page.url(),
       state,
