@@ -121,7 +121,7 @@ FEDEX_PROFILE_DIR=/tmp/trackified-fedex-profile-worker
 The Compose worker command starts Xvfb and then execs the Node worker:
 
 ```yaml
-command: ["sh", "-lc", "rm -f /tmp/.X99-lock; Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp & XVFB_PID=$!; for i in $(seq 1 50); do [ -S /tmp/.X11-unix/X99 ] && break; sleep 0.1; done; export DISPLAY=:99; npm run worker; STATUS=$?; kill $XVFB_PID 2>/dev/null || true; exit $STATUS"]
+command: ["sh", "-lc", "rm -f /tmp/.X99-lock; Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp & XVFB_PID=$$!; for i in $$(seq 1 50); do [ -S /tmp/.X11-unix/X99 ] && break; sleep 0.1; done; export DISPLAY=:99; npm run worker; STATUS=$$?; kill $$XVFB_PID 2>/dev/null || true; exit $$STATUS"]
 ```
 
 Do not run FedEx lookups in the API process. `POST /v1/trackings`, `/v1/trackings/bulk`, and `/v1/trackings/{id}/retrack` enqueue jobs, and the worker keeps the browser session hot.
