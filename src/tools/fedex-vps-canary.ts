@@ -2,6 +2,16 @@ import { SessionPool } from "../workers/session-pool.ts";
 
 const trackingNumber = process.argv[2] ?? process.env.FEDEX_CANARY_TRACKING_NUMBER ?? "382150811542";
 const timeoutMs = Number(process.env.FEDEX_CANARY_TIMEOUT_MS ?? 180_000);
+const originalProfileDir = process.env.FEDEX_PROFILE_DIR;
+
+if (process.platform === "linux" && !process.env.DISPLAY) {
+  process.env.DISPLAY = process.env.FEDEX_CANARY_DISPLAY ?? ":99";
+}
+
+if (process.env.FEDEX_CANARY_REUSE_PROFILE !== "true") {
+  const baseProfileDir = originalProfileDir ?? "/tmp/trackified-fedex-profile-worker";
+  process.env.FEDEX_PROFILE_DIR = `${baseProfileDir}-canary-${process.pid}-${Date.now().toString(36)}`;
+}
 
 async function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   let timeout: NodeJS.Timeout | undefined;
@@ -42,6 +52,8 @@ try {
           fallback_session_count: (process.env.PROXY_SESSION_FALLBACKS_FEDEX ?? process.env.PROXY_SESSION_FALLBACKS ?? "")
             .split(",")
             .filter((value) => value.trim()).length,
+          display: process.env.DISPLAY ?? null,
+          isolated_profile: process.env.FEDEX_PROFILE_DIR !== originalProfileDir,
         },
       }
     : {
