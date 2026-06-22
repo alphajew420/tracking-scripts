@@ -10,10 +10,11 @@ function flagValue(args: string[], name: string, fallback: string): string {
   return found ? found.slice(prefix.length) : fallback;
 }
 
-function proxyMode(args: string[]): "native" | "extension" {
-  return flagValue(args, "--proxy-mode", process.env.PROXY_MODE ?? "native") === "extension"
-    ? "extension"
-    : "native";
+function proxyMode(args: string[]): "native" | "extension" | "direct" {
+  const mode = flagValue(args, "--proxy-mode", process.env.PROXY_MODE ?? "native");
+  if (mode === "extension") return "extension";
+  if (mode === "direct") return "direct";
+  return "native";
 }
 
 function trackingQualifier(trackingNumber: string): string {
@@ -50,12 +51,12 @@ async function main() {
 
   const session = flagValue(args, "--session", `fedexprobe${Date.now()}`);
   const mode = proxyMode(args);
-  const proxy = proxyForCarrier("fedex", { country: "us", session });
-  if (!proxy) throw new Error("missing FedEx proxy env");
+  const proxy = mode === "direct" ? undefined : proxyForCarrier("fedex", { country: "us", session });
+  if (mode !== "direct" && !proxy) throw new Error("missing FedEx proxy env");
 
   const profileDir = resolve(flagValue(args, "--profile-dir", `.browser-profiles/fedex-proxy-surface-${session}`));
   mkdirSync(profileDir, { recursive: true });
-  const extension = mode === "extension" ? createProxyExtension(proxy, `fedex-surface-${session}`) : null;
+  const extension = mode === "extension" && proxy ? createProxyExtension(proxy, `fedex-surface-${session}`) : null;
   const context = await chromium.launchPersistentContext(profileDir, {
     ...(process.env.FEDEX_BROWSER_CHANNEL === "bundled" ? {} : { channel: "chrome" as const }),
     headless: process.env.HEADLESS !== "false",
@@ -66,7 +67,7 @@ async function main() {
         ? undefined
         : process.env.FEDEX_USER_AGENT ||
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36",
-    ...(mode === "native" ? { proxy } : {}),
+    ...(mode === "native" && proxy ? { proxy } : {}),
     args: [
       "--disable-blink-features=AutomationControlled",
       ...(extension ? [`--disable-extensions-except=${extension}`, `--load-extension=${extension}`] : []),
@@ -238,7 +239,9 @@ async function main() {
 
     console.log(JSON.stringify({
       proxyMode: mode,
-      proxy: { server: proxy.server, hasUsername: Boolean(proxy.username), hasPassword: Boolean(proxy.password) },
+      proxy: proxy
+        ? { server: proxy.server, hasUsername: Boolean(proxy.username), hasPassword: Boolean(proxy.password) }
+        : null,
       trackingQualifier: trackingQualifier(trackingNumber) || null,
       ip: ipText ? JSON.parse(ipText).ip : null,
       finalUrl: page.url(),
