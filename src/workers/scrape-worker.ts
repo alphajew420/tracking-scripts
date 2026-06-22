@@ -81,7 +81,7 @@ async function run() {
           [
             job.data.tracking_id,
             `${carrier}: carrier temporarily disabled`,
-            Number(process.env.SCHEDULER_SCRAPE_LEASE_SECONDS ?? 300),
+            Number(process.env.DISABLED_CARRIER_LEASE_SECONDS ?? 3600),
           ],
         );
         await releaseScrapeEnqueueLock(job.data.tracking_id);

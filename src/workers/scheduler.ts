@@ -25,6 +25,7 @@ async function tick(): Promise<void> {
   );
 
   const leaseSeconds = Number(process.env.SCHEDULER_SCRAPE_LEASE_SECONDS ?? 300);
+  const disabledLeaseSeconds = Number(process.env.DISABLED_CARRIER_LEASE_SECONDS ?? 3600);
   for (const tracking of result.rows) {
     if (carrierDisabled(tracking.carrier)) {
       await query(
@@ -32,7 +33,7 @@ async function tick(): Promise<void> {
          set next_scrape_at = now() + ($2::text || ' seconds')::interval,
              updated_at = now()
          where id = $1`,
-        [tracking.id, leaseSeconds],
+        [tracking.id, disabledLeaseSeconds],
       );
       continue;
     }
